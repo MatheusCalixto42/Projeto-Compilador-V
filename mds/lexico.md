@@ -196,7 +196,7 @@ Representam um único caractere Unicode e são delimitados por crase (`` ` ``).
 
 ---
 
-## **Literais de String**
+## **String**
 Representam sequências de caracteres.
 
 - **Strings Comuns**: Delimitadas por aspas simples (`''`). Sequências de escape (como `\n`, `\t`, `\"`) são interpretadas.
