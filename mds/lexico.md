@@ -6,17 +6,17 @@ Este documento detalha os elementos léxicos da linguagem de programação V. V 
 
 ---
 
-## **Palavras Reservadas**
+## **1. Palavras Reservadas**
 
 V apresenta apenas as seguintes palavras reservas ou palavras-chave:
 
-### **Literais**
+### **1.1. Literais**
 
 * `true`: Representa o valor booleano verdadeiro.
 * `false`: Representa o valor booleano falso.
 * `none`: Indica a ausência de valor, semelhante a `null` em outras linguagens.
 
-### **Controle de Fluxo**
+### **1.2. Controle de Fluxo**
 
 * `if`: Inicia uma estrutura condicional.
 * `else`: Define o bloco a ser executado caso a condição do `if` seja falsa.
@@ -29,7 +29,7 @@ V apresenta apenas as seguintes palavras reservas ou palavras-chave:
 * `goto`: Permite saltar para um rótulo específico no código (uso desencorajado).
 * `select`: Utilizado para operações concorrentes, semelhante ao `select` em Go.
 
-### **Definição e Organização**
+### **1.3. Definição e Organização**
 
 * `fn`: Declara uma função.
 * `module`: Define o módulo atual do arquivo.
@@ -42,7 +42,7 @@ V apresenta apenas as seguintes palavras reservas ou palavras-chave:
 * `interface`: Declara uma interface, especificando métodos que um tipo deve implementar.
 * `implements`: Indica que um tipo implementa uma interface.
 
-### **Modificadores**
+### **1.4. Modificadores**
 
 * `pub`: Torna funções, métodos ou variáveis públicas, acessíveis fora do módulo.
 * `mut`: Indica que uma variável ou argumento é mutável.
@@ -53,7 +53,7 @@ V apresenta apenas as seguintes palavras reservas ou palavras-chave:
 * `unsafe`: Marca um bloco de código como inseguro, permitindo operações de baixo nível.
 * `volatile`: Indica que uma variável pode ser modificada fora do controle do programa, como por hardware.
 
-### **Outros**
+### **1.5. Outros**
 
 * `as`: Utilizado para renomear importações ou realizar castings.
 * `is`: Verifica se uma variável é de um determinado tipo.
@@ -72,9 +72,9 @@ V apresenta apenas as seguintes palavras reservas ou palavras-chave:
 
 ---
 
-## **Operadores**
+## **2. Operadores**
 
-### **Operadores Aritméticos**
+### **2.1 Operadores Aritméticos**
 | Operador | Descrição |
 | :---: | --- |
 | `+` | Adição |
@@ -83,7 +83,7 @@ V apresenta apenas as seguintes palavras reservas ou palavras-chave:
 | `/` | Divisão |
 | `%` | Módulo (resto da divisão) |
 
-### **Operadores de Atribuição**
+### **2.2. Operadores de Atribuição**
 | Operador | Descrição |
 | :---: | --- |
 | `=` | Atribuição simples |
@@ -99,7 +99,7 @@ V apresenta apenas as seguintes palavras reservas ou palavras-chave:
 | `<<=` | Deslocamento à esquerda e atribuição |
 | `>>=` | Deslocamento à direita e atribuição |
 
-### **Operadores de Comparação**
+### **2.3. Operadores de Comparação**
 | Operador | Descrição |
 | :---: | --- |
 | `==` | Igual a |
@@ -109,14 +109,14 @@ V apresenta apenas as seguintes palavras reservas ou palavras-chave:
 | `>` | Maior que |
 | `>=` | Maior ou igual a |
 
-### **Operadores Lógicos**
+### **2.4. Operadores Lógicos**
 | Operador | Descrição |
 | :---: | --- |
 | `&&` | E lógico |
 | `\|\|` | OU lógico |
 | `!` | NÃO lógico |
 
-### **Operadores Bit a Bit (Bitwise)**
+### **2.5. Operadores Bit a Bit (Bitwise)**
 | Operador | Descrição |
 | :---: | --- |
 | `&` | E (AND) |
@@ -127,7 +127,7 @@ V apresenta apenas as seguintes palavras reservas ou palavras-chave:
 
 ---
 
-## **Separadores ou Delimitadores**
+## **3. Separadores ou Delimitadores**
 A linguagem Vlang não possui delimitador para linhas, isto é, não é como em C, por exemplo, que necessita do `';'` para o compilador entender que o comando encerrou. Vlang delimita parâmetros de funções ao utilizar a `','` entre os parâmetros. Vlang também pode separar expressões para dar prioridade com o uso de `()`. Por fim, nessa linguagem, os blocos de comando são delimitados por `\`
 
 - **Parênteses `()`**: Usados em chamadas de função, agrupamento de expressões e definições de tipo de função.
@@ -140,7 +140,7 @@ A linguagem Vlang não possui delimitador para linhas, isto é, não é como em 
 
 ---
 
-## **Identificadores**
+## **4. Identificadores**
 Identificadores são os nomes dados a entidades como variáveis, constantes, funções, tipos e módulos.
 
 - **Regras de Nomenclatura**:
@@ -164,7 +164,7 @@ Identificadores são os nomes dados a entidades como variáveis, constantes, fun
 
 ---
 
-## **Números**
+## **5. Números**
 
 Vlang dá suporte a números inteiros e a números com ponto flutuantes. Além disso, nessa
 linguagem não só os números podem também ser representados nas notações de hexadecimal,
@@ -173,7 +173,7 @@ casas, por exemplo o número inteiro mil pode ser escrito da forma 1000 ou 1 _00
 ressaltar que a linguagem dá suporte à números com sinais e sem sinais (unsigned), sejam eles
 inteiros de 8 bits até 64 bits, floats de 32 bits até 64 bits.
 
-### **Números Inteiros**
+### **5.1. Números Inteiros**
 Representam números inteiros e podem ser especificados em diferentes bases.
 
 - **Decimal**: `123`, `42`, `1000`
@@ -181,7 +181,7 @@ Representam números inteiros e podem ser especificados em diferentes bases.
 - **Binário** (prefixo `0b`): `0b1010`, `0b1101`
 - **Octal** (prefixo `0o`): `0o77`, `0o12`
 
-### **Números de Ponto Flutuante**
+### **5.2. Números de Ponto Flutuante**
 Representam números com casas decimais.
 
 - **Padrão**: `3.14`, `0.5`, `100.0`
@@ -189,14 +189,14 @@ Representam números com casas decimais.
 
 ---
 
-## **Literais de Rune**
+## **6. Literais de Rune**
 Representam um único caractere Unicode e são delimitados por crase (`` ` ``).
 
 - **Exemplos**: `'a'`, `'B'`, `'$'`, `'\n'` (caractere de nova linha)
 
 ---
 
-## **String**
+## **7. String**
 Representam sequências de caracteres.
 
 - **Strings Comuns**: Delimitadas por aspas simples (`''`). Sequências de escape (como `\n`, `\t`, `\"`) são interpretadas.
@@ -207,7 +207,7 @@ Representam sequências de caracteres.
   
    ---
 
- ## **Erros**
+ ## **8. Erros**
  Na linguagem V, qualquer sequência de caracteres que não corresponda a um dos elementos léxicos válidos, como identificadores, literais, operadores ou palavras-chave, é considerada um erro léxico. Isso inclui, por exemplo, o uso de símbolos não reconhecidos, identificadores iniciando com números ou o uso de palavras que não pertencem à linguagem.
 Durante a análise léxica, espaços em branco, tabulações e quebras de linha são ignorados para fins de reconhecimento de tokens. Eles não afetam a interpretação dos elementos do código, exceto quando são essenciais para separar tokens ou evitar ambiguidade. Por exemplo, a:=10 e a := 10 são equivalentes, mas a ausência completa de espaço entre dois identificadores distintos poderia causar erro.
 Embora espaços e quebras de linha não alterem o significado léxico, o compilador da linguagem V utiliza essas quebras de linha para rastrear a posição do código, permitindo que mensagens de erro sejam emitidas com precisão, indicando a linha e a coluna onde ocorreu o problema. Assim, mesmo que ignoradas na análise dos símbolos, essas informações são essenciais para diagnóstico e depuração durante a compilação.
