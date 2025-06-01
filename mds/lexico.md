@@ -1,7 +1,5 @@
 # **Linguagem V(Vlang) - Elementos Léxicos**
 
----
-
 ## **Sobre o documento**
 Este documento detalha os elementos léxicos da linguagem de programação V. V é uma linguagem de programação compilada e estaticamente tipada, projetada para a construção de software sustentável.
 É semelhante ao Go e seu design também foi influenciado por Oberon, Rust, Swift, Kotlin e Python.
