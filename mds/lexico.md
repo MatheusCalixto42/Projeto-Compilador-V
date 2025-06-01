@@ -209,5 +209,11 @@ Representam sequências de caracteres. V possui dois tipos.
 
   ```v
   caminho := `C:\Usuarios\MeuUsuario\Documentos`
-  ```
+  ``` 
+ ---
+
+ ## ** Erros*
+ Na linguagem V, qualquer sequência de caracteres que não corresponda a um dos elementos léxicos válidos, como identificadores, literais, operadores ou palavras-chave, é considerada um erro léxico. Isso inclui, por exemplo, o uso de símbolos não reconhecidos, identificadores iniciando com números ou o uso de palavras que não pertencem à linguagem.
+Durante a análise léxica, espaços em branco, tabulações e quebras de linha são ignorados para fins de reconhecimento de tokens. Eles não afetam a interpretação dos elementos do código, exceto quando são essenciais para separar tokens ou evitar ambiguidade. Por exemplo, a:=10 e a := 10 são equivalentes, mas a ausência completa de espaço entre dois identificadores distintos poderia causar erro.
+Embora espaços e quebras de linha não alterem o significado léxico, o compilador da linguagem V utiliza essas quebras de linha para rastrear a posição do código, permitindo que mensagens de erro sejam emitidas com precisão, indicando a linha e a coluna onde ocorreu o problema. Assim, mesmo que ignoradas na análise dos símbolos, essas informações são essenciais para diagnóstico e depuração durante a compilação.
 
