@@ -205,7 +205,7 @@ Representam sequências de caracteres.
   minha_string := 'Olá, mundo!\nIsto está em uma nova linha.'
   ```
   
-   ---
+---
 
  ## **8. Erros**
  Na linguagem V, qualquer sequência de caracteres que não corresponda a um dos elementos léxicos válidos, como identificadores, literais, operadores ou palavras-chave, é considerada um erro léxico. Isso inclui, por exemplo, o uso de símbolos não reconhecidos, identificadores iniciando com números ou o uso de palavras que não pertencem à linguagem.
