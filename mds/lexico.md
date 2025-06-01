@@ -197,20 +197,15 @@ Representam um único caractere Unicode e são delimitados por crase (`` ` ``).
 ---
 
 ## **Literais de String**
-Representam sequências de caracteres. V possui dois tipos.
+Representam sequências de caracteres.
 
-- **Strings Interpretadas**: Delimitadas por aspas duplas (`"`). Sequências de escape (como `\n`, `\t`, `\"`) são interpretadas.
+- **Strings Comuns**: Delimitadas por aspas simples (`''`). Sequências de escape (como `\n`, `\t`, `\"`) são interpretadas.
 
-  ```v
-  minha_string := "Olá, mundo!\nIsto está em uma nova linha."
   ```
-
-- **Strings Brutas (Raw Strings)**: Delimitadas por crases (`` ` ``). Todo o conteúdo é lido literalmente, sem interpretar sequências de escape. Útil para caminhos de arquivo ou expressões regulares.
-
-  ```v
-  caminho := `C:\Usuarios\MeuUsuario\Documentos`
-  ``` 
- ---
+  minha_string := 'Olá, mundo!\nIsto está em uma nova linha.'
+  ```
+  
+   ---
 
  ## **Erros**
  Na linguagem V, qualquer sequência de caracteres que não corresponda a um dos elementos léxicos válidos, como identificadores, literais, operadores ou palavras-chave, é considerada um erro léxico. Isso inclui, por exemplo, o uso de símbolos não reconhecidos, identificadores iniciando com números ou o uso de palavras que não pertencem à linguagem.
