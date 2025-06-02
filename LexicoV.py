@@ -96,7 +96,9 @@ def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
-
+def t_error(t):
+  print("Caractere ilegal '%s'" % t.value[0])
+  t.lexer.skip(1)
 
 
 
