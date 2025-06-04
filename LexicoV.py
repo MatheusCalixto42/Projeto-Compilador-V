@@ -1,4 +1,5 @@
 import ply.lex as lex
+from tabulate import tabulate
 
 reservadas = {
     'true' : 'TRUE',
@@ -55,11 +56,66 @@ tokens = ['PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'MOD', 'ASSIGN', 'PLUS_ASSIGN', 'M
   'LE', 'GT', 'GE', 'AND', 'OR', 'NOT', 'BIT_AND', 'BIT_OR', 'BIT_XOR', 'LSHIFT', 'RSHIFT',
   'BIT_NOT', 'INCREMENT', 'DECREMENT', 'DOTDOT', 'DECLARE_ASSIGN', 'QUESTION',
   'EXCLAMATION', 'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE', 'LBRACKET', 'RBRACKET',
-  'DOT', 'COMMA', 'SEMICOLON', 'COLON','DOLLAR'] + list(reservadas.values())
+  'DOT', 'COMMA', 'SEMICOLON', 'COLON','DOLLAR','ID','NUMBER','BINARY','OCTAL'
+  'HEX','NOTACAOCIENTIFICA','NUMBERFLOAT','ASPASSIMPLES','ASPASDUPLAS'] + list(reservadas.values())
 
-t_PLUS    = r'\+'
-t_MINUS   = r'-'
+t_PLUS         = r'\+'
+t_MINUS        = r'-'
+t_TIMES        = r'\*'
+t_DIVIDE       = r'/'
+t_MOD          = r'%'
 
+t_ASSIGN            = r'='
+t_PLUS_ASSIGN       = r'\+='
+t_MINUS_ASSIGN      = r'-='
+t_TIMES_ASSIGN      = r'\*='
+t_DIVIDE_ASSIGN     = r'/='
+t_MOD_ASSIGN        = r'%='
+t_BIT_AND_ASSIGN    = r'&='
+t_BIT_OR_ASSIGN     = r'\|='
+t_BIT_XOR_ASSIGN    = r'\^='
+t_BIT_LSHIFT_ASSIGN = r'<<='
+t_BIT_RSHIFT_ASSIGN = r'>>='
+
+t_EQ  = r'=='
+t_NEQ = r'!='
+t_LT  = r'<'
+t_LE  = r'<='
+t_GT  = r'>'
+t_GE  = r'>='
+
+t_AND = r'&&'
+t_OR  = r'\|\|'
+t_NOT = r'!'
+
+t_BIT_AND = r'&'
+t_BIT_OR  = r'\|'
+t_BIT_XOR = r'\^'
+t_LSHIFT  = r'<<'
+t_RSHIFT  = r'>>'
+t_BIT_NOT = r'~'
+
+t_INCREMENT = r'\+\+'
+t_DECREMENT = r'--'
+
+t_DOTDOT         = r'\.\.'     
+t_DECLARE_ASSIGN = r':='       
+t_QUESTION       = r'\?'       
+t_EXCLAMATION    = r'!' 
+
+t_LPAREN    = r'\('
+t_RPAREN    = r'\)'
+t_LBRACE    = r'\{'
+t_RBRACE    = r'\}'
+t_LBRACKET  = r'\['
+t_RBRACKET  = r'\]'
+t_DOT       = r'\.'
+t_COMMA     = r','
+t_SEMICOLON = r';'
+t_COLON     = r':'
+t_DOLLAR    = r'\$'
+t_ASPASSIMPLES = r'\''
+t_ASPASDUPLAS = r'\"'
 
 
 def t_ID(t):
@@ -92,22 +148,54 @@ def t_NUMBERFLOAT(t):
     t.value = float(t.value)
     return t
 
+def t_NUMBER(t):
+    r'\d+'
+    t.value = int(t.value)
+    return t
+
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
+def t_error(t):
+   print("Illegal character '%s'" % t.value[0])
+   t.lexer.skip(1)
 
 
-
-
-t_ignore  = ' \t' #Ignora branco, tabulação e quebra de linha
-
-
-
+t_ignore  = ' \t' 
 
 
 lexer = lex.lex()
-lexer.input("+\n  - --+\n +  +")
-print('{:10s}{:10s}{:10s}{:10s}'.format("Token", "Lexema", "Linha", "Coluna"))
+
+#codigo  de exemplo em V para testar
+codigo_v = """
+x := 10
+y := 20
+z := x + y * 2
+if x == y {
+    println('iguais')
+} else {
+    println('diferentes')
+}
+++x
+--y
+$myvar = 42
+"""
+lexer.input(codigo_v)
+
+tabela = []
+
+# Função para calcular coluna
+def find_column(input_text, token):
+    last_cr = input_text.rfind('\n', 0, token.lexpos)
+    if last_cr < 0:
+        last_cr = -1
+    return token.lexpos - last_cr
+
 for tok in lexer:
-  print('{:10s}{:10s}{:10s}{:10s}'.format(tok.type, tok.value, str(tok.lineno), str(tok.lexpos)))
+    coluna = find_column(codigo_v, tok)
+    tabela.append([tok.type, tok.value, tok.lineno, tok.lexpos])
+
+cabecalho = ["Token", "Lexema", "Linha", "Posição"]
+
+print(tabulate(tabela, headers=cabecalho, tablefmt="grid"))
