@@ -154,12 +154,12 @@ def t_NUMBER(t):
 
 def t_XOMENTARIOSIMPLES(t):
     r'//.*'
-    return None
+    pass
 
 def t_BLOCODECOMENTARIO(t):
     r'/\*(.|\n)*?\*/'
     t.lexer.lineno += t.value.count('\n')
-    return None
+    pass
 
 def t_newline(t):
     r'\n+'

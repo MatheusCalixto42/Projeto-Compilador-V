@@ -1,4 +1,7 @@
+
 fn main() {
-	println("OOOOOOOOOOOOOOOOOOOOOOOOO")
-	r := 'paulo'
+    //teste := 'pão'
+    println("OOOOOOOOOOOOOOOOOOOOOOOOO")
+    r := 'paulo'
+    println(teste)
 }
