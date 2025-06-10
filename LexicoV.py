@@ -52,7 +52,7 @@ reservadas = {
 tokens = ['PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'MOD', 'ASSIGN', 'PLUS_ASSIGN', 'MINUS_ASSIGN',
   'TIMES_ASSIGN', 'DIVIDE_ASSIGN', 'MOD_ASSIGN', 'BIT_AND_ASSIGN', 'BIT_OR_ASSIGN',
   'BIT_XOR_ASSIGN', 'BIT_LSHIFT_ASSIGN', 'BIT_RSHIFT_ASSIGN', 'EQ', 'NEQ', 'LT',
-  'LE', 'GT', 'GE', 'AND', 'OR', 'NOT', 'BIT_AND', 'BIT_OR', 'BIT_XOR', 'LSHIFT', 'RSHIFT',
+  'LE', 'GT', 'GE', 'AND','NOT', 'BIT_AND', 'BIT_OR', 'BIT_XOR', 'LSHIFT', 'RSHIFT',
   'BIT_NOT', 'INCREMENT', 'DECREMENT', 'DOTDOT', 'DECLARE_ASSIGN', 'QUESTION',
   'EXCLAMATION', 'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE', 'LBRACKET', 'RBRACKET',
   'DOT', 'COMMA', 'SEMICOLON', 'COLON','DOLLAR','ID','NUMBER','BINARY','OCTAL'
@@ -152,12 +152,21 @@ def t_NUMBER(t):
     t.value = int(t.value)
     return t
 
+def t_XOMENTARIOSIMPLES(t):
+    r'//.*'
+    return None
+
+def t_BLOCODECOMENTARIO(t):
+    r'/\*(.|\n)*?\*/'
+    t.lexer.lineno += t.value.count('\n')
+    return None
+
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
 def t_error(t):
-   print("Illegal character '%s'" % t.value[0])
+   print("Caractere inválido '%s'" % t.value[0])
    t.lexer.skip(1)
 
 
@@ -179,6 +188,13 @@ if x == y {
 ++x
 --y
 $myvar = 42
+palavra || palarv12
+//comentario
+/*teste
+comentario
+*/
+pao123
+//comentario5938450
 """
 lexer.input(codigo_v)
 
