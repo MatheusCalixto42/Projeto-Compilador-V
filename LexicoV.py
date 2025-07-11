@@ -1,11 +1,9 @@
 import ply.lex as lex
 from tabulate import tabulate
 
-reservadas = {
+reservadas = { # Analisar defer, as, suporte a global
     'as': 'AS',
-    'asm': 'ASM',
     'assert': 'ASSERT',
-    'atomic': 'ATOMIC',
     'break': 'BREAK',
     'const': 'CONST',
     'continue': 'CONTINUE',
@@ -15,38 +13,23 @@ reservadas = {
     'false': 'FALSE',
     'fn': 'FN',
     'for': 'FOR',
-    'go': 'GO',
-    'goto': 'GOTO',
     'if': 'IF',
-    'implements': 'IMPLEMENTS',
     'import': 'IMPORT',
     'in': 'IN',
-    'interface': 'INTERFACE',
     'is': 'IS',
     'isreftype': 'ISREFTYPE',
-    'lock': 'LOCK',
     'match': 'MATCH',
-    'module': 'MODULE',
     'mut': 'MUT',
     'none': 'NONE',
     'or': 'OR',
-    'pub': 'PUB',
     'return': 'RETURN',
-    'rlock': 'RLOCK',
-    'select': 'SELECT',
-    'shared': 'SHARED',
     'sizeof': 'SIZEOF',
-    'spawn': 'SPAWN',
-    'static': 'STATIC',
-    'struct': 'STRUCT',
     'true': 'TRUE',
     'type': 'TYPE',
     'typeof': 'TYPEOF',
     'union': 'UNION',
     'unsafe': 'UNSAFE',
-    'volatile': 'VOLATILE',
     '__global': 'GLOBAL',
-    '__offsetof': 'OFFSETOF'
 }
 
 tokens = ['PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'MOD', 'ASSIGN', 'PLUS_ASSIGN', 'MINUS_ASSIGN',
