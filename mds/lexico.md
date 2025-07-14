@@ -26,32 +26,20 @@ V apresenta apenas as seguintes palavras reservas ou palavras-chave:
 * `continue`: Pula para a próxima iteração de um loop.
 * `return`: Retorna um valor de uma função.
 * `or`: Utilizado para tratamento de erros, especificando um bloco a ser executado em caso de erro.
-* `goto`: Permite saltar para um rótulo específico no código (uso desencorajado).
-* `select`: Utilizado para operações concorrentes, semelhante ao `select` em Go.
 
 ### **1.3. Definição e Organização**
 
 * `fn`: Declara uma função.
-* `module`: Define o módulo atual do arquivo.
 * `import`: Importa módulos externos.
 * `const`: Declara constantes.
 * `type`: Define um novo tipo.
-* `struct`: Define uma estrutura de dados.
 * `enum`: Declara um conjunto enumerado de constantes.
 * `union`: Define uma união de tipos.
-* `interface`: Declara uma interface, especificando métodos que um tipo deve implementar.
-* `implements`: Indica que um tipo implementa uma interface.
 
 ### **1.4. Modificadores**
 
-* `pub`: Torna funções, métodos ou variáveis públicas, acessíveis fora do módulo.
 * `mut`: Indica que uma variável ou argumento é mutável.
-* `shared`: Declara uma variável compartilhada entre threads.
-* `rlock`: Adquire um bloqueio de leitura em uma variável compartilhada.
-* `lock`: Adquire um bloqueio de escrita em uma variável compartilhada.
-* `atomic`: Indica que uma operação é atômica, utilizada em contextos concorrentes.
 * `unsafe`: Marca um bloco de código como inseguro, permitindo operações de baixo nível.
-* `volatile`: Indica que uma variável pode ser modificada fora do controle do programa, como por hardware.
 
 ### **1.5. Outros**
 
@@ -61,69 +49,70 @@ V apresenta apenas as seguintes palavras reservas ou palavras-chave:
 * `isreftype`: Verifica se um tipo é uma referência.
 * `sizeof`: Retorna o tamanho em bytes de um tipo ou variável.
 * `typeof`: Retorna o tipo de uma variável.
-* `__offsetof`: Retorna o deslocamento de um campo dentro de uma estrutura.
 * `__global`: Declara uma variável global; requer a flag `-enable-globals` para uso.
-* `spawn`: Inicia uma nova goroutine (thread leve) para execução concorrente.
-* `go`: Similar ao `spawn`; inicia uma nova goroutine.
-* `defer`: Adia a execução de uma função até o final do escopo atual.
-* `static`: Indica que uma variável ou função tem duração estática.
 * `assert`: Verifica se uma condição é verdadeira; caso contrário, interrompe a execução.
-* `asm`: Permite a inserção de código assembly inline.
+
 
 ---
 
 ## **2. Operadores**
 
 ### **2.1 Operadores Aritméticos**
-| Operador | Descrição |
-| :---: | --- |
-| `+` | Adição |
-| `-` | Subtração |
-| `*` | Multiplicação |
-| `/` | Divisão |
-| `%` | Módulo (resto da divisão) |
+| Operador | Descrição | Precedência | Associatividade |
+| :---: | --- | --- | --- |
+| `+` | Adição | --- | --- |
+| `-` | Subtração | --- | --- |
+| `*` | Multiplicação | --- | --- |
+| `/` | Divisão | --- | --- |
+| `%` | Módulo (resto da divisão) | --- | --- |
 
 ### **2.2. Operadores de Atribuição**
-| Operador | Descrição |
-| :---: | --- |
-| `=` | Atribuição simples |
-| `:=` | Declaração de variáveis com inferência de tipo e atribuição |  
-| `+=` | Adição e atribuição |
-| `-=` | Subtração e atribuição |
-| `*=` | Multiplicação e atribuição |
-| `/=` | Divisão e atribuição |
-| `%=` | Módulo e atribuição |
-| `&=` | E bit a bit e atribuição |
-| `\|=` | OU bit a bit e atribuição |
-| `^=` | XOR bit a bit e atribuição |
-| `<<=` | Deslocamento à esquerda e atribuição |
-| `>>=` | Deslocamento à direita e atribuição |
+| Operador | Descrição | Precedência | Associatividade |
+| :---: | --- | --- | --- |
+| `=` | Atribuição simples | --- | --- |
+| `:=` | Declaração de variáveis com inferência de tipo e atribuição | --- | --- | 
+| `+=` | Adição e atribuição | --- | --- |
+| `-=` | Subtração e atribuição | --- | --- |
+| `*=` | Multiplicação e atribuição | --- | --- |
+| `/=` | Divisão e atribuição | --- | --- |
+| `%=` | Módulo e atribuição | --- | --- |
+| `&=` | E bit a bit e atribuição | --- | --- |
+| `\|=` | OU bit a bit e atribuição | --- | --- |
+| `^=` | XOR bit a bit e atribuição | --- | --- |
+| `<<=` | Deslocamento à esquerda e atribuição | --- | --- |
+| `>>=` | Deslocamento à direita e atribuição | --- | --- |
 
 ### **2.3. Operadores de Comparação**
-| Operador | Descrição |
-| :---: | --- |
-| `==` | Igual a |
-| `!=` | Diferente de |
-| `<` | Menor que |
-| `<=` | Menor ou igual a |
-| `>` | Maior que |
-| `>=` | Maior ou igual a |
+| Operador | Descrição | Precedência | Associatividade |
+| :---: | --- | --- | --- |
+| `==` | Igual a | --- | --- |
+| `!=` | Diferente de | --- | --- |
+| `<` | Menor que | --- | --- |
+| `<=` | Menor ou igual a | --- | --- |
+| `>` | Maior que | --- | --- |
+| `>=` | Maior ou igual a | --- | --- |
 
 ### **2.4. Operadores Lógicos**
-| Operador | Descrição |
-| :---: | --- |
-| `&&` | E lógico |
-| `\|\|` | OU lógico |
-| `!` | NÃO lógico |
+| Operador | Descrição | Precedência | Associatividade |
+| :---: | --- | --- | --- |
+| `&&` | E lógico | --- | --- |
+| `\|\|` | OU lógico | --- | --- |
+| `!` | NÃO lógico | --- | --- |
 
 ### **2.5. Operadores Bit a Bit (Bitwise)**
-| Operador | Descrição |
-| :---: | --- |
-| `&` | E (AND) |
-| `\|` | OU (OR) |
-| `^` | OU Exclusivo (XOR) |
-| `<<` | Deslocamento à esquerda |
-| `>>` | Deslocamento à direita |
+| Operador | Descrição | Precedência | Associatividade |
+| :---: | --- | --- | --- |
+| `&` | E (AND) | --- | --- |
+| `\|` | OU (OR) | --- | --- |
+| `^` | OU Exclusivo (XOR) | --- | --- |
+| `<<` | Deslocamento à esquerda | --- | --- |
+| `>>` | Deslocamento à direita | --- | --- |
+
+### **2.6. Operadores Unários de Atualização**
+| Operador | Descrição | Precedência | Associatividade |
+| :---: | --- | --- | --- |
+| `++` | Soma 1 ao valor da variável | --- | --- |
+| `--` | Subtrai 1 ao valor da variável | --- | --- |
 
 ---
 
@@ -133,7 +122,6 @@ A linguagem Vlang não possui delimitador para linhas, isto é, não é como em 
 - **Parênteses `()`**: Usados em chamadas de função, agrupamento de expressões e definições de tipo de função.
 - **Chaves `{}`**: Usadas para delimitar blocos de código (corpo de funções, laços, condicionais) e para a inicialização de literais de struct, array e mapa.
 - **Colchetes `[]`**: Usados para acessar elementos de arrays e mapas, e para definir tipos de array.
-- **Ponto `.`**: Usado para acessar membros de structs e módulos.
 - **Vírgula `,`**: Usada para separar elementos em listas (argumentos de função, elementos de array, etc.).
 - **Ponto e vírgula `;`**: Geralmente opcional em V, pois o compilador insere-os automaticamente no final das linhas. Seu uso explícito é raro.
 - **Dois pontos `:`**: Usado em conjunto com `=` na declaração curta de variáveis (`:=`).
@@ -199,10 +187,13 @@ Representam um único caractere Unicode e são delimitados por crase (`` ` ``).
 ## **7. String**
 Representam sequências de caracteres.
 
-- **Strings Comuns**: Delimitadas por aspas simples (`''`). Sequências de escape (como `\n`, `\t`, `\"`) são interpretadas.
+- **Strings Comuns**: Delimitadas por aspas simples (`''`) e por aspas duplas(`""`). Sequências de escape (como `\n`, `\t`, `\"`) são interpretadas.
 
   ```
   minha_string := 'Olá, mundo!\nIsto está em uma nova linha.'
+  ```
+  ```
+  minha_string := "Olá, mundo!\nIsto está em uma nova linha."
   ```
   
 ---
