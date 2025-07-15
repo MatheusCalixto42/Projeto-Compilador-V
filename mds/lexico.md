@@ -60,59 +60,59 @@ V apresenta apenas as seguintes palavras reservas ou palavras-chave:
 ### **2.1 Operadores Aritméticos**
 | Operador | Descrição | Precedência | Associatividade |
 | :---: | --- | --- | --- |
-| `+` | Adição | --- | --- |
-| `-` | Subtração | --- | --- |
-| `*` | Multiplicação | --- | --- |
-| `/` | Divisão | --- | --- |
-| `%` | Módulo (resto da divisão) | --- | --- |
+| `+` | Adição | 4 | ➡️ |
+| `-` | Subtração | 4 | ➡️ |
+| `*` | Multiplicação | 5 | ➡️ |
+| `/` | Divisão | 5 | ➡️ |
+| `%` | Módulo (resto da divisão) | 5 | ➡️ |
 
 ### **2.2. Operadores de Atribuição**
 | Operador | Descrição | Precedência | Associatividade |
 | :---: | --- | --- | --- |
-| `=` | Atribuição simples | --- | --- |
-| `:=` | Declaração de variáveis com inferência de tipo e atribuição | --- | --- | 
-| `+=` | Adição e atribuição | --- | --- |
-| `-=` | Subtração e atribuição | --- | --- |
-| `*=` | Multiplicação e atribuição | --- | --- |
-| `/=` | Divisão e atribuição | --- | --- |
-| `%=` | Módulo e atribuição | --- | --- |
-| `&=` | E bit a bit e atribuição | --- | --- |
-| `\|=` | OU bit a bit e atribuição | --- | --- |
-| `^=` | XOR bit a bit e atribuição | --- | --- |
-| `<<=` | Deslocamento à esquerda e atribuição | --- | --- |
-| `>>=` | Deslocamento à direita e atribuição | --- | --- |
+| `=` | Atribuição simples | - | - |
+| `:=` | Declaração de variáveis com inferência de tipo e atribuição | - | - | 
+| `+=` | Adição e atribuição | - | - |
+| `-=` | Subtração e atribuição | - | - |
+| `*=` | Multiplicação e atribuição | - | - |
+| `/=` | Divisão e atribuição | - | - |
+| `%=` | Módulo e atribuição | - | - |
+| `&=` | E bit a bit e atribuição | - | - |
+| `\|=` | OU bit a bit e atribuição | - | - |
+| `^=` | XOR bit a bit e atribuição | - | - |
+| `<<=` | Deslocamento à esquerda e atribuição | - | - |
+| `>>=` | Deslocamento à direita e atribuição | - | - |
 
 ### **2.3. Operadores de Comparação**
 | Operador | Descrição | Precedência | Associatividade |
 | :---: | --- | --- | --- |
-| `==` | Igual a | --- | --- |
-| `!=` | Diferente de | --- | --- |
-| `<` | Menor que | --- | --- |
-| `<=` | Menor ou igual a | --- | --- |
-| `>` | Maior que | --- | --- |
-| `>=` | Maior ou igual a | --- | --- |
+| `==` | Igual a | 3 | ➡️ | 
+| `!=` | Diferente de | 3 | ➡️ |
+| `<` | Menor que | 3 | ➡️ |
+| `<=` | Menor ou igual a | 3 | ➡️ |
+| `>` | Maior que | 3 | ➡️ |
+| `>=` | Maior ou igual a | 3 | ➡️ |
 
 ### **2.4. Operadores Lógicos**
 | Operador | Descrição | Precedência | Associatividade |
 | :---: | --- | --- | --- |
-| `&&` | E lógico | --- | --- |
-| `\|\|` | OU lógico | --- | --- |
-| `!` | NÃO lógico | --- | --- |
+| `&&` | E lógico | 2 | ➡️ |
+| `\|\|` | OU lógico | 1 | ➡️ |
+| `!` | NÃO lógico | 5 | ⬅️ |
 
 ### **2.5. Operadores Bit a Bit (Bitwise)**
 | Operador | Descrição | Precedência | Associatividade |
 | :---: | --- | --- | --- |
-| `&` | E (AND) | --- | --- |
-| `\|` | OU (OR) | --- | --- |
-| `^` | OU Exclusivo (XOR) | --- | --- |
-| `<<` | Deslocamento à esquerda | --- | --- |
-| `>>` | Deslocamento à direita | --- | --- |
+| `&` | E (AND) | 5 | ➡️ |
+| `\|` | OU (OR) | 4 | ➡️ |
+| `^` | OU Exclusivo (XOR) | 4 | ➡️ |
+| `<<` | Deslocamento à esquerda | 5 | ➡️ |
+| `>>` | Deslocamento à direita | 5 | ➡️ |
 
 ### **2.6. Operadores Unários de Atualização**
 | Operador | Descrição | Precedência | Associatividade |
 | :---: | --- | --- | --- |
-| `++` | Soma 1 ao valor da variável | --- | --- |
-| `--` | Subtrai 1 ao valor da variável | --- | --- |
+| `++` | Soma 1 ao valor da variável | - | - |
+| `--` | Subtrai 1 ao valor da variável | - | - |
 
 ---
 
@@ -140,7 +140,7 @@ Identificadores são os nomes dados a entidades como variáveis, constantes, fun
   - V é **case-sensitive**, o que significa que `minhaVariavel` e `minhavariavel` são identificadores distintos.
 
 - **Convenções**:
-  - **`camelCase`**: Usado para variáveis e funções (`nomeUsuario`, `calcularTotal`).
+  - **`snake_case`**: Usado para variáveis e funções (`nome_usuario`, `calculartotal`).
   - **`PascalCase`** (ou **`CapitalCase`**): Usado para tipos, como structs, enums e interfaces (`Usuario`, `OpcoesDePagamento`).
 
 - **Exemplos de Identificadores Válidos**:
