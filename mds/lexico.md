@@ -132,7 +132,7 @@ A linguagem Vlang não possui delimitador para linhas, isto é, não é como em 
 Identificadores são os nomes dados a entidades como variáveis, constantes, funções, tipos e módulos.
 
 - **Regras de Nomenclatura**:
-  - Devem começar com uma letra (`a-z`) ou um sublinhado (`_`).
+  - Devem começar com uma letra (`a-z`).
   - Identificadores que começam com letra maiúscula são usados para tipos exportados (como Pessoa, Usuario, etc.).
   - Após o primeiro caractere, podem conter letras, números (`0-9`) e sublinhados.
   - Não podem conter espaços nem símbolos como `@`, `#`, `%`, `-`, etc.
@@ -145,7 +145,6 @@ Identificadores são os nomes dados a entidades como variáveis, constantes, fun
 
 - **Exemplos de Identificadores Válidos**:
   - `idade`
-  - `_temp`
   - `soma1`
   - `nomeDeUsuario`
   - `Ponto`
