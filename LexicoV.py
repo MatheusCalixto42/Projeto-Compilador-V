@@ -1,11 +1,9 @@
 import ply.lex as lex
 from tabulate import tabulate
 
-reservadas = {
+reservadas = { # Analisar defer, as, suporte a global
     'as': 'AS',
-    'asm': 'ASM',
     'assert': 'ASSERT',
-    'atomic': 'ATOMIC',
     'break': 'BREAK',
     'const': 'CONST',
     'continue': 'CONTINUE',
@@ -15,38 +13,23 @@ reservadas = {
     'false': 'FALSE',
     'fn': 'FN',
     'for': 'FOR',
-    'go': 'GO',
-    'goto': 'GOTO',
     'if': 'IF',
-    'implements': 'IMPLEMENTS',
     'import': 'IMPORT',
     'in': 'IN',
-    'interface': 'INTERFACE',
     'is': 'IS',
     'isreftype': 'ISREFTYPE',
-    'lock': 'LOCK',
     'match': 'MATCH',
-    'module': 'MODULE',
     'mut': 'MUT',
     'none': 'NONE',
     'or': 'OR',
-    'pub': 'PUB',
     'return': 'RETURN',
-    'rlock': 'RLOCK',
-    'select': 'SELECT',
-    'shared': 'SHARED',
     'sizeof': 'SIZEOF',
-    'spawn': 'SPAWN',
-    'static': 'STATIC',
-    'struct': 'STRUCT',
     'true': 'TRUE',
     'type': 'TYPE',
     'typeof': 'TYPEOF',
     'union': 'UNION',
     'unsafe': 'UNSAFE',
-    'volatile': 'VOLATILE',
     '__global': 'GLOBAL',
-    '__offsetof': 'OFFSETOF'
 }
 
 tokens = ['PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'MOD', 'ASSIGN', 'PLUS_ASSIGN', 'MINUS_ASSIGN',
@@ -56,7 +39,7 @@ tokens = ['PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'MOD', 'ASSIGN', 'PLUS_ASSIGN', 'M
   'BIT_NOT', 'INCREMENT', 'DECREMENT', 'DOTDOT', 'DECLARE_ASSIGN', 'QUESTION',
   'EXCLAMATION', 'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE', 'LBRACKET', 'RBRACKET',
   'DOT', 'COMMA', 'SEMICOLON', 'COLON','DOLLAR','ID','NUMBER','BINARY','OCTAL'
-  'HEX','NOTACAOCIENTIFICA','NUMBERFLOAT','ASPASSIMPLES','ASPASDUPLAS'] + list(reservadas.values())
+  'HEX','NOTACAOCIENTIFICA','NUMBERFLOAT','ASPASSIMPLES','ASPASDUPLAS', 'STRING'] + list(reservadas.values())
 
 t_PLUS         = r'\+'
 t_MINUS        = r'-'
@@ -116,9 +99,12 @@ t_DOLLAR    = r'\$'
 t_ASPASSIMPLES = r'\''
 t_ASPASDUPLAS = r'\"'
 
+def t_STRING(t):
+    r'\'[^\']*\'|\"[^\"]*\"'
+    return t
 
 def t_ID(t):
-    r'[a-zA-Z_][a-zA-Z0-9_]*'
+    r'[a-z][a-z0-9_]*'
     t.type = reservadas.get(t.value,'ID') #busca nas reservadas se tem alguma igual, se tiver retorna com o nome que esta la, por exemplo "IF", se n tiver retorna com 'ID'
     return t
 
@@ -177,24 +163,60 @@ lexer = lex.lex()
 
 #codigo  de exemplo em V para testar
 codigo_v = """
-x := 10
-y := 20
-z := x + y * 2
-if x == y {
-    println('iguais')
-} else {
-    println('diferentes')
+fn soma(a int, b int) int {
+	return a + b
 }
-++x
---y
-$myvar = 42
-palavra || palarv12
-//comentario
-/*teste
-comentario
-*/
-pao123
-//comentario5938450
+
+fn main(){
+	println('Hello World!')
+
+	nome := 'Matheus'	// Variável imutável (seria o const do C)
+	mut idade := 30		// Variável mutável (igual a uma variável comum no C)
+
+	println('Nome: ${nome}')
+	println('Idade: ${idade}')
+
+	idade = 25
+
+	print('Idade atualizada: ${idade}\n')
+
+	println('\n---------------------------------------\n')
+
+	saldo := 100.50	// Padrão f64
+	esta_ativo := true	// booleano
+	letras := ['a', 'b', 'c']	// []rune (array de caracteres)
+
+	println('Saldo: ${saldo}')
+	println('Ativo: ${esta_ativo}')
+	println('Primeira letra: ${letras[0]}')
+
+	println('\n---------------------------------------\n')
+
+	if idade < 25 {
+		println('Idade menor que 25 anos')
+	} else if idade == 25 {
+		println('Idade igual a 25 anos')
+	} else {
+		println('Idade maior que 25 anos')
+	}
+
+	println('\n---------------------------------------\n')
+
+	for i := 0; i < 5; i++ {
+		println('Contador: ${i}')
+	}
+	
+	numeros := [1,2,3,4,5]
+	for i in numeros {
+		println('Número: ${i}')
+	}
+
+	println('\n---------------------------------------\n')
+
+	println('Função soma: ${soma(numeros[0],numeros[1])}')
+
+
+}
 """
 lexer.input(codigo_v)
 
