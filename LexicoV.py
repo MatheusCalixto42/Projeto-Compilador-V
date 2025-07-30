@@ -18,6 +18,7 @@ reservadas = { # Analisar defer, as, suporte a global
     'in': 'IN',
     'is': 'IS',
     'isreftype': 'ISREFTYPE',
+    'main' : 'MAIN',
     'match': 'MATCH',
     'mut': 'MUT',
     'none': 'NONE',
