@@ -22,11 +22,11 @@ More_Params -> "," ID Type More_Params
 Type -> INT | F32 | F64 | RUNE | STRING | BOOL 
 	  
 	  
-Block_statement -> Var_statement | Var_assignment | 
-				   Func_call | 
+Block_statement -> Var_statement | Var_assignment |
+				   Func_call |
 				   If_statement |
 				   For_statement |
-				   Return_statement 
+				   Return_statement
 
 Var_statement -> 
 	DeclarationImutable |
@@ -39,20 +39,21 @@ Var_assignment ->
 Func_call -> ID "(" id_list ")" |
 	     ID "(" ")"
 
-id_list -> Expression ("," Expression)*
+id_list -> Expression more_Expression
+
+more_Expression -> "," Expression more_Expression
+                  | ε
 
 If_statement ->
-	"if" ExpressionRelacional "{" Block_statement "}" Else? 
+	"if" ExpressionRelacional "{" Block_statement "}" | "if" ExpressionRelacional "{" Block_statement "}" Else?
 
 Else? ->
-	"else" (If_statement | "{" Block_statement "}" ) 
-	
+	"else" If_statement | "else" "{" Block_statement "}"
 
 For_statement -> 
 	"for" ID "in" Expression "{" Block_statement "}" | **For each precisa ser uma lista desse jeito ta tratando?
 	"for" DeclarationImutable ";" ExpressionRelacional ";" Increment"{" Block_statement "}" | **Logica do increment ta certa?
 	"for" ExpressionRelacional "{" Block_statemente "}"
-
 
 DeclarationImutable ->
 	ID ":=" Expression
@@ -60,9 +61,7 @@ DeclarationImutable ->
 Return_statement ->
 	"return" Expression
 
-Expression -> Term (("+" | "-") Term)* |
-	      Term
-	      
+Expression -> Expression "+" Term | Expression "-" Term | Term	      
 
 ExpressionRelacional ->	Expression "==" Expression |
 	     		Expression "!=" Expression |
@@ -74,13 +73,11 @@ ExpressionRelacional ->	Expression "==" Expression |
 	      		Expression "||" Expression |
 	      		"!" Expression 
 
-Term -> Factor (("*" | "/" | "%") Factor)* |
-        Factor
-
+Term -> Term "*" Factor | Term "/" Factor | Term "%" Factor | Factor
 
 #elementos mais basico -- RUne entra?
 Factor -> NUMBER |
-	  NumberOperation |    
+	  NumberOperation |
 	  STRING |
 	  ID     |
 	  "(" Expression ")" |
@@ -88,5 +85,5 @@ Factor -> NUMBER |
 	  TRUE |
 	  FALSE	
 
-Increment-> 
-	ID"++" | ID"--"         
+Increment -> 
+	ID"++" | ID"--"

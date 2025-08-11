@@ -6,6 +6,8 @@ __pycache__/
 # C extensions
 *.so
 
+*.exe
+
 # Distribution / packaging
 .Python
 build/
@@ -36,7 +38,7 @@ MANIFEST
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Unit test / coverage reports
+# Unit test / coselect': 'SELECT',verage reports
 htmlcov/
 .tox/
 .nox/
