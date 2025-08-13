@@ -69,18 +69,18 @@ V apresenta apenas as seguintes palavras reservas ou palavras-chave:
 ### **2.2. Operadores de Atribuição**
 | Operador | Descrição | Precedência | Associatividade |
 | :---: | --- | --- | --- |
-| `=` | Atribuição simples | - | - |
-| `:=` | Declaração de variáveis com inferência de tipo e atribuição | - | - | 
-| `+=` | Adição e atribuição | - | - |
-| `-=` | Subtração e atribuição | - | - |
-| `*=` | Multiplicação e atribuição | - | - |
-| `/=` | Divisão e atribuição | - | - |
-| `%=` | Módulo e atribuição | - | - |
-| `&=` | E bit a bit e atribuição | - | - |
-| `\|=` | OU bit a bit e atribuição | - | - |
-| `^=` | XOR bit a bit e atribuição | - | - |
-| `<<=` | Deslocamento à esquerda e atribuição | - | - |
-| `>>=` | Deslocamento à direita e atribuição | - | - |
+| `=` | Atribuição simples | 1 | ➡️ |
+| `:=` | Declaração de variáveis com inferência de tipo e atribuição | 1 | ➡️ | 
+| `+=` | Adição e atribuição | 1 | ➡️ |
+| `-=` | Subtração e atribuição | 1 | ➡️ |
+| `*=` | Multiplicação e atribuição | 1 | ➡️ |
+| `/=` | Divisão e atribuição | 1 | ➡️ |
+| `%=` | Módulo e atribuição | 1 | ➡️ |
+| `&=` | E bit a bit e atribuição | 1 | ➡️ |
+| `\|=` | OU bit a bit e atribuição | 1 | ➡️ |
+| `^=` | XOR bit a bit e atribuição | 1 | ➡️ |
+| `<<=` | Deslocamento à esquerda e atribuição | 1 | ➡️ |
+| `>>=` | Deslocamento à direita e atribuição | 1 | ➡️ |
 
 ### **2.3. Operadores de Comparação**
 | Operador | Descrição | Precedência | Associatividade |
@@ -109,10 +109,10 @@ V apresenta apenas as seguintes palavras reservas ou palavras-chave:
 | `>>` | Deslocamento à direita | 5 | ➡️ |
 
 ### **2.6. Operadores Unários de Atualização**
-| Operador | Descrição | Precedência | Associatividade |
-| :---: | --- | --- | --- |
-| `++` | Soma 1 ao valor da variável | - | - |
-| `--` | Subtrai 1 ao valor da variável | - | - |
+| Operador | Descrição | 
+| :---: | --- |
+| `++` | Soma 1 ao valor da variável |
+| `--` | Subtrai 1 ao valor da variável | 
 
 ---
 
