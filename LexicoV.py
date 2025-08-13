@@ -152,14 +152,15 @@ def t_newline(t):
     t.lexer.lineno += len(t.value)
 
 def t_error(t):
-   print("Caractere inválido '%s'" % t.value[0])
-   t.lexer.skip(1)
+    print("Caractere inválido '%s'" % t.value[0])
+    t.lexer.skip(1)
 
 
 t_ignore  = ' \t' 
 
 
 lexer = lex.lex()
+
 
 #codigo  de exemplo em V para testar
 codigo_v = """
@@ -170,6 +171,8 @@ fn soma(a int, b int) int {
 fn main(){
 	println('Hello World!')
 
+    n_O_me := 20
+    
 	nome := 'Matheus'	// Variável imutável (seria o const do C)
 	mut idade := 30		// Variável mutável (igual a uma variável comum no C)
 
@@ -177,6 +180,8 @@ fn main(){
 	println('Idade: ${idade}')
 
 	idade = 25
+ 
+    idade = 'matheus'
 
 	print('Idade atualizada: ${idade}\n')
 
