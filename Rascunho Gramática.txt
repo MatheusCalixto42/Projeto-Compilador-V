@@ -53,7 +53,7 @@ Else? ->
 For_statement -> 
 	"for" ID "in" Expression "{" Block_statement "}" | **For each precisa ser uma lista desse jeito ta tratando?
 	"for" DeclarationImutable ";" ExpressionRelacional ";" Increment"{" Block_statement "}" | **Logica do increment ta certa?
-	"for" ExpressionRelacional "{" Block_statemente "}"
+	"for" ExpressionRelacional "{" Block_statement "}"
 
 DeclarationImutable ->
 	ID ":=" Expression
@@ -76,14 +76,13 @@ ExpressionRelacional ->	Expression "==" Expression |
 Term -> Term "*" Factor | Term "/" Factor | Term "%" Factor | Factor
 
 #elementos mais basico -- RUne entra?
-Factor -> NUMBER |
-	  NumberOperation |
+Factor -> NUMBER | 
 	  STRING |
 	  ID     |
 	  "(" Expression ")" |
-          #BOOL colocar?# |
 	  TRUE |
-	  FALSE	
+	  FALSE	|
+	  RUNE
 
 Increment -> 
 	ID"++" | ID"--"
