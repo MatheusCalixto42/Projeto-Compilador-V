@@ -10,7 +10,7 @@ class Visitor(AbstractVisitor):
         importAndFuncDefinition.program_import.accept(self)
         importAndFuncDefinition.function_definition.accept(self)
 
-     def visitSingleFuncDefinition(self,singleFuncDefinition):
+    def visitSingleFuncDefinition(self,singleFuncDefinition):
         singleFuncDefinition.function_definition.accept(self)
 
 ###################################################################
@@ -91,7 +91,7 @@ class Visitor(AbstractVisitor):
 ##################################################################
 
     def visitIntV(self,intV):
-        intV.intv.accept(self)
+        intV.int.accept(self)
 
     def visitF32(self,f32):
         f32.f32.accept(self)
@@ -106,7 +106,7 @@ class Visitor(AbstractVisitor):
         string.string.accept(self)
     
     def visitBoolV(self,boolV):
-        boolV.boolv.accept(self)
+        boolV.bool.accept(self)
 
 ###################################################################
 # Classes to visit the Abstract Syntax of Block Statement
