@@ -5,19 +5,21 @@ Program ->  Program_import Function_definition
 Program_import -> IMPORT ID Program_import
                 | IMPORT ID 
 
-Function_definition* -> "fn" ID "(" Param ")" "{" Block_statement "}" Function_definition | 
-            "fn" ID "(" Param ")" Type "{" Block_statement "}" Function_definition |
+Function_definition* -> "fn" ID "(" Params ")" "{" Block_statement "}" Function_definition | 
+            "fn" ID "(" Params ")" Type "{" Block_statement "}" Function_definition |
             "fn" MAIN "(" ")" "{" Block_statement "}" Function_definition_without_main |
            
-Function_definition_without_main -> "fn" ID "(" Param ")" "{" Block_statement "}" Function_definition_without_main | 
-                         "fn" ID "(" Param ")" Type "{" Block_statement "}" Function_definition_without_main |   
+Function_definition_without_main -> "fn" ID "(" Params ")" "{" Block_statement "}" Function_definition_without_main | 
+                         "fn" ID "(" Params ")" Type "{" Block_statement "}" Function_definition_without_main |   
 		   
 
+Params -> Param More_Params
 
-More_Params -> Param More_Params
-          | Param
+More_Params -> "," Param More_Params
+             | ε
 
-Param -> ID Type | ε
+Param -> ID Type
+
 
 Type -> INT | F32 | F64 | RUNE | STRING | BOOL 
 	  
