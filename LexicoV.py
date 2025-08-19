@@ -246,4 +246,4 @@ for tok in lexer:
 
 cabecalho = ["Token", "Lexema", "Linha", "Posição"]
 
-print(tabulate(tabela, headers=cabecalho, tablefmt="grid"))
+#print(tabulate(tabela, headers=cabecalho, tablefmt="grid"))

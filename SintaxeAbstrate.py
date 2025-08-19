@@ -110,6 +110,12 @@ class FunctionReturnTypeWithoutMain(function_definition_without_main): #funçõe
     def accept(self, visitor):
         return visitor.visitFunctionReturnTypeWithoutMain(self)
 
+class NoneFunction(function_definition_without_main):
+    def __init__(self):
+        pass
+    def accept(self, visitor):
+        return visitor.visitNoneFunction(self)
+
 #######################################################
 # Classes da Sintaxe Abstrata para Param
 ######################################################
@@ -232,6 +238,12 @@ class VarAssignment(BlockStatement):
     def accept(self, visitor):
         return visitor.visitVarAssignment(self)
 
+class FuncCallS(BlockStatement):
+    def __init__(self, func_call):
+        self.func_call = func_call
+    def accept(self, visitor):
+        return visitor.visitFuncCallS(self)
+
 class IfStatement(BlockStatement):
     def __init__(self, if_statement):
         self.if_statement = if_statement
@@ -349,7 +361,7 @@ class PlusExpres(MoreExpression):
         self.expression = expression
         self.more_expression = more_expression
     def accept(self, visitor):
-        return visitor.visitPlusExpression(self)
+        return visitor.visitPlusExpres(self)
 
 class NoneExpression(MoreExpression):
     def __init__(self):
@@ -406,7 +418,7 @@ class OnlyElse(Else):
 # Classes da Sintaxe Abstrata para For
 ###########################################################
 
-class For(metaClass=ABCMeta):
+class For(metaclass=ABCMeta):
     @abstractmethod
     def accept(self,visitor):
         pass
