@@ -8,7 +8,7 @@ fn main(){
 }
 
 //const teste1 := 10
-/*fn main(){
+fn main(){
 	println('Hello World!')
 
 	nome := 'Matheus'	// Variável imutável (seria o const do C)
