@@ -1,9 +1,6 @@
 fn soma(a int, b int) int {
 	return a + b
 }
-
-
-const teste1 := 10
 fn main(){
 	println('Hello World!')
 
@@ -20,9 +17,9 @@ fn main(){
 
 	println('\n---------------------------------------\n')
 
-	saldo := 100.50	// Padrão f64
+	//saldo := 100.50	// Padrão f64
 	esta_ativo := true	// booleano
-	letras := ['a', 'b', 'c']	// []rune (array de caracteres)
+	//letras := ['a', 'b', 'c']	// []rune (array de caracteres)
 
 	println('Saldo: ${saldo}')
 	println('Ativo: ${esta_ativo}')
@@ -44,25 +41,23 @@ fn main(){
 		println('Contador: ${i}')
 	}
 	
-	numeros := [1,2,3,4,5]
+	//numeros := [1,2,3,4,5]
 	for i in numeros {
 		println('Número: ${i}')
 	}
     mut x := 0
     for x < 5{
         println('Contador: ${x}')
-        x++
+        //x++
     }
 
 	println('\n---------------------------------------\n')
-    somar += soma((2+3), numeros[1]) + 3
+    //somar += soma((2+3), numeros[1]) + 3
 	println('Função soma: ${somar}')
     mut soma2 := 5
-    mut soma1 := 5 + 4 * (soma2++)
+    //mut soma1 := 5 + 4 * (soma2++)
     //soma1 = (soma2++) + 2
     println(soma1)
 	println(teste1)
 
 }
-
-const t2 := 0 

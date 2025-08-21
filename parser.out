@@ -1,0 +1,3222 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    AS
+    ASPASDUPLAS
+    ASPASSIMPLES
+    ASSERT
+    BINARY
+    BIT_AND
+    BIT_AND_ASSIGN
+    BIT_LSHIFT_ASSIGN
+    BIT_NOT
+    BIT_OR
+    BIT_OR_ASSIGN
+    BIT_RSHIFT_ASSIGN
+    BIT_XOR
+    BIT_XOR_ASSIGN
+    BREAK
+    COLON
+    CONTINUE
+    DEFER
+    DIVIDE_ASSIGN
+    DOLLAR
+    DOT
+    DOTDOT
+    ENUM
+    EXCLAMATION
+    GLOBAL
+    IS
+    ISREFTYPE
+    LBRACKET
+    LSHIFT
+    MATCH
+    MINUS_ASSIGN
+    MOD_ASSIGN
+    NONE
+    NOTACAOCIENTIFICA
+    NUMBERFLOAT
+    OCTALHEX
+    PLUS_ASSIGN
+    QUESTION
+    RBRACKET
+    RSHIFT
+    SIZEOF
+    TIMES_ASSIGN
+    TYPE
+    TYPEOF
+    UNION
+    UNSAFE
+
+Grammar
+
+Rule 0     S' -> program
+Rule 1     program -> program_Import function_definition
+Rule 2     program -> function_definition
+Rule 3     program_Import -> IMPORT ID program_Import
+Rule 4     program_Import -> IMPORT ID
+Rule 5     function_definition -> FN ID LPAREN params RPAREN LBRACE block_statement RBRACE function_definition
+Rule 6     function_definition -> FN ID LPAREN params RPAREN type LBRACE block_statement RBRACE function_definition
+Rule 7     function_definition -> FN MAIN LPAREN RPAREN LBRACE block_statement RBRACE function_definition_without_main
+Rule 8     function_definition_without_main -> FN ID LPAREN params RPAREN LBRACE block_statement RBRACE function_definition_without_main
+Rule 9     function_definition_without_main -> FN ID LPAREN params RPAREN type LBRACE block_statement RBRACE function_definition_without_main
+Rule 10    function_definition_without_main -> <empty>
+Rule 11    params -> param more_params
+Rule 12    more_params -> COMMA param more_params
+Rule 13    more_params -> <empty>
+Rule 14    param -> ID type
+Rule 15    type -> INT
+Rule 16    type -> F32
+Rule 17    type -> F64
+Rule 18    type -> STRING
+Rule 19    type -> BOOL
+Rule 20    type -> RUNE
+Rule 21    block_statement -> statement
+Rule 22    statement -> var_statement statement
+Rule 23    statement -> var_assignment statement
+Rule 24    statement -> func_call statement
+Rule 25    statement -> if_statement statement
+Rule 26    statement -> for_statement statement
+Rule 27    statement -> return_statement
+Rule 28    statement -> <empty>
+Rule 29    var_statement -> declaration_imutable
+Rule 30    var_statement -> MUT ID DECLARE_ASSIGN expression
+Rule 31    var_statement -> CONST ID DECLARE_ASSIGN expression
+Rule 32    var_assignment -> ID ASSIGN expression
+Rule 33    func_call -> ID LPAREN id_list RPAREN
+Rule 34    func_call -> ID LPAREN RPAREN
+Rule 35    id_list -> expression more_expressions
+Rule 36    more_expressions -> COMMA expression more_expressions
+Rule 37    more_expressions -> <empty>
+Rule 38    if_statement -> IF expression_relacional LBRACE statement RBRACE
+Rule 39    if_statement -> IF expression_relacional LBRACE statement RBRACE elseop
+Rule 40    elseop -> ELSE if_statement
+Rule 41    elseop -> ELSE LBRACE statement RBRACE
+Rule 42    for_statement -> FOR ID IN expression LBRACE statement RBRACE
+Rule 43    for_statement -> FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE
+Rule 44    for_statement -> FOR expression_relacional LBRACE statement RBRACE
+Rule 45    declaration_imutable -> ID DECLARE_ASSIGN expression
+Rule 46    return_statement -> RETURN expression
+Rule 47    expression -> expression PLUS term
+Rule 48    expression -> expression MINUS term
+Rule 49    expression -> term
+Rule 50    term -> term TIMES factor
+Rule 51    term -> term DIVIDE factor
+Rule 52    term -> term MOD factor
+Rule 53    term -> factor
+Rule 54    factor -> ID
+Rule 55    factor -> NUMBER
+Rule 56    factor -> STRING
+Rule 57    factor -> TRUE
+Rule 58    factor -> FALSE
+Rule 59    factor -> RUNE
+Rule 60    factor -> LPAREN expression RPAREN
+Rule 61    increment_rule -> ID INCREMENT
+Rule 62    increment_rule -> ID DECREMENT
+Rule 63    expression_relacional -> expression EQ expression
+Rule 64    expression_relacional -> expression NEQ expression
+Rule 65    expression_relacional -> expression LT expression
+Rule 66    expression_relacional -> expression LE expression
+Rule 67    expression_relacional -> expression GT expression
+Rule 68    expression_relacional -> expression GE expression
+Rule 69    expression_relacional -> expression AND expression
+Rule 70    expression_relacional -> expression OR expression
+Rule 71    expression_relacional -> NOT expression
+
+Terminals, with rules where they appear
+
+AND                  : 69
+AS                   : 
+ASPASDUPLAS          : 
+ASPASSIMPLES         : 
+ASSERT               : 
+ASSIGN               : 32
+BINARY               : 
+BIT_AND              : 
+BIT_AND_ASSIGN       : 
+BIT_LSHIFT_ASSIGN    : 
+BIT_NOT              : 
+BIT_OR               : 
+BIT_OR_ASSIGN        : 
+BIT_RSHIFT_ASSIGN    : 
+BIT_XOR              : 
+BIT_XOR_ASSIGN       : 
+BOOL                 : 19
+BREAK                : 
+COLON                : 
+COMMA                : 12 36
+CONST                : 31
+CONTINUE             : 
+DECLARE_ASSIGN       : 30 31 45
+DECREMENT            : 62
+DEFER                : 
+DIVIDE               : 51
+DIVIDE_ASSIGN        : 
+DOLLAR               : 
+DOT                  : 
+DOTDOT               : 
+ELSE                 : 40 41
+ENUM                 : 
+EQ                   : 63
+EXCLAMATION          : 
+F32                  : 16
+F64                  : 17
+FALSE                : 58
+FN                   : 5 6 7 8 9
+FOR                  : 42 43 44
+GE                   : 68
+GLOBAL               : 
+GT                   : 67
+ID                   : 3 4 5 6 8 9 14 30 31 32 33 34 42 45 54 61 62
+IF                   : 38 39
+IMPORT               : 3 4
+IN                   : 42
+INCREMENT            : 61
+INT                  : 15
+IS                   : 
+ISREFTYPE            : 
+LBRACE               : 5 6 7 8 9 38 39 41 42 43 44
+LBRACKET             : 
+LE                   : 66
+LPAREN               : 5 6 7 8 9 33 34 60
+LSHIFT               : 
+LT                   : 65
+MAIN                 : 7
+MATCH                : 
+MINUS                : 48
+MINUS_ASSIGN         : 
+MOD                  : 52
+MOD_ASSIGN           : 
+MUT                  : 30
+NEQ                  : 64
+NONE                 : 
+NOT                  : 71
+NOTACAOCIENTIFICA    : 
+NUMBER               : 55
+NUMBERFLOAT          : 
+OCTALHEX             : 
+OR                   : 70
+PLUS                 : 47
+PLUS_ASSIGN          : 
+QUESTION             : 
+RBRACE               : 5 6 7 8 9 38 39 41 42 43 44
+RBRACKET             : 
+RETURN               : 46
+RPAREN               : 5 6 7 8 9 33 34 60
+RSHIFT               : 
+RUNE                 : 20 59
+SEMICOLON            : 43 43
+SIZEOF               : 
+STRING               : 18 56
+TIMES                : 50
+TIMES_ASSIGN         : 
+TRUE                 : 57
+TYPE                 : 
+TYPEOF               : 
+UNION                : 
+UNSAFE               : 
+error                : 
+
+Nonterminals, with rules where they appear
+
+block_statement      : 5 6 7 8 9
+declaration_imutable : 29 43
+elseop               : 39
+expression           : 30 31 32 35 36 42 45 46 47 48 60 63 63 64 64 65 65 66 66 67 67 68 68 69 69 70 70 71
+expression_relacional : 38 39 43 44
+factor               : 50 51 52 53
+for_statement        : 26
+func_call            : 24
+function_definition  : 1 2 5 6
+function_definition_without_main : 7 8 9
+id_list              : 33
+if_statement         : 25 40
+increment_rule       : 43
+more_expressions     : 35 36
+more_params          : 11 12
+param                : 11 12
+params               : 5 6 8 9
+program              : 0
+program_Import       : 1 3
+return_statement     : 27
+statement            : 21 22 23 24 25 26 38 39 41 42 43 44
+term                 : 47 48 49 50 51 52
+type                 : 6 9 14
+var_assignment       : 23
+var_statement        : 22
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . program
+    (1) program -> . program_Import function_definition
+    (2) program -> . function_definition
+    (3) program_Import -> . IMPORT ID program_Import
+    (4) program_Import -> . IMPORT ID
+    (5) function_definition -> . FN ID LPAREN params RPAREN LBRACE block_statement RBRACE function_definition
+    (6) function_definition -> . FN ID LPAREN params RPAREN type LBRACE block_statement RBRACE function_definition
+    (7) function_definition -> . FN MAIN LPAREN RPAREN LBRACE block_statement RBRACE function_definition_without_main
+
+    IMPORT          shift and go to state 4
+    FN              shift and go to state 5
+
+    program                        shift and go to state 1
+    program_Import                 shift and go to state 2
+    function_definition            shift and go to state 3
+
+state 1
+
+    (0) S' -> program .
+
+
+
+state 2
+
+    (1) program -> program_Import . function_definition
+    (5) function_definition -> . FN ID LPAREN params RPAREN LBRACE block_statement RBRACE function_definition
+    (6) function_definition -> . FN ID LPAREN params RPAREN type LBRACE block_statement RBRACE function_definition
+    (7) function_definition -> . FN MAIN LPAREN RPAREN LBRACE block_statement RBRACE function_definition_without_main
+
+    FN              shift and go to state 5
+
+    function_definition            shift and go to state 6
+
+state 3
+
+    (2) program -> function_definition .
+
+    $end            reduce using rule 2 (program -> function_definition .)
+
+
+state 4
+
+    (3) program_Import -> IMPORT . ID program_Import
+    (4) program_Import -> IMPORT . ID
+
+    ID              shift and go to state 7
+
+
+state 5
+
+    (5) function_definition -> FN . ID LPAREN params RPAREN LBRACE block_statement RBRACE function_definition
+    (6) function_definition -> FN . ID LPAREN params RPAREN type LBRACE block_statement RBRACE function_definition
+    (7) function_definition -> FN . MAIN LPAREN RPAREN LBRACE block_statement RBRACE function_definition_without_main
+
+    ID              shift and go to state 8
+    MAIN            shift and go to state 9
+
+
+state 6
+
+    (1) program -> program_Import function_definition .
+
+    $end            reduce using rule 1 (program -> program_Import function_definition .)
+
+
+state 7
+
+    (3) program_Import -> IMPORT ID . program_Import
+    (4) program_Import -> IMPORT ID .
+    (3) program_Import -> . IMPORT ID program_Import
+    (4) program_Import -> . IMPORT ID
+
+    FN              reduce using rule 4 (program_Import -> IMPORT ID .)
+    IMPORT          shift and go to state 4
+
+    program_Import                 shift and go to state 10
+
+state 8
+
+    (5) function_definition -> FN ID . LPAREN params RPAREN LBRACE block_statement RBRACE function_definition
+    (6) function_definition -> FN ID . LPAREN params RPAREN type LBRACE block_statement RBRACE function_definition
+
+    LPAREN          shift and go to state 11
+
+
+state 9
+
+    (7) function_definition -> FN MAIN . LPAREN RPAREN LBRACE block_statement RBRACE function_definition_without_main
+
+    LPAREN          shift and go to state 12
+
+
+state 10
+
+    (3) program_Import -> IMPORT ID program_Import .
+
+    FN              reduce using rule 3 (program_Import -> IMPORT ID program_Import .)
+
+
+state 11
+
+    (5) function_definition -> FN ID LPAREN . params RPAREN LBRACE block_statement RBRACE function_definition
+    (6) function_definition -> FN ID LPAREN . params RPAREN type LBRACE block_statement RBRACE function_definition
+    (11) params -> . param more_params
+    (14) param -> . ID type
+
+    ID              shift and go to state 13
+
+    params                         shift and go to state 14
+    param                          shift and go to state 15
+
+state 12
+
+    (7) function_definition -> FN MAIN LPAREN . RPAREN LBRACE block_statement RBRACE function_definition_without_main
+
+    RPAREN          shift and go to state 16
+
+
+state 13
+
+    (14) param -> ID . type
+    (15) type -> . INT
+    (16) type -> . F32
+    (17) type -> . F64
+    (18) type -> . STRING
+    (19) type -> . BOOL
+    (20) type -> . RUNE
+
+    INT             shift and go to state 18
+    F32             shift and go to state 19
+    F64             shift and go to state 20
+    STRING          shift and go to state 21
+    BOOL            shift and go to state 22
+    RUNE            shift and go to state 23
+
+    type                           shift and go to state 17
+
+state 14
+
+    (5) function_definition -> FN ID LPAREN params . RPAREN LBRACE block_statement RBRACE function_definition
+    (6) function_definition -> FN ID LPAREN params . RPAREN type LBRACE block_statement RBRACE function_definition
+
+    RPAREN          shift and go to state 24
+
+
+state 15
+
+    (11) params -> param . more_params
+    (12) more_params -> . COMMA param more_params
+    (13) more_params -> .
+
+    COMMA           shift and go to state 26
+    RPAREN          reduce using rule 13 (more_params -> .)
+
+    more_params                    shift and go to state 25
+
+state 16
+
+    (7) function_definition -> FN MAIN LPAREN RPAREN . LBRACE block_statement RBRACE function_definition_without_main
+
+    LBRACE          shift and go to state 27
+
+
+state 17
+
+    (14) param -> ID type .
+
+    COMMA           reduce using rule 14 (param -> ID type .)
+    RPAREN          reduce using rule 14 (param -> ID type .)
+
+
+state 18
+
+    (15) type -> INT .
+
+    COMMA           reduce using rule 15 (type -> INT .)
+    RPAREN          reduce using rule 15 (type -> INT .)
+    LBRACE          reduce using rule 15 (type -> INT .)
+
+
+state 19
+
+    (16) type -> F32 .
+
+    COMMA           reduce using rule 16 (type -> F32 .)
+    RPAREN          reduce using rule 16 (type -> F32 .)
+    LBRACE          reduce using rule 16 (type -> F32 .)
+
+
+state 20
+
+    (17) type -> F64 .
+
+    COMMA           reduce using rule 17 (type -> F64 .)
+    RPAREN          reduce using rule 17 (type -> F64 .)
+    LBRACE          reduce using rule 17 (type -> F64 .)
+
+
+state 21
+
+    (18) type -> STRING .
+
+    COMMA           reduce using rule 18 (type -> STRING .)
+    RPAREN          reduce using rule 18 (type -> STRING .)
+    LBRACE          reduce using rule 18 (type -> STRING .)
+
+
+state 22
+
+    (19) type -> BOOL .
+
+    COMMA           reduce using rule 19 (type -> BOOL .)
+    RPAREN          reduce using rule 19 (type -> BOOL .)
+    LBRACE          reduce using rule 19 (type -> BOOL .)
+
+
+state 23
+
+    (20) type -> RUNE .
+
+    COMMA           reduce using rule 20 (type -> RUNE .)
+    RPAREN          reduce using rule 20 (type -> RUNE .)
+    LBRACE          reduce using rule 20 (type -> RUNE .)
+
+
+state 24
+
+    (5) function_definition -> FN ID LPAREN params RPAREN . LBRACE block_statement RBRACE function_definition
+    (6) function_definition -> FN ID LPAREN params RPAREN . type LBRACE block_statement RBRACE function_definition
+    (15) type -> . INT
+    (16) type -> . F32
+    (17) type -> . F64
+    (18) type -> . STRING
+    (19) type -> . BOOL
+    (20) type -> . RUNE
+
+    LBRACE          shift and go to state 28
+    INT             shift and go to state 18
+    F32             shift and go to state 19
+    F64             shift and go to state 20
+    STRING          shift and go to state 21
+    BOOL            shift and go to state 22
+    RUNE            shift and go to state 23
+
+    type                           shift and go to state 29
+
+state 25
+
+    (11) params -> param more_params .
+
+    RPAREN          reduce using rule 11 (params -> param more_params .)
+
+
+state 26
+
+    (12) more_params -> COMMA . param more_params
+    (14) param -> . ID type
+
+    ID              shift and go to state 13
+
+    param                          shift and go to state 30
+
+state 27
+
+    (7) function_definition -> FN MAIN LPAREN RPAREN LBRACE . block_statement RBRACE function_definition_without_main
+    (21) block_statement -> . statement
+    (22) statement -> . var_statement statement
+    (23) statement -> . var_assignment statement
+    (24) statement -> . func_call statement
+    (25) statement -> . if_statement statement
+    (26) statement -> . for_statement statement
+    (27) statement -> . return_statement
+    (28) statement -> .
+    (29) var_statement -> . declaration_imutable
+    (30) var_statement -> . MUT ID DECLARE_ASSIGN expression
+    (31) var_statement -> . CONST ID DECLARE_ASSIGN expression
+    (32) var_assignment -> . ID ASSIGN expression
+    (33) func_call -> . ID LPAREN id_list RPAREN
+    (34) func_call -> . ID LPAREN RPAREN
+    (38) if_statement -> . IF expression_relacional LBRACE statement RBRACE
+    (39) if_statement -> . IF expression_relacional LBRACE statement RBRACE elseop
+    (42) for_statement -> . FOR ID IN expression LBRACE statement RBRACE
+    (43) for_statement -> . FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE
+    (44) for_statement -> . FOR expression_relacional LBRACE statement RBRACE
+    (46) return_statement -> . RETURN expression
+    (45) declaration_imutable -> . ID DECLARE_ASSIGN expression
+
+    RBRACE          reduce using rule 28 (statement -> .)
+    MUT             shift and go to state 40
+    CONST           shift and go to state 42
+    ID              shift and go to state 41
+    IF              shift and go to state 43
+    FOR             shift and go to state 44
+    RETURN          shift and go to state 45
+
+    block_statement                shift and go to state 31
+    statement                      shift and go to state 32
+    var_statement                  shift and go to state 33
+    var_assignment                 shift and go to state 34
+    func_call                      shift and go to state 35
+    if_statement                   shift and go to state 36
+    for_statement                  shift and go to state 37
+    return_statement               shift and go to state 38
+    declaration_imutable           shift and go to state 39
+
+state 28
+
+    (5) function_definition -> FN ID LPAREN params RPAREN LBRACE . block_statement RBRACE function_definition
+    (21) block_statement -> . statement
+    (22) statement -> . var_statement statement
+    (23) statement -> . var_assignment statement
+    (24) statement -> . func_call statement
+    (25) statement -> . if_statement statement
+    (26) statement -> . for_statement statement
+    (27) statement -> . return_statement
+    (28) statement -> .
+    (29) var_statement -> . declaration_imutable
+    (30) var_statement -> . MUT ID DECLARE_ASSIGN expression
+    (31) var_statement -> . CONST ID DECLARE_ASSIGN expression
+    (32) var_assignment -> . ID ASSIGN expression
+    (33) func_call -> . ID LPAREN id_list RPAREN
+    (34) func_call -> . ID LPAREN RPAREN
+    (38) if_statement -> . IF expression_relacional LBRACE statement RBRACE
+    (39) if_statement -> . IF expression_relacional LBRACE statement RBRACE elseop
+    (42) for_statement -> . FOR ID IN expression LBRACE statement RBRACE
+    (43) for_statement -> . FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE
+    (44) for_statement -> . FOR expression_relacional LBRACE statement RBRACE
+    (46) return_statement -> . RETURN expression
+    (45) declaration_imutable -> . ID DECLARE_ASSIGN expression
+
+    RBRACE          reduce using rule 28 (statement -> .)
+    MUT             shift and go to state 40
+    CONST           shift and go to state 42
+    ID              shift and go to state 41
+    IF              shift and go to state 43
+    FOR             shift and go to state 44
+    RETURN          shift and go to state 45
+
+    block_statement                shift and go to state 46
+    statement                      shift and go to state 32
+    var_statement                  shift and go to state 33
+    var_assignment                 shift and go to state 34
+    func_call                      shift and go to state 35
+    if_statement                   shift and go to state 36
+    for_statement                  shift and go to state 37
+    return_statement               shift and go to state 38
+    declaration_imutable           shift and go to state 39
+
+state 29
+
+    (6) function_definition -> FN ID LPAREN params RPAREN type . LBRACE block_statement RBRACE function_definition
+
+    LBRACE          shift and go to state 47
+
+
+state 30
+
+    (12) more_params -> COMMA param . more_params
+    (12) more_params -> . COMMA param more_params
+    (13) more_params -> .
+
+    COMMA           shift and go to state 26
+    RPAREN          reduce using rule 13 (more_params -> .)
+
+    more_params                    shift and go to state 48
+
+state 31
+
+    (7) function_definition -> FN MAIN LPAREN RPAREN LBRACE block_statement . RBRACE function_definition_without_main
+
+    RBRACE          shift and go to state 49
+
+
+state 32
+
+    (21) block_statement -> statement .
+
+    RBRACE          reduce using rule 21 (block_statement -> statement .)
+
+
+state 33
+
+    (22) statement -> var_statement . statement
+    (22) statement -> . var_statement statement
+    (23) statement -> . var_assignment statement
+    (24) statement -> . func_call statement
+    (25) statement -> . if_statement statement
+    (26) statement -> . for_statement statement
+    (27) statement -> . return_statement
+    (28) statement -> .
+    (29) var_statement -> . declaration_imutable
+    (30) var_statement -> . MUT ID DECLARE_ASSIGN expression
+    (31) var_statement -> . CONST ID DECLARE_ASSIGN expression
+    (32) var_assignment -> . ID ASSIGN expression
+    (33) func_call -> . ID LPAREN id_list RPAREN
+    (34) func_call -> . ID LPAREN RPAREN
+    (38) if_statement -> . IF expression_relacional LBRACE statement RBRACE
+    (39) if_statement -> . IF expression_relacional LBRACE statement RBRACE elseop
+    (42) for_statement -> . FOR ID IN expression LBRACE statement RBRACE
+    (43) for_statement -> . FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE
+    (44) for_statement -> . FOR expression_relacional LBRACE statement RBRACE
+    (46) return_statement -> . RETURN expression
+    (45) declaration_imutable -> . ID DECLARE_ASSIGN expression
+
+    RBRACE          reduce using rule 28 (statement -> .)
+    MUT             shift and go to state 40
+    CONST           shift and go to state 42
+    ID              shift and go to state 41
+    IF              shift and go to state 43
+    FOR             shift and go to state 44
+    RETURN          shift and go to state 45
+
+    var_statement                  shift and go to state 33
+    statement                      shift and go to state 50
+    var_assignment                 shift and go to state 34
+    func_call                      shift and go to state 35
+    if_statement                   shift and go to state 36
+    for_statement                  shift and go to state 37
+    return_statement               shift and go to state 38
+    declaration_imutable           shift and go to state 39
+
+state 34
+
+    (23) statement -> var_assignment . statement
+    (22) statement -> . var_statement statement
+    (23) statement -> . var_assignment statement
+    (24) statement -> . func_call statement
+    (25) statement -> . if_statement statement
+    (26) statement -> . for_statement statement
+    (27) statement -> . return_statement
+    (28) statement -> .
+    (29) var_statement -> . declaration_imutable
+    (30) var_statement -> . MUT ID DECLARE_ASSIGN expression
+    (31) var_statement -> . CONST ID DECLARE_ASSIGN expression
+    (32) var_assignment -> . ID ASSIGN expression
+    (33) func_call -> . ID LPAREN id_list RPAREN
+    (34) func_call -> . ID LPAREN RPAREN
+    (38) if_statement -> . IF expression_relacional LBRACE statement RBRACE
+    (39) if_statement -> . IF expression_relacional LBRACE statement RBRACE elseop
+    (42) for_statement -> . FOR ID IN expression LBRACE statement RBRACE
+    (43) for_statement -> . FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE
+    (44) for_statement -> . FOR expression_relacional LBRACE statement RBRACE
+    (46) return_statement -> . RETURN expression
+    (45) declaration_imutable -> . ID DECLARE_ASSIGN expression
+
+    RBRACE          reduce using rule 28 (statement -> .)
+    MUT             shift and go to state 40
+    CONST           shift and go to state 42
+    ID              shift and go to state 41
+    IF              shift and go to state 43
+    FOR             shift and go to state 44
+    RETURN          shift and go to state 45
+
+    var_assignment                 shift and go to state 34
+    statement                      shift and go to state 51
+    var_statement                  shift and go to state 33
+    func_call                      shift and go to state 35
+    if_statement                   shift and go to state 36
+    for_statement                  shift and go to state 37
+    return_statement               shift and go to state 38
+    declaration_imutable           shift and go to state 39
+
+state 35
+
+    (24) statement -> func_call . statement
+    (22) statement -> . var_statement statement
+    (23) statement -> . var_assignment statement
+    (24) statement -> . func_call statement
+    (25) statement -> . if_statement statement
+    (26) statement -> . for_statement statement
+    (27) statement -> . return_statement
+    (28) statement -> .
+    (29) var_statement -> . declaration_imutable
+    (30) var_statement -> . MUT ID DECLARE_ASSIGN expression
+    (31) var_statement -> . CONST ID DECLARE_ASSIGN expression
+    (32) var_assignment -> . ID ASSIGN expression
+    (33) func_call -> . ID LPAREN id_list RPAREN
+    (34) func_call -> . ID LPAREN RPAREN
+    (38) if_statement -> . IF expression_relacional LBRACE statement RBRACE
+    (39) if_statement -> . IF expression_relacional LBRACE statement RBRACE elseop
+    (42) for_statement -> . FOR ID IN expression LBRACE statement RBRACE
+    (43) for_statement -> . FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE
+    (44) for_statement -> . FOR expression_relacional LBRACE statement RBRACE
+    (46) return_statement -> . RETURN expression
+    (45) declaration_imutable -> . ID DECLARE_ASSIGN expression
+
+    RBRACE          reduce using rule 28 (statement -> .)
+    MUT             shift and go to state 40
+    CONST           shift and go to state 42
+    ID              shift and go to state 41
+    IF              shift and go to state 43
+    FOR             shift and go to state 44
+    RETURN          shift and go to state 45
+
+    func_call                      shift and go to state 35
+    statement                      shift and go to state 52
+    var_statement                  shift and go to state 33
+    var_assignment                 shift and go to state 34
+    if_statement                   shift and go to state 36
+    for_statement                  shift and go to state 37
+    return_statement               shift and go to state 38
+    declaration_imutable           shift and go to state 39
+
+state 36
+
+    (25) statement -> if_statement . statement
+    (22) statement -> . var_statement statement
+    (23) statement -> . var_assignment statement
+    (24) statement -> . func_call statement
+    (25) statement -> . if_statement statement
+    (26) statement -> . for_statement statement
+    (27) statement -> . return_statement
+    (28) statement -> .
+    (29) var_statement -> . declaration_imutable
+    (30) var_statement -> . MUT ID DECLARE_ASSIGN expression
+    (31) var_statement -> . CONST ID DECLARE_ASSIGN expression
+    (32) var_assignment -> . ID ASSIGN expression
+    (33) func_call -> . ID LPAREN id_list RPAREN
+    (34) func_call -> . ID LPAREN RPAREN
+    (38) if_statement -> . IF expression_relacional LBRACE statement RBRACE
+    (39) if_statement -> . IF expression_relacional LBRACE statement RBRACE elseop
+    (42) for_statement -> . FOR ID IN expression LBRACE statement RBRACE
+    (43) for_statement -> . FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE
+    (44) for_statement -> . FOR expression_relacional LBRACE statement RBRACE
+    (46) return_statement -> . RETURN expression
+    (45) declaration_imutable -> . ID DECLARE_ASSIGN expression
+
+    RBRACE          reduce using rule 28 (statement -> .)
+    MUT             shift and go to state 40
+    CONST           shift and go to state 42
+    ID              shift and go to state 41
+    IF              shift and go to state 43
+    FOR             shift and go to state 44
+    RETURN          shift and go to state 45
+
+    if_statement                   shift and go to state 36
+    statement                      shift and go to state 53
+    var_statement                  shift and go to state 33
+    var_assignment                 shift and go to state 34
+    func_call                      shift and go to state 35
+    for_statement                  shift and go to state 37
+    return_statement               shift and go to state 38
+    declaration_imutable           shift and go to state 39
+
+state 37
+
+    (26) statement -> for_statement . statement
+    (22) statement -> . var_statement statement
+    (23) statement -> . var_assignment statement
+    (24) statement -> . func_call statement
+    (25) statement -> . if_statement statement
+    (26) statement -> . for_statement statement
+    (27) statement -> . return_statement
+    (28) statement -> .
+    (29) var_statement -> . declaration_imutable
+    (30) var_statement -> . MUT ID DECLARE_ASSIGN expression
+    (31) var_statement -> . CONST ID DECLARE_ASSIGN expression
+    (32) var_assignment -> . ID ASSIGN expression
+    (33) func_call -> . ID LPAREN id_list RPAREN
+    (34) func_call -> . ID LPAREN RPAREN
+    (38) if_statement -> . IF expression_relacional LBRACE statement RBRACE
+    (39) if_statement -> . IF expression_relacional LBRACE statement RBRACE elseop
+    (42) for_statement -> . FOR ID IN expression LBRACE statement RBRACE
+    (43) for_statement -> . FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE
+    (44) for_statement -> . FOR expression_relacional LBRACE statement RBRACE
+    (46) return_statement -> . RETURN expression
+    (45) declaration_imutable -> . ID DECLARE_ASSIGN expression
+
+    RBRACE          reduce using rule 28 (statement -> .)
+    MUT             shift and go to state 40
+    CONST           shift and go to state 42
+    ID              shift and go to state 41
+    IF              shift and go to state 43
+    FOR             shift and go to state 44
+    RETURN          shift and go to state 45
+
+    for_statement                  shift and go to state 37
+    statement                      shift and go to state 54
+    var_statement                  shift and go to state 33
+    var_assignment                 shift and go to state 34
+    func_call                      shift and go to state 35
+    if_statement                   shift and go to state 36
+    return_statement               shift and go to state 38
+    declaration_imutable           shift and go to state 39
+
+state 38
+
+    (27) statement -> return_statement .
+
+    RBRACE          reduce using rule 27 (statement -> return_statement .)
+
+
+state 39
+
+    (29) var_statement -> declaration_imutable .
+
+    MUT             reduce using rule 29 (var_statement -> declaration_imutable .)
+    CONST           reduce using rule 29 (var_statement -> declaration_imutable .)
+    ID              reduce using rule 29 (var_statement -> declaration_imutable .)
+    IF              reduce using rule 29 (var_statement -> declaration_imutable .)
+    FOR             reduce using rule 29 (var_statement -> declaration_imutable .)
+    RETURN          reduce using rule 29 (var_statement -> declaration_imutable .)
+    RBRACE          reduce using rule 29 (var_statement -> declaration_imutable .)
+
+
+state 40
+
+    (30) var_statement -> MUT . ID DECLARE_ASSIGN expression
+
+    ID              shift and go to state 55
+
+
+state 41
+
+    (32) var_assignment -> ID . ASSIGN expression
+    (33) func_call -> ID . LPAREN id_list RPAREN
+    (34) func_call -> ID . LPAREN RPAREN
+    (45) declaration_imutable -> ID . DECLARE_ASSIGN expression
+
+    ASSIGN          shift and go to state 56
+    LPAREN          shift and go to state 57
+    DECLARE_ASSIGN  shift and go to state 58
+
+
+state 42
+
+    (31) var_statement -> CONST . ID DECLARE_ASSIGN expression
+
+    ID              shift and go to state 59
+
+
+state 43
+
+    (38) if_statement -> IF . expression_relacional LBRACE statement RBRACE
+    (39) if_statement -> IF . expression_relacional LBRACE statement RBRACE elseop
+    (63) expression_relacional -> . expression EQ expression
+    (64) expression_relacional -> . expression NEQ expression
+    (65) expression_relacional -> . expression LT expression
+    (66) expression_relacional -> . expression LE expression
+    (67) expression_relacional -> . expression GT expression
+    (68) expression_relacional -> . expression GE expression
+    (69) expression_relacional -> . expression AND expression
+    (70) expression_relacional -> . expression OR expression
+    (71) expression_relacional -> . NOT expression
+    (47) expression -> . expression PLUS term
+    (48) expression -> . expression MINUS term
+    (49) expression -> . term
+    (50) term -> . term TIMES factor
+    (51) term -> . term DIVIDE factor
+    (52) term -> . term MOD factor
+    (53) term -> . factor
+    (54) factor -> . ID
+    (55) factor -> . NUMBER
+    (56) factor -> . STRING
+    (57) factor -> . TRUE
+    (58) factor -> . FALSE
+    (59) factor -> . RUNE
+    (60) factor -> . LPAREN expression RPAREN
+
+    NOT             shift and go to state 62
+    ID              shift and go to state 65
+    NUMBER          shift and go to state 66
+    STRING          shift and go to state 67
+    TRUE            shift and go to state 68
+    FALSE           shift and go to state 69
+    RUNE            shift and go to state 70
+    LPAREN          shift and go to state 71
+
+    expression_relacional          shift and go to state 60
+    expression                     shift and go to state 61
+    term                           shift and go to state 63
+    factor                         shift and go to state 64
+
+state 44
+
+    (42) for_statement -> FOR . ID IN expression LBRACE statement RBRACE
+    (43) for_statement -> FOR . declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE
+    (44) for_statement -> FOR . expression_relacional LBRACE statement RBRACE
+    (45) declaration_imutable -> . ID DECLARE_ASSIGN expression
+    (63) expression_relacional -> . expression EQ expression
+    (64) expression_relacional -> . expression NEQ expression
+    (65) expression_relacional -> . expression LT expression
+    (66) expression_relacional -> . expression LE expression
+    (67) expression_relacional -> . expression GT expression
+    (68) expression_relacional -> . expression GE expression
+    (69) expression_relacional -> . expression AND expression
+    (70) expression_relacional -> . expression OR expression
+    (71) expression_relacional -> . NOT expression
+    (47) expression -> . expression PLUS term
+    (48) expression -> . expression MINUS term
+    (49) expression -> . term
+    (50) term -> . term TIMES factor
+    (51) term -> . term DIVIDE factor
+    (52) term -> . term MOD factor
+    (53) term -> . factor
+    (54) factor -> . ID
+    (55) factor -> . NUMBER
+    (56) factor -> . STRING
+    (57) factor -> . TRUE
+    (58) factor -> . FALSE
+    (59) factor -> . RUNE
+    (60) factor -> . LPAREN expression RPAREN
+
+    ID              shift and go to state 72
+    NOT             shift and go to state 62
+    NUMBER          shift and go to state 66
+    STRING          shift and go to state 67
+    TRUE            shift and go to state 68
+    FALSE           shift and go to state 69
+    RUNE            shift and go to state 70
+    LPAREN          shift and go to state 71
+
+    expression                     shift and go to state 61
+    declaration_imutable           shift and go to state 73
+    expression_relacional          shift and go to state 74
+    term                           shift and go to state 63
+    factor                         shift and go to state 64
+
+state 45
+
+    (46) return_statement -> RETURN . expression
+    (47) expression -> . expression PLUS term
+    (48) expression -> . expression MINUS term
+    (49) expression -> . term
+    (50) term -> . term TIMES factor
+    (51) term -> . term DIVIDE factor
+    (52) term -> . term MOD factor
+    (53) term -> . factor
+    (54) factor -> . ID
+    (55) factor -> . NUMBER
+    (56) factor -> . STRING
+    (57) factor -> . TRUE
+    (58) factor -> . FALSE
+    (59) factor -> . RUNE
+    (60) factor -> . LPAREN expression RPAREN
+
+    ID              shift and go to state 65
+    NUMBER          shift and go to state 66
+    STRING          shift and go to state 67
+    TRUE            shift and go to state 68
+    FALSE           shift and go to state 69
+    RUNE            shift and go to state 70
+    LPAREN          shift and go to state 71
+
+    expression                     shift and go to state 75
+    term                           shift and go to state 63
+    factor                         shift and go to state 64
+
+state 46
+
+    (5) function_definition -> FN ID LPAREN params RPAREN LBRACE block_statement . RBRACE function_definition
+
+    RBRACE          shift and go to state 76
+
+
+state 47
+
+    (6) function_definition -> FN ID LPAREN params RPAREN type LBRACE . block_statement RBRACE function_definition
+    (21) block_statement -> . statement
+    (22) statement -> . var_statement statement
+    (23) statement -> . var_assignment statement
+    (24) statement -> . func_call statement
+    (25) statement -> . if_statement statement
+    (26) statement -> . for_statement statement
+    (27) statement -> . return_statement
+    (28) statement -> .
+    (29) var_statement -> . declaration_imutable
+    (30) var_statement -> . MUT ID DECLARE_ASSIGN expression
+    (31) var_statement -> . CONST ID DECLARE_ASSIGN expression
+    (32) var_assignment -> . ID ASSIGN expression
+    (33) func_call -> . ID LPAREN id_list RPAREN
+    (34) func_call -> . ID LPAREN RPAREN
+    (38) if_statement -> . IF expression_relacional LBRACE statement RBRACE
+    (39) if_statement -> . IF expression_relacional LBRACE statement RBRACE elseop
+    (42) for_statement -> . FOR ID IN expression LBRACE statement RBRACE
+    (43) for_statement -> . FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE
+    (44) for_statement -> . FOR expression_relacional LBRACE statement RBRACE
+    (46) return_statement -> . RETURN expression
+    (45) declaration_imutable -> . ID DECLARE_ASSIGN expression
+
+    RBRACE          reduce using rule 28 (statement -> .)
+    MUT             shift and go to state 40
+    CONST           shift and go to state 42
+    ID              shift and go to state 41
+    IF              shift and go to state 43
+    FOR             shift and go to state 44
+    RETURN          shift and go to state 45
+
+    block_statement                shift and go to state 77
+    statement                      shift and go to state 32
+    var_statement                  shift and go to state 33
+    var_assignment                 shift and go to state 34
+    func_call                      shift and go to state 35
+    if_statement                   shift and go to state 36
+    for_statement                  shift and go to state 37
+    return_statement               shift and go to state 38
+    declaration_imutable           shift and go to state 39
+
+state 48
+
+    (12) more_params -> COMMA param more_params .
+
+    RPAREN          reduce using rule 12 (more_params -> COMMA param more_params .)
+
+
+state 49
+
+    (7) function_definition -> FN MAIN LPAREN RPAREN LBRACE block_statement RBRACE . function_definition_without_main
+    (8) function_definition_without_main -> . FN ID LPAREN params RPAREN LBRACE block_statement RBRACE function_definition_without_main
+    (9) function_definition_without_main -> . FN ID LPAREN params RPAREN type LBRACE block_statement RBRACE function_definition_without_main
+    (10) function_definition_without_main -> .
+
+    FN              shift and go to state 78
+    $end            reduce using rule 10 (function_definition_without_main -> .)
+
+    function_definition_without_main shift and go to state 79
+
+state 50
+
+    (22) statement -> var_statement statement .
+
+    RBRACE          reduce using rule 22 (statement -> var_statement statement .)
+
+
+state 51
+
+    (23) statement -> var_assignment statement .
+
+    RBRACE          reduce using rule 23 (statement -> var_assignment statement .)
+
+
+state 52
+
+    (24) statement -> func_call statement .
+
+    RBRACE          reduce using rule 24 (statement -> func_call statement .)
+
+
+state 53
+
+    (25) statement -> if_statement statement .
+
+    RBRACE          reduce using rule 25 (statement -> if_statement statement .)
+
+
+state 54
+
+    (26) statement -> for_statement statement .
+
+    RBRACE          reduce using rule 26 (statement -> for_statement statement .)
+
+
+state 55
+
+    (30) var_statement -> MUT ID . DECLARE_ASSIGN expression
+
+    DECLARE_ASSIGN  shift and go to state 80
+
+
+state 56
+
+    (32) var_assignment -> ID ASSIGN . expression
+    (47) expression -> . expression PLUS term
+    (48) expression -> . expression MINUS term
+    (49) expression -> . term
+    (50) term -> . term TIMES factor
+    (51) term -> . term DIVIDE factor
+    (52) term -> . term MOD factor
+    (53) term -> . factor
+    (54) factor -> . ID
+    (55) factor -> . NUMBER
+    (56) factor -> . STRING
+    (57) factor -> . TRUE
+    (58) factor -> . FALSE
+    (59) factor -> . RUNE
+    (60) factor -> . LPAREN expression RPAREN
+
+    ID              shift and go to state 65
+    NUMBER          shift and go to state 66
+    STRING          shift and go to state 67
+    TRUE            shift and go to state 68
+    FALSE           shift and go to state 69
+    RUNE            shift and go to state 70
+    LPAREN          shift and go to state 71
+
+    expression                     shift and go to state 81
+    term                           shift and go to state 63
+    factor                         shift and go to state 64
+
+state 57
+
+    (33) func_call -> ID LPAREN . id_list RPAREN
+    (34) func_call -> ID LPAREN . RPAREN
+    (35) id_list -> . expression more_expressions
+    (47) expression -> . expression PLUS term
+    (48) expression -> . expression MINUS term
+    (49) expression -> . term
+    (50) term -> . term TIMES factor
+    (51) term -> . term DIVIDE factor
+    (52) term -> . term MOD factor
+    (53) term -> . factor
+    (54) factor -> . ID
+    (55) factor -> . NUMBER
+    (56) factor -> . STRING
+    (57) factor -> . TRUE
+    (58) factor -> . FALSE
+    (59) factor -> . RUNE
+    (60) factor -> . LPAREN expression RPAREN
+
+    RPAREN          shift and go to state 83
+    ID              shift and go to state 65
+    NUMBER          shift and go to state 66
+    STRING          shift and go to state 67
+    TRUE            shift and go to state 68
+    FALSE           shift and go to state 69
+    RUNE            shift and go to state 70
+    LPAREN          shift and go to state 71
+
+    id_list                        shift and go to state 82
+    expression                     shift and go to state 84
+    term                           shift and go to state 63
+    factor                         shift and go to state 64
+
+state 58
+
+    (45) declaration_imutable -> ID DECLARE_ASSIGN . expression
+    (47) expression -> . expression PLUS term
+    (48) expression -> . expression MINUS term
+    (49) expression -> . term
+    (50) term -> . term TIMES factor
+    (51) term -> . term DIVIDE factor
+    (52) term -> . term MOD factor
+    (53) term -> . factor
+    (54) factor -> . ID
+    (55) factor -> . NUMBER
+    (56) factor -> . STRING
+    (57) factor -> . TRUE
+    (58) factor -> . FALSE
+    (59) factor -> . RUNE
+    (60) factor -> . LPAREN expression RPAREN
+
+    ID              shift and go to state 65
+    NUMBER          shift and go to state 66
+    STRING          shift and go to state 67
+    TRUE            shift and go to state 68
+    FALSE           shift and go to state 69
+    RUNE            shift and go to state 70
+    LPAREN          shift and go to state 71
+
+    expression                     shift and go to state 85
+    term                           shift and go to state 63
+    factor                         shift and go to state 64
+
+state 59
+
+    (31) var_statement -> CONST ID . DECLARE_ASSIGN expression
+
+    DECLARE_ASSIGN  shift and go to state 86
+
+
+state 60
+
+    (38) if_statement -> IF expression_relacional . LBRACE statement RBRACE
+    (39) if_statement -> IF expression_relacional . LBRACE statement RBRACE elseop
+
+    LBRACE          shift and go to state 87
+
+
+state 61
+
+    (63) expression_relacional -> expression . EQ expression
+    (64) expression_relacional -> expression . NEQ expression
+    (65) expression_relacional -> expression . LT expression
+    (66) expression_relacional -> expression . LE expression
+    (67) expression_relacional -> expression . GT expression
+    (68) expression_relacional -> expression . GE expression
+    (69) expression_relacional -> expression . AND expression
+    (70) expression_relacional -> expression . OR expression
+    (47) expression -> expression . PLUS term
+    (48) expression -> expression . MINUS term
+
+    EQ              shift and go to state 88
+    NEQ             shift and go to state 89
+    LT              shift and go to state 90
+    LE              shift and go to state 91
+    GT              shift and go to state 92
+    GE              shift and go to state 93
+    AND             shift and go to state 94
+    OR              shift and go to state 95
+    PLUS            shift and go to state 96
+    MINUS           shift and go to state 97
+
+
+state 62
+
+    (71) expression_relacional -> NOT . expression
+    (47) expression -> . expression PLUS term
+    (48) expression -> . expression MINUS term
+    (49) expression -> . term
+    (50) term -> . term TIMES factor
+    (51) term -> . term DIVIDE factor
+    (52) term -> . term MOD factor
+    (53) term -> . factor
+    (54) factor -> . ID
+    (55) factor -> . NUMBER
+    (56) factor -> . STRING
+    (57) factor -> . TRUE
+    (58) factor -> . FALSE
+    (59) factor -> . RUNE
+    (60) factor -> . LPAREN expression RPAREN
+
+    ID              shift and go to state 65
+    NUMBER          shift and go to state 66
+    STRING          shift and go to state 67
+    TRUE            shift and go to state 68
+    FALSE           shift and go to state 69
+    RUNE            shift and go to state 70
+    LPAREN          shift and go to state 71
+
+    expression                     shift and go to state 98
+    term                           shift and go to state 63
+    factor                         shift and go to state 64
+
+state 63
+
+    (49) expression -> term .
+    (50) term -> term . TIMES factor
+    (51) term -> term . DIVIDE factor
+    (52) term -> term . MOD factor
+
+    EQ              reduce using rule 49 (expression -> term .)
+    NEQ             reduce using rule 49 (expression -> term .)
+    LT              reduce using rule 49 (expression -> term .)
+    LE              reduce using rule 49 (expression -> term .)
+    GT              reduce using rule 49 (expression -> term .)
+    GE              reduce using rule 49 (expression -> term .)
+    AND             reduce using rule 49 (expression -> term .)
+    OR              reduce using rule 49 (expression -> term .)
+    PLUS            reduce using rule 49 (expression -> term .)
+    MINUS           reduce using rule 49 (expression -> term .)
+    RBRACE          reduce using rule 49 (expression -> term .)
+    MUT             reduce using rule 49 (expression -> term .)
+    CONST           reduce using rule 49 (expression -> term .)
+    ID              reduce using rule 49 (expression -> term .)
+    IF              reduce using rule 49 (expression -> term .)
+    FOR             reduce using rule 49 (expression -> term .)
+    RETURN          reduce using rule 49 (expression -> term .)
+    COMMA           reduce using rule 49 (expression -> term .)
+    RPAREN          reduce using rule 49 (expression -> term .)
+    SEMICOLON       reduce using rule 49 (expression -> term .)
+    LBRACE          reduce using rule 49 (expression -> term .)
+    TIMES           shift and go to state 99
+    DIVIDE          shift and go to state 100
+    MOD             shift and go to state 101
+
+
+state 64
+
+    (53) term -> factor .
+
+    TIMES           reduce using rule 53 (term -> factor .)
+    DIVIDE          reduce using rule 53 (term -> factor .)
+    MOD             reduce using rule 53 (term -> factor .)
+    EQ              reduce using rule 53 (term -> factor .)
+    NEQ             reduce using rule 53 (term -> factor .)
+    LT              reduce using rule 53 (term -> factor .)
+    LE              reduce using rule 53 (term -> factor .)
+    GT              reduce using rule 53 (term -> factor .)
+    GE              reduce using rule 53 (term -> factor .)
+    AND             reduce using rule 53 (term -> factor .)
+    OR              reduce using rule 53 (term -> factor .)
+    PLUS            reduce using rule 53 (term -> factor .)
+    MINUS           reduce using rule 53 (term -> factor .)
+    RBRACE          reduce using rule 53 (term -> factor .)
+    MUT             reduce using rule 53 (term -> factor .)
+    CONST           reduce using rule 53 (term -> factor .)
+    ID              reduce using rule 53 (term -> factor .)
+    IF              reduce using rule 53 (term -> factor .)
+    FOR             reduce using rule 53 (term -> factor .)
+    RETURN          reduce using rule 53 (term -> factor .)
+    COMMA           reduce using rule 53 (term -> factor .)
+    RPAREN          reduce using rule 53 (term -> factor .)
+    SEMICOLON       reduce using rule 53 (term -> factor .)
+    LBRACE          reduce using rule 53 (term -> factor .)
+
+
+state 65
+
+    (54) factor -> ID .
+
+    TIMES           reduce using rule 54 (factor -> ID .)
+    DIVIDE          reduce using rule 54 (factor -> ID .)
+    MOD             reduce using rule 54 (factor -> ID .)
+    EQ              reduce using rule 54 (factor -> ID .)
+    NEQ             reduce using rule 54 (factor -> ID .)
+    LT              reduce using rule 54 (factor -> ID .)
+    LE              reduce using rule 54 (factor -> ID .)
+    GT              reduce using rule 54 (factor -> ID .)
+    GE              reduce using rule 54 (factor -> ID .)
+    AND             reduce using rule 54 (factor -> ID .)
+    OR              reduce using rule 54 (factor -> ID .)
+    PLUS            reduce using rule 54 (factor -> ID .)
+    MINUS           reduce using rule 54 (factor -> ID .)
+    RBRACE          reduce using rule 54 (factor -> ID .)
+    MUT             reduce using rule 54 (factor -> ID .)
+    CONST           reduce using rule 54 (factor -> ID .)
+    ID              reduce using rule 54 (factor -> ID .)
+    IF              reduce using rule 54 (factor -> ID .)
+    FOR             reduce using rule 54 (factor -> ID .)
+    RETURN          reduce using rule 54 (factor -> ID .)
+    COMMA           reduce using rule 54 (factor -> ID .)
+    RPAREN          reduce using rule 54 (factor -> ID .)
+    SEMICOLON       reduce using rule 54 (factor -> ID .)
+    LBRACE          reduce using rule 54 (factor -> ID .)
+
+
+state 66
+
+    (55) factor -> NUMBER .
+
+    TIMES           reduce using rule 55 (factor -> NUMBER .)
+    DIVIDE          reduce using rule 55 (factor -> NUMBER .)
+    MOD             reduce using rule 55 (factor -> NUMBER .)
+    EQ              reduce using rule 55 (factor -> NUMBER .)
+    NEQ             reduce using rule 55 (factor -> NUMBER .)
+    LT              reduce using rule 55 (factor -> NUMBER .)
+    LE              reduce using rule 55 (factor -> NUMBER .)
+    GT              reduce using rule 55 (factor -> NUMBER .)
+    GE              reduce using rule 55 (factor -> NUMBER .)
+    AND             reduce using rule 55 (factor -> NUMBER .)
+    OR              reduce using rule 55 (factor -> NUMBER .)
+    PLUS            reduce using rule 55 (factor -> NUMBER .)
+    MINUS           reduce using rule 55 (factor -> NUMBER .)
+    RBRACE          reduce using rule 55 (factor -> NUMBER .)
+    MUT             reduce using rule 55 (factor -> NUMBER .)
+    CONST           reduce using rule 55 (factor -> NUMBER .)
+    ID              reduce using rule 55 (factor -> NUMBER .)
+    IF              reduce using rule 55 (factor -> NUMBER .)
+    FOR             reduce using rule 55 (factor -> NUMBER .)
+    RETURN          reduce using rule 55 (factor -> NUMBER .)
+    COMMA           reduce using rule 55 (factor -> NUMBER .)
+    RPAREN          reduce using rule 55 (factor -> NUMBER .)
+    SEMICOLON       reduce using rule 55 (factor -> NUMBER .)
+    LBRACE          reduce using rule 55 (factor -> NUMBER .)
+
+
+state 67
+
+    (56) factor -> STRING .
+
+    TIMES           reduce using rule 56 (factor -> STRING .)
+    DIVIDE          reduce using rule 56 (factor -> STRING .)
+    MOD             reduce using rule 56 (factor -> STRING .)
+    EQ              reduce using rule 56 (factor -> STRING .)
+    NEQ             reduce using rule 56 (factor -> STRING .)
+    LT              reduce using rule 56 (factor -> STRING .)
+    LE              reduce using rule 56 (factor -> STRING .)
+    GT              reduce using rule 56 (factor -> STRING .)
+    GE              reduce using rule 56 (factor -> STRING .)
+    AND             reduce using rule 56 (factor -> STRING .)
+    OR              reduce using rule 56 (factor -> STRING .)
+    PLUS            reduce using rule 56 (factor -> STRING .)
+    MINUS           reduce using rule 56 (factor -> STRING .)
+    RBRACE          reduce using rule 56 (factor -> STRING .)
+    MUT             reduce using rule 56 (factor -> STRING .)
+    CONST           reduce using rule 56 (factor -> STRING .)
+    ID              reduce using rule 56 (factor -> STRING .)
+    IF              reduce using rule 56 (factor -> STRING .)
+    FOR             reduce using rule 56 (factor -> STRING .)
+    RETURN          reduce using rule 56 (factor -> STRING .)
+    COMMA           reduce using rule 56 (factor -> STRING .)
+    RPAREN          reduce using rule 56 (factor -> STRING .)
+    SEMICOLON       reduce using rule 56 (factor -> STRING .)
+    LBRACE          reduce using rule 56 (factor -> STRING .)
+
+
+state 68
+
+    (57) factor -> TRUE .
+
+    TIMES           reduce using rule 57 (factor -> TRUE .)
+    DIVIDE          reduce using rule 57 (factor -> TRUE .)
+    MOD             reduce using rule 57 (factor -> TRUE .)
+    EQ              reduce using rule 57 (factor -> TRUE .)
+    NEQ             reduce using rule 57 (factor -> TRUE .)
+    LT              reduce using rule 57 (factor -> TRUE .)
+    LE              reduce using rule 57 (factor -> TRUE .)
+    GT              reduce using rule 57 (factor -> TRUE .)
+    GE              reduce using rule 57 (factor -> TRUE .)
+    AND             reduce using rule 57 (factor -> TRUE .)
+    OR              reduce using rule 57 (factor -> TRUE .)
+    PLUS            reduce using rule 57 (factor -> TRUE .)
+    MINUS           reduce using rule 57 (factor -> TRUE .)
+    RBRACE          reduce using rule 57 (factor -> TRUE .)
+    MUT             reduce using rule 57 (factor -> TRUE .)
+    CONST           reduce using rule 57 (factor -> TRUE .)
+    ID              reduce using rule 57 (factor -> TRUE .)
+    IF              reduce using rule 57 (factor -> TRUE .)
+    FOR             reduce using rule 57 (factor -> TRUE .)
+    RETURN          reduce using rule 57 (factor -> TRUE .)
+    COMMA           reduce using rule 57 (factor -> TRUE .)
+    RPAREN          reduce using rule 57 (factor -> TRUE .)
+    SEMICOLON       reduce using rule 57 (factor -> TRUE .)
+    LBRACE          reduce using rule 57 (factor -> TRUE .)
+
+
+state 69
+
+    (58) factor -> FALSE .
+
+    TIMES           reduce using rule 58 (factor -> FALSE .)
+    DIVIDE          reduce using rule 58 (factor -> FALSE .)
+    MOD             reduce using rule 58 (factor -> FALSE .)
+    EQ              reduce using rule 58 (factor -> FALSE .)
+    NEQ             reduce using rule 58 (factor -> FALSE .)
+    LT              reduce using rule 58 (factor -> FALSE .)
+    LE              reduce using rule 58 (factor -> FALSE .)
+    GT              reduce using rule 58 (factor -> FALSE .)
+    GE              reduce using rule 58 (factor -> FALSE .)
+    AND             reduce using rule 58 (factor -> FALSE .)
+    OR              reduce using rule 58 (factor -> FALSE .)
+    PLUS            reduce using rule 58 (factor -> FALSE .)
+    MINUS           reduce using rule 58 (factor -> FALSE .)
+    RBRACE          reduce using rule 58 (factor -> FALSE .)
+    MUT             reduce using rule 58 (factor -> FALSE .)
+    CONST           reduce using rule 58 (factor -> FALSE .)
+    ID              reduce using rule 58 (factor -> FALSE .)
+    IF              reduce using rule 58 (factor -> FALSE .)
+    FOR             reduce using rule 58 (factor -> FALSE .)
+    RETURN          reduce using rule 58 (factor -> FALSE .)
+    COMMA           reduce using rule 58 (factor -> FALSE .)
+    RPAREN          reduce using rule 58 (factor -> FALSE .)
+    SEMICOLON       reduce using rule 58 (factor -> FALSE .)
+    LBRACE          reduce using rule 58 (factor -> FALSE .)
+
+
+state 70
+
+    (59) factor -> RUNE .
+
+    TIMES           reduce using rule 59 (factor -> RUNE .)
+    DIVIDE          reduce using rule 59 (factor -> RUNE .)
+    MOD             reduce using rule 59 (factor -> RUNE .)
+    EQ              reduce using rule 59 (factor -> RUNE .)
+    NEQ             reduce using rule 59 (factor -> RUNE .)
+    LT              reduce using rule 59 (factor -> RUNE .)
+    LE              reduce using rule 59 (factor -> RUNE .)
+    GT              reduce using rule 59 (factor -> RUNE .)
+    GE              reduce using rule 59 (factor -> RUNE .)
+    AND             reduce using rule 59 (factor -> RUNE .)
+    OR              reduce using rule 59 (factor -> RUNE .)
+    PLUS            reduce using rule 59 (factor -> RUNE .)
+    MINUS           reduce using rule 59 (factor -> RUNE .)
+    RBRACE          reduce using rule 59 (factor -> RUNE .)
+    MUT             reduce using rule 59 (factor -> RUNE .)
+    CONST           reduce using rule 59 (factor -> RUNE .)
+    ID              reduce using rule 59 (factor -> RUNE .)
+    IF              reduce using rule 59 (factor -> RUNE .)
+    FOR             reduce using rule 59 (factor -> RUNE .)
+    RETURN          reduce using rule 59 (factor -> RUNE .)
+    COMMA           reduce using rule 59 (factor -> RUNE .)
+    RPAREN          reduce using rule 59 (factor -> RUNE .)
+    SEMICOLON       reduce using rule 59 (factor -> RUNE .)
+    LBRACE          reduce using rule 59 (factor -> RUNE .)
+
+
+state 71
+
+    (60) factor -> LPAREN . expression RPAREN
+    (47) expression -> . expression PLUS term
+    (48) expression -> . expression MINUS term
+    (49) expression -> . term
+    (50) term -> . term TIMES factor
+    (51) term -> . term DIVIDE factor
+    (52) term -> . term MOD factor
+    (53) term -> . factor
+    (54) factor -> . ID
+    (55) factor -> . NUMBER
+    (56) factor -> . STRING
+    (57) factor -> . TRUE
+    (58) factor -> . FALSE
+    (59) factor -> . RUNE
+    (60) factor -> . LPAREN expression RPAREN
+
+    ID              shift and go to state 65
+    NUMBER          shift and go to state 66
+    STRING          shift and go to state 67
+    TRUE            shift and go to state 68
+    FALSE           shift and go to state 69
+    RUNE            shift and go to state 70
+    LPAREN          shift and go to state 71
+
+    expression                     shift and go to state 102
+    term                           shift and go to state 63
+    factor                         shift and go to state 64
+
+state 72
+
+    (42) for_statement -> FOR ID . IN expression LBRACE statement RBRACE
+    (45) declaration_imutable -> ID . DECLARE_ASSIGN expression
+    (54) factor -> ID .
+
+    IN              shift and go to state 103
+    DECLARE_ASSIGN  shift and go to state 58
+    TIMES           reduce using rule 54 (factor -> ID .)
+    DIVIDE          reduce using rule 54 (factor -> ID .)
+    MOD             reduce using rule 54 (factor -> ID .)
+    EQ              reduce using rule 54 (factor -> ID .)
+    NEQ             reduce using rule 54 (factor -> ID .)
+    LT              reduce using rule 54 (factor -> ID .)
+    LE              reduce using rule 54 (factor -> ID .)
+    GT              reduce using rule 54 (factor -> ID .)
+    GE              reduce using rule 54 (factor -> ID .)
+    AND             reduce using rule 54 (factor -> ID .)
+    OR              reduce using rule 54 (factor -> ID .)
+    PLUS            reduce using rule 54 (factor -> ID .)
+    MINUS           reduce using rule 54 (factor -> ID .)
+
+
+state 73
+
+    (43) for_statement -> FOR declaration_imutable . SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE
+
+    SEMICOLON       shift and go to state 104
+
+
+state 74
+
+    (44) for_statement -> FOR expression_relacional . LBRACE statement RBRACE
+
+    LBRACE          shift and go to state 105
+
+
+state 75
+
+    (46) return_statement -> RETURN expression .
+    (47) expression -> expression . PLUS term
+    (48) expression -> expression . MINUS term
+
+    RBRACE          reduce using rule 46 (return_statement -> RETURN expression .)
+    PLUS            shift and go to state 96
+    MINUS           shift and go to state 97
+
+
+state 76
+
+    (5) function_definition -> FN ID LPAREN params RPAREN LBRACE block_statement RBRACE . function_definition
+    (5) function_definition -> . FN ID LPAREN params RPAREN LBRACE block_statement RBRACE function_definition
+    (6) function_definition -> . FN ID LPAREN params RPAREN type LBRACE block_statement RBRACE function_definition
+    (7) function_definition -> . FN MAIN LPAREN RPAREN LBRACE block_statement RBRACE function_definition_without_main
+
+    FN              shift and go to state 5
+
+    function_definition            shift and go to state 106
+
+state 77
+
+    (6) function_definition -> FN ID LPAREN params RPAREN type LBRACE block_statement . RBRACE function_definition
+
+    RBRACE          shift and go to state 107
+
+
+state 78
+
+    (8) function_definition_without_main -> FN . ID LPAREN params RPAREN LBRACE block_statement RBRACE function_definition_without_main
+    (9) function_definition_without_main -> FN . ID LPAREN params RPAREN type LBRACE block_statement RBRACE function_definition_without_main
+
+    ID              shift and go to state 108
+
+
+state 79
+
+    (7) function_definition -> FN MAIN LPAREN RPAREN LBRACE block_statement RBRACE function_definition_without_main .
+
+    $end            reduce using rule 7 (function_definition -> FN MAIN LPAREN RPAREN LBRACE block_statement RBRACE function_definition_without_main .)
+
+
+state 80
+
+    (30) var_statement -> MUT ID DECLARE_ASSIGN . expression
+    (47) expression -> . expression PLUS term
+    (48) expression -> . expression MINUS term
+    (49) expression -> . term
+    (50) term -> . term TIMES factor
+    (51) term -> . term DIVIDE factor
+    (52) term -> . term MOD factor
+    (53) term -> . factor
+    (54) factor -> . ID
+    (55) factor -> . NUMBER
+    (56) factor -> . STRING
+    (57) factor -> . TRUE
+    (58) factor -> . FALSE
+    (59) factor -> . RUNE
+    (60) factor -> . LPAREN expression RPAREN
+
+    ID              shift and go to state 65
+    NUMBER          shift and go to state 66
+    STRING          shift and go to state 67
+    TRUE            shift and go to state 68
+    FALSE           shift and go to state 69
+    RUNE            shift and go to state 70
+    LPAREN          shift and go to state 71
+
+    expression                     shift and go to state 109
+    term                           shift and go to state 63
+    factor                         shift and go to state 64
+
+state 81
+
+    (32) var_assignment -> ID ASSIGN expression .
+    (47) expression -> expression . PLUS term
+    (48) expression -> expression . MINUS term
+
+    MUT             reduce using rule 32 (var_assignment -> ID ASSIGN expression .)
+    CONST           reduce using rule 32 (var_assignment -> ID ASSIGN expression .)
+    ID              reduce using rule 32 (var_assignment -> ID ASSIGN expression .)
+    IF              reduce using rule 32 (var_assignment -> ID ASSIGN expression .)
+    FOR             reduce using rule 32 (var_assignment -> ID ASSIGN expression .)
+    RETURN          reduce using rule 32 (var_assignment -> ID ASSIGN expression .)
+    RBRACE          reduce using rule 32 (var_assignment -> ID ASSIGN expression .)
+    PLUS            shift and go to state 96
+    MINUS           shift and go to state 97
+
+
+state 82
+
+    (33) func_call -> ID LPAREN id_list . RPAREN
+
+    RPAREN          shift and go to state 110
+
+
+state 83
+
+    (34) func_call -> ID LPAREN RPAREN .
+
+    MUT             reduce using rule 34 (func_call -> ID LPAREN RPAREN .)
+    CONST           reduce using rule 34 (func_call -> ID LPAREN RPAREN .)
+    ID              reduce using rule 34 (func_call -> ID LPAREN RPAREN .)
+    IF              reduce using rule 34 (func_call -> ID LPAREN RPAREN .)
+    FOR             reduce using rule 34 (func_call -> ID LPAREN RPAREN .)
+    RETURN          reduce using rule 34 (func_call -> ID LPAREN RPAREN .)
+    RBRACE          reduce using rule 34 (func_call -> ID LPAREN RPAREN .)
+
+
+state 84
+
+    (35) id_list -> expression . more_expressions
+    (47) expression -> expression . PLUS term
+    (48) expression -> expression . MINUS term
+    (36) more_expressions -> . COMMA expression more_expressions
+    (37) more_expressions -> .
+
+    PLUS            shift and go to state 96
+    MINUS           shift and go to state 97
+    COMMA           shift and go to state 112
+    RPAREN          reduce using rule 37 (more_expressions -> .)
+
+    more_expressions               shift and go to state 111
+
+state 85
+
+    (45) declaration_imutable -> ID DECLARE_ASSIGN expression .
+    (47) expression -> expression . PLUS term
+    (48) expression -> expression . MINUS term
+
+    MUT             reduce using rule 45 (declaration_imutable -> ID DECLARE_ASSIGN expression .)
+    CONST           reduce using rule 45 (declaration_imutable -> ID DECLARE_ASSIGN expression .)
+    ID              reduce using rule 45 (declaration_imutable -> ID DECLARE_ASSIGN expression .)
+    IF              reduce using rule 45 (declaration_imutable -> ID DECLARE_ASSIGN expression .)
+    FOR             reduce using rule 45 (declaration_imutable -> ID DECLARE_ASSIGN expression .)
+    RETURN          reduce using rule 45 (declaration_imutable -> ID DECLARE_ASSIGN expression .)
+    RBRACE          reduce using rule 45 (declaration_imutable -> ID DECLARE_ASSIGN expression .)
+    SEMICOLON       reduce using rule 45 (declaration_imutable -> ID DECLARE_ASSIGN expression .)
+    PLUS            shift and go to state 96
+    MINUS           shift and go to state 97
+
+
+state 86
+
+    (31) var_statement -> CONST ID DECLARE_ASSIGN . expression
+    (47) expression -> . expression PLUS term
+    (48) expression -> . expression MINUS term
+    (49) expression -> . term
+    (50) term -> . term TIMES factor
+    (51) term -> . term DIVIDE factor
+    (52) term -> . term MOD factor
+    (53) term -> . factor
+    (54) factor -> . ID
+    (55) factor -> . NUMBER
+    (56) factor -> . STRING
+    (57) factor -> . TRUE
+    (58) factor -> . FALSE
+    (59) factor -> . RUNE
+    (60) factor -> . LPAREN expression RPAREN
+
+    ID              shift and go to state 65
+    NUMBER          shift and go to state 66
+    STRING          shift and go to state 67
+    TRUE            shift and go to state 68
+    FALSE           shift and go to state 69
+    RUNE            shift and go to state 70
+    LPAREN          shift and go to state 71
+
+    expression                     shift and go to state 113
+    term                           shift and go to state 63
+    factor                         shift and go to state 64
+
+state 87
+
+    (38) if_statement -> IF expression_relacional LBRACE . statement RBRACE
+    (39) if_statement -> IF expression_relacional LBRACE . statement RBRACE elseop
+    (22) statement -> . var_statement statement
+    (23) statement -> . var_assignment statement
+    (24) statement -> . func_call statement
+    (25) statement -> . if_statement statement
+    (26) statement -> . for_statement statement
+    (27) statement -> . return_statement
+    (28) statement -> .
+    (29) var_statement -> . declaration_imutable
+    (30) var_statement -> . MUT ID DECLARE_ASSIGN expression
+    (31) var_statement -> . CONST ID DECLARE_ASSIGN expression
+    (32) var_assignment -> . ID ASSIGN expression
+    (33) func_call -> . ID LPAREN id_list RPAREN
+    (34) func_call -> . ID LPAREN RPAREN
+    (38) if_statement -> . IF expression_relacional LBRACE statement RBRACE
+    (39) if_statement -> . IF expression_relacional LBRACE statement RBRACE elseop
+    (42) for_statement -> . FOR ID IN expression LBRACE statement RBRACE
+    (43) for_statement -> . FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE
+    (44) for_statement -> . FOR expression_relacional LBRACE statement RBRACE
+    (46) return_statement -> . RETURN expression
+    (45) declaration_imutable -> . ID DECLARE_ASSIGN expression
+
+    RBRACE          reduce using rule 28 (statement -> .)
+    MUT             shift and go to state 40
+    CONST           shift and go to state 42
+    ID              shift and go to state 41
+    IF              shift and go to state 43
+    FOR             shift and go to state 44
+    RETURN          shift and go to state 45
+
+    statement                      shift and go to state 114
+    var_statement                  shift and go to state 33
+    var_assignment                 shift and go to state 34
+    func_call                      shift and go to state 35
+    if_statement                   shift and go to state 36
+    for_statement                  shift and go to state 37
+    return_statement               shift and go to state 38
+    declaration_imutable           shift and go to state 39
+
+state 88
+
+    (63) expression_relacional -> expression EQ . expression
+    (47) expression -> . expression PLUS term
+    (48) expression -> . expression MINUS term
+    (49) expression -> . term
+    (50) term -> . term TIMES factor
+    (51) term -> . term DIVIDE factor
+    (52) term -> . term MOD factor
+    (53) term -> . factor
+    (54) factor -> . ID
+    (55) factor -> . NUMBER
+    (56) factor -> . STRING
+    (57) factor -> . TRUE
+    (58) factor -> . FALSE
+    (59) factor -> . RUNE
+    (60) factor -> . LPAREN expression RPAREN
+
+    ID              shift and go to state 65
+    NUMBER          shift and go to state 66
+    STRING          shift and go to state 67
+    TRUE            shift and go to state 68
+    FALSE           shift and go to state 69
+    RUNE            shift and go to state 70
+    LPAREN          shift and go to state 71
+
+    expression                     shift and go to state 115
+    term                           shift and go to state 63
+    factor                         shift and go to state 64
+
+state 89
+
+    (64) expression_relacional -> expression NEQ . expression
+    (47) expression -> . expression PLUS term
+    (48) expression -> . expression MINUS term
+    (49) expression -> . term
+    (50) term -> . term TIMES factor
+    (51) term -> . term DIVIDE factor
+    (52) term -> . term MOD factor
+    (53) term -> . factor
+    (54) factor -> . ID
+    (55) factor -> . NUMBER
+    (56) factor -> . STRING
+    (57) factor -> . TRUE
+    (58) factor -> . FALSE
+    (59) factor -> . RUNE
+    (60) factor -> . LPAREN expression RPAREN
+
+    ID              shift and go to state 65
+    NUMBER          shift and go to state 66
+    STRING          shift and go to state 67
+    TRUE            shift and go to state 68
+    FALSE           shift and go to state 69
+    RUNE            shift and go to state 70
+    LPAREN          shift and go to state 71
+
+    expression                     shift and go to state 116
+    term                           shift and go to state 63
+    factor                         shift and go to state 64
+
+state 90
+
+    (65) expression_relacional -> expression LT . expression
+    (47) expression -> . expression PLUS term
+    (48) expression -> . expression MINUS term
+    (49) expression -> . term
+    (50) term -> . term TIMES factor
+    (51) term -> . term DIVIDE factor
+    (52) term -> . term MOD factor
+    (53) term -> . factor
+    (54) factor -> . ID
+    (55) factor -> . NUMBER
+    (56) factor -> . STRING
+    (57) factor -> . TRUE
+    (58) factor -> . FALSE
+    (59) factor -> . RUNE
+    (60) factor -> . LPAREN expression RPAREN
+
+    ID              shift and go to state 65
+    NUMBER          shift and go to state 66
+    STRING          shift and go to state 67
+    TRUE            shift and go to state 68
+    FALSE           shift and go to state 69
+    RUNE            shift and go to state 70
+    LPAREN          shift and go to state 71
+
+    expression                     shift and go to state 117
+    term                           shift and go to state 63
+    factor                         shift and go to state 64
+
+state 91
+
+    (66) expression_relacional -> expression LE . expression
+    (47) expression -> . expression PLUS term
+    (48) expression -> . expression MINUS term
+    (49) expression -> . term
+    (50) term -> . term TIMES factor
+    (51) term -> . term DIVIDE factor
+    (52) term -> . term MOD factor
+    (53) term -> . factor
+    (54) factor -> . ID
+    (55) factor -> . NUMBER
+    (56) factor -> . STRING
+    (57) factor -> . TRUE
+    (58) factor -> . FALSE
+    (59) factor -> . RUNE
+    (60) factor -> . LPAREN expression RPAREN
+
+    ID              shift and go to state 65
+    NUMBER          shift and go to state 66
+    STRING          shift and go to state 67
+    TRUE            shift and go to state 68
+    FALSE           shift and go to state 69
+    RUNE            shift and go to state 70
+    LPAREN          shift and go to state 71
+
+    expression                     shift and go to state 118
+    term                           shift and go to state 63
+    factor                         shift and go to state 64
+
+state 92
+
+    (67) expression_relacional -> expression GT . expression
+    (47) expression -> . expression PLUS term
+    (48) expression -> . expression MINUS term
+    (49) expression -> . term
+    (50) term -> . term TIMES factor
+    (51) term -> . term DIVIDE factor
+    (52) term -> . term MOD factor
+    (53) term -> . factor
+    (54) factor -> . ID
+    (55) factor -> . NUMBER
+    (56) factor -> . STRING
+    (57) factor -> . TRUE
+    (58) factor -> . FALSE
+    (59) factor -> . RUNE
+    (60) factor -> . LPAREN expression RPAREN
+
+    ID              shift and go to state 65
+    NUMBER          shift and go to state 66
+    STRING          shift and go to state 67
+    TRUE            shift and go to state 68
+    FALSE           shift and go to state 69
+    RUNE            shift and go to state 70
+    LPAREN          shift and go to state 71
+
+    expression                     shift and go to state 119
+    term                           shift and go to state 63
+    factor                         shift and go to state 64
+
+state 93
+
+    (68) expression_relacional -> expression GE . expression
+    (47) expression -> . expression PLUS term
+    (48) expression -> . expression MINUS term
+    (49) expression -> . term
+    (50) term -> . term TIMES factor
+    (51) term -> . term DIVIDE factor
+    (52) term -> . term MOD factor
+    (53) term -> . factor
+    (54) factor -> . ID
+    (55) factor -> . NUMBER
+    (56) factor -> . STRING
+    (57) factor -> . TRUE
+    (58) factor -> . FALSE
+    (59) factor -> . RUNE
+    (60) factor -> . LPAREN expression RPAREN
+
+    ID              shift and go to state 65
+    NUMBER          shift and go to state 66
+    STRING          shift and go to state 67
+    TRUE            shift and go to state 68
+    FALSE           shift and go to state 69
+    RUNE            shift and go to state 70
+    LPAREN          shift and go to state 71
+
+    expression                     shift and go to state 120
+    term                           shift and go to state 63
+    factor                         shift and go to state 64
+
+state 94
+
+    (69) expression_relacional -> expression AND . expression
+    (47) expression -> . expression PLUS term
+    (48) expression -> . expression MINUS term
+    (49) expression -> . term
+    (50) term -> . term TIMES factor
+    (51) term -> . term DIVIDE factor
+    (52) term -> . term MOD factor
+    (53) term -> . factor
+    (54) factor -> . ID
+    (55) factor -> . NUMBER
+    (56) factor -> . STRING
+    (57) factor -> . TRUE
+    (58) factor -> . FALSE
+    (59) factor -> . RUNE
+    (60) factor -> . LPAREN expression RPAREN
+
+    ID              shift and go to state 65
+    NUMBER          shift and go to state 66
+    STRING          shift and go to state 67
+    TRUE            shift and go to state 68
+    FALSE           shift and go to state 69
+    RUNE            shift and go to state 70
+    LPAREN          shift and go to state 71
+
+    expression                     shift and go to state 121
+    term                           shift and go to state 63
+    factor                         shift and go to state 64
+
+state 95
+
+    (70) expression_relacional -> expression OR . expression
+    (47) expression -> . expression PLUS term
+    (48) expression -> . expression MINUS term
+    (49) expression -> . term
+    (50) term -> . term TIMES factor
+    (51) term -> . term DIVIDE factor
+    (52) term -> . term MOD factor
+    (53) term -> . factor
+    (54) factor -> . ID
+    (55) factor -> . NUMBER
+    (56) factor -> . STRING
+    (57) factor -> . TRUE
+    (58) factor -> . FALSE
+    (59) factor -> . RUNE
+    (60) factor -> . LPAREN expression RPAREN
+
+    ID              shift and go to state 65
+    NUMBER          shift and go to state 66
+    STRING          shift and go to state 67
+    TRUE            shift and go to state 68
+    FALSE           shift and go to state 69
+    RUNE            shift and go to state 70
+    LPAREN          shift and go to state 71
+
+    expression                     shift and go to state 122
+    term                           shift and go to state 63
+    factor                         shift and go to state 64
+
+state 96
+
+    (47) expression -> expression PLUS . term
+    (50) term -> . term TIMES factor
+    (51) term -> . term DIVIDE factor
+    (52) term -> . term MOD factor
+    (53) term -> . factor
+    (54) factor -> . ID
+    (55) factor -> . NUMBER
+    (56) factor -> . STRING
+    (57) factor -> . TRUE
+    (58) factor -> . FALSE
+    (59) factor -> . RUNE
+    (60) factor -> . LPAREN expression RPAREN
+
+    ID              shift and go to state 65
+    NUMBER          shift and go to state 66
+    STRING          shift and go to state 67
+    TRUE            shift and go to state 68
+    FALSE           shift and go to state 69
+    RUNE            shift and go to state 70
+    LPAREN          shift and go to state 71
+
+    term                           shift and go to state 123
+    factor                         shift and go to state 64
+
+state 97
+
+    (48) expression -> expression MINUS . term
+    (50) term -> . term TIMES factor
+    (51) term -> . term DIVIDE factor
+    (52) term -> . term MOD factor
+    (53) term -> . factor
+    (54) factor -> . ID
+    (55) factor -> . NUMBER
+    (56) factor -> . STRING
+    (57) factor -> . TRUE
+    (58) factor -> . FALSE
+    (59) factor -> . RUNE
+    (60) factor -> . LPAREN expression RPAREN
+
+    ID              shift and go to state 65
+    NUMBER          shift and go to state 66
+    STRING          shift and go to state 67
+    TRUE            shift and go to state 68
+    FALSE           shift and go to state 69
+    RUNE            shift and go to state 70
+    LPAREN          shift and go to state 71
+
+    term                           shift and go to state 124
+    factor                         shift and go to state 64
+
+state 98
+
+    (71) expression_relacional -> NOT expression .
+    (47) expression -> expression . PLUS term
+    (48) expression -> expression . MINUS term
+
+    LBRACE          reduce using rule 71 (expression_relacional -> NOT expression .)
+    SEMICOLON       reduce using rule 71 (expression_relacional -> NOT expression .)
+    PLUS            shift and go to state 96
+    MINUS           shift and go to state 97
+
+
+state 99
+
+    (50) term -> term TIMES . factor
+    (54) factor -> . ID
+    (55) factor -> . NUMBER
+    (56) factor -> . STRING
+    (57) factor -> . TRUE
+    (58) factor -> . FALSE
+    (59) factor -> . RUNE
+    (60) factor -> . LPAREN expression RPAREN
+
+    ID              shift and go to state 65
+    NUMBER          shift and go to state 66
+    STRING          shift and go to state 67
+    TRUE            shift and go to state 68
+    FALSE           shift and go to state 69
+    RUNE            shift and go to state 70
+    LPAREN          shift and go to state 71
+
+    factor                         shift and go to state 125
+
+state 100
+
+    (51) term -> term DIVIDE . factor
+    (54) factor -> . ID
+    (55) factor -> . NUMBER
+    (56) factor -> . STRING
+    (57) factor -> . TRUE
+    (58) factor -> . FALSE
+    (59) factor -> . RUNE
+    (60) factor -> . LPAREN expression RPAREN
+
+    ID              shift and go to state 65
+    NUMBER          shift and go to state 66
+    STRING          shift and go to state 67
+    TRUE            shift and go to state 68
+    FALSE           shift and go to state 69
+    RUNE            shift and go to state 70
+    LPAREN          shift and go to state 71
+
+    factor                         shift and go to state 126
+
+state 101
+
+    (52) term -> term MOD . factor
+    (54) factor -> . ID
+    (55) factor -> . NUMBER
+    (56) factor -> . STRING
+    (57) factor -> . TRUE
+    (58) factor -> . FALSE
+    (59) factor -> . RUNE
+    (60) factor -> . LPAREN expression RPAREN
+
+    ID              shift and go to state 65
+    NUMBER          shift and go to state 66
+    STRING          shift and go to state 67
+    TRUE            shift and go to state 68
+    FALSE           shift and go to state 69
+    RUNE            shift and go to state 70
+    LPAREN          shift and go to state 71
+
+    factor                         shift and go to state 127
+
+state 102
+
+    (60) factor -> LPAREN expression . RPAREN
+    (47) expression -> expression . PLUS term
+    (48) expression -> expression . MINUS term
+
+    RPAREN          shift and go to state 128
+    PLUS            shift and go to state 96
+    MINUS           shift and go to state 97
+
+
+state 103
+
+    (42) for_statement -> FOR ID IN . expression LBRACE statement RBRACE
+    (47) expression -> . expression PLUS term
+    (48) expression -> . expression MINUS term
+    (49) expression -> . term
+    (50) term -> . term TIMES factor
+    (51) term -> . term DIVIDE factor
+    (52) term -> . term MOD factor
+    (53) term -> . factor
+    (54) factor -> . ID
+    (55) factor -> . NUMBER
+    (56) factor -> . STRING
+    (57) factor -> . TRUE
+    (58) factor -> . FALSE
+    (59) factor -> . RUNE
+    (60) factor -> . LPAREN expression RPAREN
+
+    ID              shift and go to state 65
+    NUMBER          shift and go to state 66
+    STRING          shift and go to state 67
+    TRUE            shift and go to state 68
+    FALSE           shift and go to state 69
+    RUNE            shift and go to state 70
+    LPAREN          shift and go to state 71
+
+    expression                     shift and go to state 129
+    term                           shift and go to state 63
+    factor                         shift and go to state 64
+
+state 104
+
+    (43) for_statement -> FOR declaration_imutable SEMICOLON . expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE
+    (63) expression_relacional -> . expression EQ expression
+    (64) expression_relacional -> . expression NEQ expression
+    (65) expression_relacional -> . expression LT expression
+    (66) expression_relacional -> . expression LE expression
+    (67) expression_relacional -> . expression GT expression
+    (68) expression_relacional -> . expression GE expression
+    (69) expression_relacional -> . expression AND expression
+    (70) expression_relacional -> . expression OR expression
+    (71) expression_relacional -> . NOT expression
+    (47) expression -> . expression PLUS term
+    (48) expression -> . expression MINUS term
+    (49) expression -> . term
+    (50) term -> . term TIMES factor
+    (51) term -> . term DIVIDE factor
+    (52) term -> . term MOD factor
+    (53) term -> . factor
+    (54) factor -> . ID
+    (55) factor -> . NUMBER
+    (56) factor -> . STRING
+    (57) factor -> . TRUE
+    (58) factor -> . FALSE
+    (59) factor -> . RUNE
+    (60) factor -> . LPAREN expression RPAREN
+
+    NOT             shift and go to state 62
+    ID              shift and go to state 65
+    NUMBER          shift and go to state 66
+    STRING          shift and go to state 67
+    TRUE            shift and go to state 68
+    FALSE           shift and go to state 69
+    RUNE            shift and go to state 70
+    LPAREN          shift and go to state 71
+
+    expression_relacional          shift and go to state 130
+    expression                     shift and go to state 61
+    term                           shift and go to state 63
+    factor                         shift and go to state 64
+
+state 105
+
+    (44) for_statement -> FOR expression_relacional LBRACE . statement RBRACE
+    (22) statement -> . var_statement statement
+    (23) statement -> . var_assignment statement
+    (24) statement -> . func_call statement
+    (25) statement -> . if_statement statement
+    (26) statement -> . for_statement statement
+    (27) statement -> . return_statement
+    (28) statement -> .
+    (29) var_statement -> . declaration_imutable
+    (30) var_statement -> . MUT ID DECLARE_ASSIGN expression
+    (31) var_statement -> . CONST ID DECLARE_ASSIGN expression
+    (32) var_assignment -> . ID ASSIGN expression
+    (33) func_call -> . ID LPAREN id_list RPAREN
+    (34) func_call -> . ID LPAREN RPAREN
+    (38) if_statement -> . IF expression_relacional LBRACE statement RBRACE
+    (39) if_statement -> . IF expression_relacional LBRACE statement RBRACE elseop
+    (42) for_statement -> . FOR ID IN expression LBRACE statement RBRACE
+    (43) for_statement -> . FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE
+    (44) for_statement -> . FOR expression_relacional LBRACE statement RBRACE
+    (46) return_statement -> . RETURN expression
+    (45) declaration_imutable -> . ID DECLARE_ASSIGN expression
+
+    RBRACE          reduce using rule 28 (statement -> .)
+    MUT             shift and go to state 40
+    CONST           shift and go to state 42
+    ID              shift and go to state 41
+    IF              shift and go to state 43
+    FOR             shift and go to state 44
+    RETURN          shift and go to state 45
+
+    statement                      shift and go to state 131
+    var_statement                  shift and go to state 33
+    var_assignment                 shift and go to state 34
+    func_call                      shift and go to state 35
+    if_statement                   shift and go to state 36
+    for_statement                  shift and go to state 37
+    return_statement               shift and go to state 38
+    declaration_imutable           shift and go to state 39
+
+state 106
+
+    (5) function_definition -> FN ID LPAREN params RPAREN LBRACE block_statement RBRACE function_definition .
+
+    $end            reduce using rule 5 (function_definition -> FN ID LPAREN params RPAREN LBRACE block_statement RBRACE function_definition .)
+
+
+state 107
+
+    (6) function_definition -> FN ID LPAREN params RPAREN type LBRACE block_statement RBRACE . function_definition
+    (5) function_definition -> . FN ID LPAREN params RPAREN LBRACE block_statement RBRACE function_definition
+    (6) function_definition -> . FN ID LPAREN params RPAREN type LBRACE block_statement RBRACE function_definition
+    (7) function_definition -> . FN MAIN LPAREN RPAREN LBRACE block_statement RBRACE function_definition_without_main
+
+    FN              shift and go to state 5
+
+    function_definition            shift and go to state 132
+
+state 108
+
+    (8) function_definition_without_main -> FN ID . LPAREN params RPAREN LBRACE block_statement RBRACE function_definition_without_main
+    (9) function_definition_without_main -> FN ID . LPAREN params RPAREN type LBRACE block_statement RBRACE function_definition_without_main
+
+    LPAREN          shift and go to state 133
+
+
+state 109
+
+    (30) var_statement -> MUT ID DECLARE_ASSIGN expression .
+    (47) expression -> expression . PLUS term
+    (48) expression -> expression . MINUS term
+
+    MUT             reduce using rule 30 (var_statement -> MUT ID DECLARE_ASSIGN expression .)
+    CONST           reduce using rule 30 (var_statement -> MUT ID DECLARE_ASSIGN expression .)
+    ID              reduce using rule 30 (var_statement -> MUT ID DECLARE_ASSIGN expression .)
+    IF              reduce using rule 30 (var_statement -> MUT ID DECLARE_ASSIGN expression .)
+    FOR             reduce using rule 30 (var_statement -> MUT ID DECLARE_ASSIGN expression .)
+    RETURN          reduce using rule 30 (var_statement -> MUT ID DECLARE_ASSIGN expression .)
+    RBRACE          reduce using rule 30 (var_statement -> MUT ID DECLARE_ASSIGN expression .)
+    PLUS            shift and go to state 96
+    MINUS           shift and go to state 97
+
+
+state 110
+
+    (33) func_call -> ID LPAREN id_list RPAREN .
+
+    MUT             reduce using rule 33 (func_call -> ID LPAREN id_list RPAREN .)
+    CONST           reduce using rule 33 (func_call -> ID LPAREN id_list RPAREN .)
+    ID              reduce using rule 33 (func_call -> ID LPAREN id_list RPAREN .)
+    IF              reduce using rule 33 (func_call -> ID LPAREN id_list RPAREN .)
+    FOR             reduce using rule 33 (func_call -> ID LPAREN id_list RPAREN .)
+    RETURN          reduce using rule 33 (func_call -> ID LPAREN id_list RPAREN .)
+    RBRACE          reduce using rule 33 (func_call -> ID LPAREN id_list RPAREN .)
+
+
+state 111
+
+    (35) id_list -> expression more_expressions .
+
+    RPAREN          reduce using rule 35 (id_list -> expression more_expressions .)
+
+
+state 112
+
+    (36) more_expressions -> COMMA . expression more_expressions
+    (47) expression -> . expression PLUS term
+    (48) expression -> . expression MINUS term
+    (49) expression -> . term
+    (50) term -> . term TIMES factor
+    (51) term -> . term DIVIDE factor
+    (52) term -> . term MOD factor
+    (53) term -> . factor
+    (54) factor -> . ID
+    (55) factor -> . NUMBER
+    (56) factor -> . STRING
+    (57) factor -> . TRUE
+    (58) factor -> . FALSE
+    (59) factor -> . RUNE
+    (60) factor -> . LPAREN expression RPAREN
+
+    ID              shift and go to state 65
+    NUMBER          shift and go to state 66
+    STRING          shift and go to state 67
+    TRUE            shift and go to state 68
+    FALSE           shift and go to state 69
+    RUNE            shift and go to state 70
+    LPAREN          shift and go to state 71
+
+    expression                     shift and go to state 134
+    term                           shift and go to state 63
+    factor                         shift and go to state 64
+
+state 113
+
+    (31) var_statement -> CONST ID DECLARE_ASSIGN expression .
+    (47) expression -> expression . PLUS term
+    (48) expression -> expression . MINUS term
+
+    MUT             reduce using rule 31 (var_statement -> CONST ID DECLARE_ASSIGN expression .)
+    CONST           reduce using rule 31 (var_statement -> CONST ID DECLARE_ASSIGN expression .)
+    ID              reduce using rule 31 (var_statement -> CONST ID DECLARE_ASSIGN expression .)
+    IF              reduce using rule 31 (var_statement -> CONST ID DECLARE_ASSIGN expression .)
+    FOR             reduce using rule 31 (var_statement -> CONST ID DECLARE_ASSIGN expression .)
+    RETURN          reduce using rule 31 (var_statement -> CONST ID DECLARE_ASSIGN expression .)
+    RBRACE          reduce using rule 31 (var_statement -> CONST ID DECLARE_ASSIGN expression .)
+    PLUS            shift and go to state 96
+    MINUS           shift and go to state 97
+
+
+state 114
+
+    (38) if_statement -> IF expression_relacional LBRACE statement . RBRACE
+    (39) if_statement -> IF expression_relacional LBRACE statement . RBRACE elseop
+
+    RBRACE          shift and go to state 135
+
+
+state 115
+
+    (63) expression_relacional -> expression EQ expression .
+    (47) expression -> expression . PLUS term
+    (48) expression -> expression . MINUS term
+
+    LBRACE          reduce using rule 63 (expression_relacional -> expression EQ expression .)
+    SEMICOLON       reduce using rule 63 (expression_relacional -> expression EQ expression .)
+    PLUS            shift and go to state 96
+    MINUS           shift and go to state 97
+
+
+state 116
+
+    (64) expression_relacional -> expression NEQ expression .
+    (47) expression -> expression . PLUS term
+    (48) expression -> expression . MINUS term
+
+    LBRACE          reduce using rule 64 (expression_relacional -> expression NEQ expression .)
+    SEMICOLON       reduce using rule 64 (expression_relacional -> expression NEQ expression .)
+    PLUS            shift and go to state 96
+    MINUS           shift and go to state 97
+
+
+state 117
+
+    (65) expression_relacional -> expression LT expression .
+    (47) expression -> expression . PLUS term
+    (48) expression -> expression . MINUS term
+
+    LBRACE          reduce using rule 65 (expression_relacional -> expression LT expression .)
+    SEMICOLON       reduce using rule 65 (expression_relacional -> expression LT expression .)
+    PLUS            shift and go to state 96
+    MINUS           shift and go to state 97
+
+
+state 118
+
+    (66) expression_relacional -> expression LE expression .
+    (47) expression -> expression . PLUS term
+    (48) expression -> expression . MINUS term
+
+    LBRACE          reduce using rule 66 (expression_relacional -> expression LE expression .)
+    SEMICOLON       reduce using rule 66 (expression_relacional -> expression LE expression .)
+    PLUS            shift and go to state 96
+    MINUS           shift and go to state 97
+
+
+state 119
+
+    (67) expression_relacional -> expression GT expression .
+    (47) expression -> expression . PLUS term
+    (48) expression -> expression . MINUS term
+
+    LBRACE          reduce using rule 67 (expression_relacional -> expression GT expression .)
+    SEMICOLON       reduce using rule 67 (expression_relacional -> expression GT expression .)
+    PLUS            shift and go to state 96
+    MINUS           shift and go to state 97
+
+
+state 120
+
+    (68) expression_relacional -> expression GE expression .
+    (47) expression -> expression . PLUS term
+    (48) expression -> expression . MINUS term
+
+    LBRACE          reduce using rule 68 (expression_relacional -> expression GE expression .)
+    SEMICOLON       reduce using rule 68 (expression_relacional -> expression GE expression .)
+    PLUS            shift and go to state 96
+    MINUS           shift and go to state 97
+
+
+state 121
+
+    (69) expression_relacional -> expression AND expression .
+    (47) expression -> expression . PLUS term
+    (48) expression -> expression . MINUS term
+
+    LBRACE          reduce using rule 69 (expression_relacional -> expression AND expression .)
+    SEMICOLON       reduce using rule 69 (expression_relacional -> expression AND expression .)
+    PLUS            shift and go to state 96
+    MINUS           shift and go to state 97
+
+
+state 122
+
+    (70) expression_relacional -> expression OR expression .
+    (47) expression -> expression . PLUS term
+    (48) expression -> expression . MINUS term
+
+    LBRACE          reduce using rule 70 (expression_relacional -> expression OR expression .)
+    SEMICOLON       reduce using rule 70 (expression_relacional -> expression OR expression .)
+    PLUS            shift and go to state 96
+    MINUS           shift and go to state 97
+
+
+state 123
+
+    (47) expression -> expression PLUS term .
+    (50) term -> term . TIMES factor
+    (51) term -> term . DIVIDE factor
+    (52) term -> term . MOD factor
+
+    EQ              reduce using rule 47 (expression -> expression PLUS term .)
+    NEQ             reduce using rule 47 (expression -> expression PLUS term .)
+    LT              reduce using rule 47 (expression -> expression PLUS term .)
+    LE              reduce using rule 47 (expression -> expression PLUS term .)
+    GT              reduce using rule 47 (expression -> expression PLUS term .)
+    GE              reduce using rule 47 (expression -> expression PLUS term .)
+    AND             reduce using rule 47 (expression -> expression PLUS term .)
+    OR              reduce using rule 47 (expression -> expression PLUS term .)
+    PLUS            reduce using rule 47 (expression -> expression PLUS term .)
+    MINUS           reduce using rule 47 (expression -> expression PLUS term .)
+    RBRACE          reduce using rule 47 (expression -> expression PLUS term .)
+    MUT             reduce using rule 47 (expression -> expression PLUS term .)
+    CONST           reduce using rule 47 (expression -> expression PLUS term .)
+    ID              reduce using rule 47 (expression -> expression PLUS term .)
+    IF              reduce using rule 47 (expression -> expression PLUS term .)
+    FOR             reduce using rule 47 (expression -> expression PLUS term .)
+    RETURN          reduce using rule 47 (expression -> expression PLUS term .)
+    COMMA           reduce using rule 47 (expression -> expression PLUS term .)
+    RPAREN          reduce using rule 47 (expression -> expression PLUS term .)
+    SEMICOLON       reduce using rule 47 (expression -> expression PLUS term .)
+    LBRACE          reduce using rule 47 (expression -> expression PLUS term .)
+    TIMES           shift and go to state 99
+    DIVIDE          shift and go to state 100
+    MOD             shift and go to state 101
+
+
+state 124
+
+    (48) expression -> expression MINUS term .
+    (50) term -> term . TIMES factor
+    (51) term -> term . DIVIDE factor
+    (52) term -> term . MOD factor
+
+    EQ              reduce using rule 48 (expression -> expression MINUS term .)
+    NEQ             reduce using rule 48 (expression -> expression MINUS term .)
+    LT              reduce using rule 48 (expression -> expression MINUS term .)
+    LE              reduce using rule 48 (expression -> expression MINUS term .)
+    GT              reduce using rule 48 (expression -> expression MINUS term .)
+    GE              reduce using rule 48 (expression -> expression MINUS term .)
+    AND             reduce using rule 48 (expression -> expression MINUS term .)
+    OR              reduce using rule 48 (expression -> expression MINUS term .)
+    PLUS            reduce using rule 48 (expression -> expression MINUS term .)
+    MINUS           reduce using rule 48 (expression -> expression MINUS term .)
+    RBRACE          reduce using rule 48 (expression -> expression MINUS term .)
+    MUT             reduce using rule 48 (expression -> expression MINUS term .)
+    CONST           reduce using rule 48 (expression -> expression MINUS term .)
+    ID              reduce using rule 48 (expression -> expression MINUS term .)
+    IF              reduce using rule 48 (expression -> expression MINUS term .)
+    FOR             reduce using rule 48 (expression -> expression MINUS term .)
+    RETURN          reduce using rule 48 (expression -> expression MINUS term .)
+    COMMA           reduce using rule 48 (expression -> expression MINUS term .)
+    RPAREN          reduce using rule 48 (expression -> expression MINUS term .)
+    SEMICOLON       reduce using rule 48 (expression -> expression MINUS term .)
+    LBRACE          reduce using rule 48 (expression -> expression MINUS term .)
+    TIMES           shift and go to state 99
+    DIVIDE          shift and go to state 100
+    MOD             shift and go to state 101
+
+
+state 125
+
+    (50) term -> term TIMES factor .
+
+    TIMES           reduce using rule 50 (term -> term TIMES factor .)
+    DIVIDE          reduce using rule 50 (term -> term TIMES factor .)
+    MOD             reduce using rule 50 (term -> term TIMES factor .)
+    EQ              reduce using rule 50 (term -> term TIMES factor .)
+    NEQ             reduce using rule 50 (term -> term TIMES factor .)
+    LT              reduce using rule 50 (term -> term TIMES factor .)
+    LE              reduce using rule 50 (term -> term TIMES factor .)
+    GT              reduce using rule 50 (term -> term TIMES factor .)
+    GE              reduce using rule 50 (term -> term TIMES factor .)
+    AND             reduce using rule 50 (term -> term TIMES factor .)
+    OR              reduce using rule 50 (term -> term TIMES factor .)
+    PLUS            reduce using rule 50 (term -> term TIMES factor .)
+    MINUS           reduce using rule 50 (term -> term TIMES factor .)
+    RBRACE          reduce using rule 50 (term -> term TIMES factor .)
+    MUT             reduce using rule 50 (term -> term TIMES factor .)
+    CONST           reduce using rule 50 (term -> term TIMES factor .)
+    ID              reduce using rule 50 (term -> term TIMES factor .)
+    IF              reduce using rule 50 (term -> term TIMES factor .)
+    FOR             reduce using rule 50 (term -> term TIMES factor .)
+    RETURN          reduce using rule 50 (term -> term TIMES factor .)
+    COMMA           reduce using rule 50 (term -> term TIMES factor .)
+    RPAREN          reduce using rule 50 (term -> term TIMES factor .)
+    SEMICOLON       reduce using rule 50 (term -> term TIMES factor .)
+    LBRACE          reduce using rule 50 (term -> term TIMES factor .)
+
+
+state 126
+
+    (51) term -> term DIVIDE factor .
+
+    TIMES           reduce using rule 51 (term -> term DIVIDE factor .)
+    DIVIDE          reduce using rule 51 (term -> term DIVIDE factor .)
+    MOD             reduce using rule 51 (term -> term DIVIDE factor .)
+    EQ              reduce using rule 51 (term -> term DIVIDE factor .)
+    NEQ             reduce using rule 51 (term -> term DIVIDE factor .)
+    LT              reduce using rule 51 (term -> term DIVIDE factor .)
+    LE              reduce using rule 51 (term -> term DIVIDE factor .)
+    GT              reduce using rule 51 (term -> term DIVIDE factor .)
+    GE              reduce using rule 51 (term -> term DIVIDE factor .)
+    AND             reduce using rule 51 (term -> term DIVIDE factor .)
+    OR              reduce using rule 51 (term -> term DIVIDE factor .)
+    PLUS            reduce using rule 51 (term -> term DIVIDE factor .)
+    MINUS           reduce using rule 51 (term -> term DIVIDE factor .)
+    RBRACE          reduce using rule 51 (term -> term DIVIDE factor .)
+    MUT             reduce using rule 51 (term -> term DIVIDE factor .)
+    CONST           reduce using rule 51 (term -> term DIVIDE factor .)
+    ID              reduce using rule 51 (term -> term DIVIDE factor .)
+    IF              reduce using rule 51 (term -> term DIVIDE factor .)
+    FOR             reduce using rule 51 (term -> term DIVIDE factor .)
+    RETURN          reduce using rule 51 (term -> term DIVIDE factor .)
+    COMMA           reduce using rule 51 (term -> term DIVIDE factor .)
+    RPAREN          reduce using rule 51 (term -> term DIVIDE factor .)
+    SEMICOLON       reduce using rule 51 (term -> term DIVIDE factor .)
+    LBRACE          reduce using rule 51 (term -> term DIVIDE factor .)
+
+
+state 127
+
+    (52) term -> term MOD factor .
+
+    TIMES           reduce using rule 52 (term -> term MOD factor .)
+    DIVIDE          reduce using rule 52 (term -> term MOD factor .)
+    MOD             reduce using rule 52 (term -> term MOD factor .)
+    EQ              reduce using rule 52 (term -> term MOD factor .)
+    NEQ             reduce using rule 52 (term -> term MOD factor .)
+    LT              reduce using rule 52 (term -> term MOD factor .)
+    LE              reduce using rule 52 (term -> term MOD factor .)
+    GT              reduce using rule 52 (term -> term MOD factor .)
+    GE              reduce using rule 52 (term -> term MOD factor .)
+    AND             reduce using rule 52 (term -> term MOD factor .)
+    OR              reduce using rule 52 (term -> term MOD factor .)
+    PLUS            reduce using rule 52 (term -> term MOD factor .)
+    MINUS           reduce using rule 52 (term -> term MOD factor .)
+    RBRACE          reduce using rule 52 (term -> term MOD factor .)
+    MUT             reduce using rule 52 (term -> term MOD factor .)
+    CONST           reduce using rule 52 (term -> term MOD factor .)
+    ID              reduce using rule 52 (term -> term MOD factor .)
+    IF              reduce using rule 52 (term -> term MOD factor .)
+    FOR             reduce using rule 52 (term -> term MOD factor .)
+    RETURN          reduce using rule 52 (term -> term MOD factor .)
+    COMMA           reduce using rule 52 (term -> term MOD factor .)
+    RPAREN          reduce using rule 52 (term -> term MOD factor .)
+    SEMICOLON       reduce using rule 52 (term -> term MOD factor .)
+    LBRACE          reduce using rule 52 (term -> term MOD factor .)
+
+
+state 128
+
+    (60) factor -> LPAREN expression RPAREN .
+
+    TIMES           reduce using rule 60 (factor -> LPAREN expression RPAREN .)
+    DIVIDE          reduce using rule 60 (factor -> LPAREN expression RPAREN .)
+    MOD             reduce using rule 60 (factor -> LPAREN expression RPAREN .)
+    EQ              reduce using rule 60 (factor -> LPAREN expression RPAREN .)
+    NEQ             reduce using rule 60 (factor -> LPAREN expression RPAREN .)
+    LT              reduce using rule 60 (factor -> LPAREN expression RPAREN .)
+    LE              reduce using rule 60 (factor -> LPAREN expression RPAREN .)
+    GT              reduce using rule 60 (factor -> LPAREN expression RPAREN .)
+    GE              reduce using rule 60 (factor -> LPAREN expression RPAREN .)
+    AND             reduce using rule 60 (factor -> LPAREN expression RPAREN .)
+    OR              reduce using rule 60 (factor -> LPAREN expression RPAREN .)
+    PLUS            reduce using rule 60 (factor -> LPAREN expression RPAREN .)
+    MINUS           reduce using rule 60 (factor -> LPAREN expression RPAREN .)
+    RBRACE          reduce using rule 60 (factor -> LPAREN expression RPAREN .)
+    MUT             reduce using rule 60 (factor -> LPAREN expression RPAREN .)
+    CONST           reduce using rule 60 (factor -> LPAREN expression RPAREN .)
+    ID              reduce using rule 60 (factor -> LPAREN expression RPAREN .)
+    IF              reduce using rule 60 (factor -> LPAREN expression RPAREN .)
+    FOR             reduce using rule 60 (factor -> LPAREN expression RPAREN .)
+    RETURN          reduce using rule 60 (factor -> LPAREN expression RPAREN .)
+    COMMA           reduce using rule 60 (factor -> LPAREN expression RPAREN .)
+    RPAREN          reduce using rule 60 (factor -> LPAREN expression RPAREN .)
+    SEMICOLON       reduce using rule 60 (factor -> LPAREN expression RPAREN .)
+    LBRACE          reduce using rule 60 (factor -> LPAREN expression RPAREN .)
+
+
+state 129
+
+    (42) for_statement -> FOR ID IN expression . LBRACE statement RBRACE
+    (47) expression -> expression . PLUS term
+    (48) expression -> expression . MINUS term
+
+    LBRACE          shift and go to state 136
+    PLUS            shift and go to state 96
+    MINUS           shift and go to state 97
+
+
+state 130
+
+    (43) for_statement -> FOR declaration_imutable SEMICOLON expression_relacional . SEMICOLON increment_rule LBRACE statement RBRACE
+
+    SEMICOLON       shift and go to state 137
+
+
+state 131
+
+    (44) for_statement -> FOR expression_relacional LBRACE statement . RBRACE
+
+    RBRACE          shift and go to state 138
+
+
+state 132
+
+    (6) function_definition -> FN ID LPAREN params RPAREN type LBRACE block_statement RBRACE function_definition .
+
+    $end            reduce using rule 6 (function_definition -> FN ID LPAREN params RPAREN type LBRACE block_statement RBRACE function_definition .)
+
+
+state 133
+
+    (8) function_definition_without_main -> FN ID LPAREN . params RPAREN LBRACE block_statement RBRACE function_definition_without_main
+    (9) function_definition_without_main -> FN ID LPAREN . params RPAREN type LBRACE block_statement RBRACE function_definition_without_main
+    (11) params -> . param more_params
+    (14) param -> . ID type
+
+    ID              shift and go to state 13
+
+    params                         shift and go to state 139
+    param                          shift and go to state 15
+
+state 134
+
+    (36) more_expressions -> COMMA expression . more_expressions
+    (47) expression -> expression . PLUS term
+    (48) expression -> expression . MINUS term
+    (36) more_expressions -> . COMMA expression more_expressions
+    (37) more_expressions -> .
+
+    PLUS            shift and go to state 96
+    MINUS           shift and go to state 97
+    COMMA           shift and go to state 112
+    RPAREN          reduce using rule 37 (more_expressions -> .)
+
+    more_expressions               shift and go to state 140
+
+state 135
+
+    (38) if_statement -> IF expression_relacional LBRACE statement RBRACE .
+    (39) if_statement -> IF expression_relacional LBRACE statement RBRACE . elseop
+    (40) elseop -> . ELSE if_statement
+    (41) elseop -> . ELSE LBRACE statement RBRACE
+
+    MUT             reduce using rule 38 (if_statement -> IF expression_relacional LBRACE statement RBRACE .)
+    CONST           reduce using rule 38 (if_statement -> IF expression_relacional LBRACE statement RBRACE .)
+    ID              reduce using rule 38 (if_statement -> IF expression_relacional LBRACE statement RBRACE .)
+    IF              reduce using rule 38 (if_statement -> IF expression_relacional LBRACE statement RBRACE .)
+    FOR             reduce using rule 38 (if_statement -> IF expression_relacional LBRACE statement RBRACE .)
+    RETURN          reduce using rule 38 (if_statement -> IF expression_relacional LBRACE statement RBRACE .)
+    RBRACE          reduce using rule 38 (if_statement -> IF expression_relacional LBRACE statement RBRACE .)
+    ELSE            shift and go to state 142
+
+    elseop                         shift and go to state 141
+
+state 136
+
+    (42) for_statement -> FOR ID IN expression LBRACE . statement RBRACE
+    (22) statement -> . var_statement statement
+    (23) statement -> . var_assignment statement
+    (24) statement -> . func_call statement
+    (25) statement -> . if_statement statement
+    (26) statement -> . for_statement statement
+    (27) statement -> . return_statement
+    (28) statement -> .
+    (29) var_statement -> . declaration_imutable
+    (30) var_statement -> . MUT ID DECLARE_ASSIGN expression
+    (31) var_statement -> . CONST ID DECLARE_ASSIGN expression
+    (32) var_assignment -> . ID ASSIGN expression
+    (33) func_call -> . ID LPAREN id_list RPAREN
+    (34) func_call -> . ID LPAREN RPAREN
+    (38) if_statement -> . IF expression_relacional LBRACE statement RBRACE
+    (39) if_statement -> . IF expression_relacional LBRACE statement RBRACE elseop
+    (42) for_statement -> . FOR ID IN expression LBRACE statement RBRACE
+    (43) for_statement -> . FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE
+    (44) for_statement -> . FOR expression_relacional LBRACE statement RBRACE
+    (46) return_statement -> . RETURN expression
+    (45) declaration_imutable -> . ID DECLARE_ASSIGN expression
+
+    RBRACE          reduce using rule 28 (statement -> .)
+    MUT             shift and go to state 40
+    CONST           shift and go to state 42
+    ID              shift and go to state 41
+    IF              shift and go to state 43
+    FOR             shift and go to state 44
+    RETURN          shift and go to state 45
+
+    statement                      shift and go to state 143
+    var_statement                  shift and go to state 33
+    var_assignment                 shift and go to state 34
+    func_call                      shift and go to state 35
+    if_statement                   shift and go to state 36
+    for_statement                  shift and go to state 37
+    return_statement               shift and go to state 38
+    declaration_imutable           shift and go to state 39
+
+state 137
+
+    (43) for_statement -> FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON . increment_rule LBRACE statement RBRACE
+    (61) increment_rule -> . ID INCREMENT
+    (62) increment_rule -> . ID DECREMENT
+
+    ID              shift and go to state 145
+
+    increment_rule                 shift and go to state 144
+
+state 138
+
+    (44) for_statement -> FOR expression_relacional LBRACE statement RBRACE .
+
+    MUT             reduce using rule 44 (for_statement -> FOR expression_relacional LBRACE statement RBRACE .)
+    CONST           reduce using rule 44 (for_statement -> FOR expression_relacional LBRACE statement RBRACE .)
+    ID              reduce using rule 44 (for_statement -> FOR expression_relacional LBRACE statement RBRACE .)
+    IF              reduce using rule 44 (for_statement -> FOR expression_relacional LBRACE statement RBRACE .)
+    FOR             reduce using rule 44 (for_statement -> FOR expression_relacional LBRACE statement RBRACE .)
+    RETURN          reduce using rule 44 (for_statement -> FOR expression_relacional LBRACE statement RBRACE .)
+    RBRACE          reduce using rule 44 (for_statement -> FOR expression_relacional LBRACE statement RBRACE .)
+
+
+state 139
+
+    (8) function_definition_without_main -> FN ID LPAREN params . RPAREN LBRACE block_statement RBRACE function_definition_without_main
+    (9) function_definition_without_main -> FN ID LPAREN params . RPAREN type LBRACE block_statement RBRACE function_definition_without_main
+
+    RPAREN          shift and go to state 146
+
+
+state 140
+
+    (36) more_expressions -> COMMA expression more_expressions .
+
+    RPAREN          reduce using rule 36 (more_expressions -> COMMA expression more_expressions .)
+
+
+state 141
+
+    (39) if_statement -> IF expression_relacional LBRACE statement RBRACE elseop .
+
+    MUT             reduce using rule 39 (if_statement -> IF expression_relacional LBRACE statement RBRACE elseop .)
+    CONST           reduce using rule 39 (if_statement -> IF expression_relacional LBRACE statement RBRACE elseop .)
+    ID              reduce using rule 39 (if_statement -> IF expression_relacional LBRACE statement RBRACE elseop .)
+    IF              reduce using rule 39 (if_statement -> IF expression_relacional LBRACE statement RBRACE elseop .)
+    FOR             reduce using rule 39 (if_statement -> IF expression_relacional LBRACE statement RBRACE elseop .)
+    RETURN          reduce using rule 39 (if_statement -> IF expression_relacional LBRACE statement RBRACE elseop .)
+    RBRACE          reduce using rule 39 (if_statement -> IF expression_relacional LBRACE statement RBRACE elseop .)
+
+
+state 142
+
+    (40) elseop -> ELSE . if_statement
+    (41) elseop -> ELSE . LBRACE statement RBRACE
+    (38) if_statement -> . IF expression_relacional LBRACE statement RBRACE
+    (39) if_statement -> . IF expression_relacional LBRACE statement RBRACE elseop
+
+    LBRACE          shift and go to state 148
+    IF              shift and go to state 43
+
+    if_statement                   shift and go to state 147
+
+state 143
+
+    (42) for_statement -> FOR ID IN expression LBRACE statement . RBRACE
+
+    RBRACE          shift and go to state 149
+
+
+state 144
+
+    (43) for_statement -> FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule . LBRACE statement RBRACE
+
+    LBRACE          shift and go to state 150
+
+
+state 145
+
+    (61) increment_rule -> ID . INCREMENT
+    (62) increment_rule -> ID . DECREMENT
+
+    INCREMENT       shift and go to state 151
+    DECREMENT       shift and go to state 152
+
+
+state 146
+
+    (8) function_definition_without_main -> FN ID LPAREN params RPAREN . LBRACE block_statement RBRACE function_definition_without_main
+    (9) function_definition_without_main -> FN ID LPAREN params RPAREN . type LBRACE block_statement RBRACE function_definition_without_main
+    (15) type -> . INT
+    (16) type -> . F32
+    (17) type -> . F64
+    (18) type -> . STRING
+    (19) type -> . BOOL
+    (20) type -> . RUNE
+
+    LBRACE          shift and go to state 153
+    INT             shift and go to state 18
+    F32             shift and go to state 19
+    F64             shift and go to state 20
+    STRING          shift and go to state 21
+    BOOL            shift and go to state 22
+    RUNE            shift and go to state 23
+
+    type                           shift and go to state 154
+
+state 147
+
+    (40) elseop -> ELSE if_statement .
+
+    MUT             reduce using rule 40 (elseop -> ELSE if_statement .)
+    CONST           reduce using rule 40 (elseop -> ELSE if_statement .)
+    ID              reduce using rule 40 (elseop -> ELSE if_statement .)
+    IF              reduce using rule 40 (elseop -> ELSE if_statement .)
+    FOR             reduce using rule 40 (elseop -> ELSE if_statement .)
+    RETURN          reduce using rule 40 (elseop -> ELSE if_statement .)
+    RBRACE          reduce using rule 40 (elseop -> ELSE if_statement .)
+
+
+state 148
+
+    (41) elseop -> ELSE LBRACE . statement RBRACE
+    (22) statement -> . var_statement statement
+    (23) statement -> . var_assignment statement
+    (24) statement -> . func_call statement
+    (25) statement -> . if_statement statement
+    (26) statement -> . for_statement statement
+    (27) statement -> . return_statement
+    (28) statement -> .
+    (29) var_statement -> . declaration_imutable
+    (30) var_statement -> . MUT ID DECLARE_ASSIGN expression
+    (31) var_statement -> . CONST ID DECLARE_ASSIGN expression
+    (32) var_assignment -> . ID ASSIGN expression
+    (33) func_call -> . ID LPAREN id_list RPAREN
+    (34) func_call -> . ID LPAREN RPAREN
+    (38) if_statement -> . IF expression_relacional LBRACE statement RBRACE
+    (39) if_statement -> . IF expression_relacional LBRACE statement RBRACE elseop
+    (42) for_statement -> . FOR ID IN expression LBRACE statement RBRACE
+    (43) for_statement -> . FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE
+    (44) for_statement -> . FOR expression_relacional LBRACE statement RBRACE
+    (46) return_statement -> . RETURN expression
+    (45) declaration_imutable -> . ID DECLARE_ASSIGN expression
+
+    RBRACE          reduce using rule 28 (statement -> .)
+    MUT             shift and go to state 40
+    CONST           shift and go to state 42
+    ID              shift and go to state 41
+    IF              shift and go to state 43
+    FOR             shift and go to state 44
+    RETURN          shift and go to state 45
+
+    statement                      shift and go to state 155
+    var_statement                  shift and go to state 33
+    var_assignment                 shift and go to state 34
+    func_call                      shift and go to state 35
+    if_statement                   shift and go to state 36
+    for_statement                  shift and go to state 37
+    return_statement               shift and go to state 38
+    declaration_imutable           shift and go to state 39
+
+state 149
+
+    (42) for_statement -> FOR ID IN expression LBRACE statement RBRACE .
+
+    MUT             reduce using rule 42 (for_statement -> FOR ID IN expression LBRACE statement RBRACE .)
+    CONST           reduce using rule 42 (for_statement -> FOR ID IN expression LBRACE statement RBRACE .)
+    ID              reduce using rule 42 (for_statement -> FOR ID IN expression LBRACE statement RBRACE .)
+    IF              reduce using rule 42 (for_statement -> FOR ID IN expression LBRACE statement RBRACE .)
+    FOR             reduce using rule 42 (for_statement -> FOR ID IN expression LBRACE statement RBRACE .)
+    RETURN          reduce using rule 42 (for_statement -> FOR ID IN expression LBRACE statement RBRACE .)
+    RBRACE          reduce using rule 42 (for_statement -> FOR ID IN expression LBRACE statement RBRACE .)
+
+
+state 150
+
+    (43) for_statement -> FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE . statement RBRACE
+    (22) statement -> . var_statement statement
+    (23) statement -> . var_assignment statement
+    (24) statement -> . func_call statement
+    (25) statement -> . if_statement statement
+    (26) statement -> . for_statement statement
+    (27) statement -> . return_statement
+    (28) statement -> .
+    (29) var_statement -> . declaration_imutable
+    (30) var_statement -> . MUT ID DECLARE_ASSIGN expression
+    (31) var_statement -> . CONST ID DECLARE_ASSIGN expression
+    (32) var_assignment -> . ID ASSIGN expression
+    (33) func_call -> . ID LPAREN id_list RPAREN
+    (34) func_call -> . ID LPAREN RPAREN
+    (38) if_statement -> . IF expression_relacional LBRACE statement RBRACE
+    (39) if_statement -> . IF expression_relacional LBRACE statement RBRACE elseop
+    (42) for_statement -> . FOR ID IN expression LBRACE statement RBRACE
+    (43) for_statement -> . FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE
+    (44) for_statement -> . FOR expression_relacional LBRACE statement RBRACE
+    (46) return_statement -> . RETURN expression
+    (45) declaration_imutable -> . ID DECLARE_ASSIGN expression
+
+    RBRACE          reduce using rule 28 (statement -> .)
+    MUT             shift and go to state 40
+    CONST           shift and go to state 42
+    ID              shift and go to state 41
+    IF              shift and go to state 43
+    FOR             shift and go to state 44
+    RETURN          shift and go to state 45
+
+    declaration_imutable           shift and go to state 39
+    statement                      shift and go to state 156
+    var_statement                  shift and go to state 33
+    var_assignment                 shift and go to state 34
+    func_call                      shift and go to state 35
+    if_statement                   shift and go to state 36
+    for_statement                  shift and go to state 37
+    return_statement               shift and go to state 38
+
+state 151
+
+    (61) increment_rule -> ID INCREMENT .
+
+    LBRACE          reduce using rule 61 (increment_rule -> ID INCREMENT .)
+
+
+state 152
+
+    (62) increment_rule -> ID DECREMENT .
+
+    LBRACE          reduce using rule 62 (increment_rule -> ID DECREMENT .)
+
+
+state 153
+
+    (8) function_definition_without_main -> FN ID LPAREN params RPAREN LBRACE . block_statement RBRACE function_definition_without_main
+    (21) block_statement -> . statement
+    (22) statement -> . var_statement statement
+    (23) statement -> . var_assignment statement
+    (24) statement -> . func_call statement
+    (25) statement -> . if_statement statement
+    (26) statement -> . for_statement statement
+    (27) statement -> . return_statement
+    (28) statement -> .
+    (29) var_statement -> . declaration_imutable
+    (30) var_statement -> . MUT ID DECLARE_ASSIGN expression
+    (31) var_statement -> . CONST ID DECLARE_ASSIGN expression
+    (32) var_assignment -> . ID ASSIGN expression
+    (33) func_call -> . ID LPAREN id_list RPAREN
+    (34) func_call -> . ID LPAREN RPAREN
+    (38) if_statement -> . IF expression_relacional LBRACE statement RBRACE
+    (39) if_statement -> . IF expression_relacional LBRACE statement RBRACE elseop
+    (42) for_statement -> . FOR ID IN expression LBRACE statement RBRACE
+    (43) for_statement -> . FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE
+    (44) for_statement -> . FOR expression_relacional LBRACE statement RBRACE
+    (46) return_statement -> . RETURN expression
+    (45) declaration_imutable -> . ID DECLARE_ASSIGN expression
+
+    RBRACE          reduce using rule 28 (statement -> .)
+    MUT             shift and go to state 40
+    CONST           shift and go to state 42
+    ID              shift and go to state 41
+    IF              shift and go to state 43
+    FOR             shift and go to state 44
+    RETURN          shift and go to state 45
+
+    block_statement                shift and go to state 157
+    statement                      shift and go to state 32
+    var_statement                  shift and go to state 33
+    var_assignment                 shift and go to state 34
+    func_call                      shift and go to state 35
+    if_statement                   shift and go to state 36
+    for_statement                  shift and go to state 37
+    return_statement               shift and go to state 38
+    declaration_imutable           shift and go to state 39
+
+state 154
+
+    (9) function_definition_without_main -> FN ID LPAREN params RPAREN type . LBRACE block_statement RBRACE function_definition_without_main
+
+    LBRACE          shift and go to state 158
+
+
+state 155
+
+    (41) elseop -> ELSE LBRACE statement . RBRACE
+
+    RBRACE          shift and go to state 159
+
+
+state 156
+
+    (43) for_statement -> FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement . RBRACE
+
+    RBRACE          shift and go to state 160
+
+
+state 157
+
+    (8) function_definition_without_main -> FN ID LPAREN params RPAREN LBRACE block_statement . RBRACE function_definition_without_main
+
+    RBRACE          shift and go to state 161
+
+
+state 158
+
+    (9) function_definition_without_main -> FN ID LPAREN params RPAREN type LBRACE . block_statement RBRACE function_definition_without_main
+    (21) block_statement -> . statement
+    (22) statement -> . var_statement statement
+    (23) statement -> . var_assignment statement
+    (24) statement -> . func_call statement
+    (25) statement -> . if_statement statement
+    (26) statement -> . for_statement statement
+    (27) statement -> . return_statement
+    (28) statement -> .
+    (29) var_statement -> . declaration_imutable
+    (30) var_statement -> . MUT ID DECLARE_ASSIGN expression
+    (31) var_statement -> . CONST ID DECLARE_ASSIGN expression
+    (32) var_assignment -> . ID ASSIGN expression
+    (33) func_call -> . ID LPAREN id_list RPAREN
+    (34) func_call -> . ID LPAREN RPAREN
+    (38) if_statement -> . IF expression_relacional LBRACE statement RBRACE
+    (39) if_statement -> . IF expression_relacional LBRACE statement RBRACE elseop
+    (42) for_statement -> . FOR ID IN expression LBRACE statement RBRACE
+    (43) for_statement -> . FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE
+    (44) for_statement -> . FOR expression_relacional LBRACE statement RBRACE
+    (46) return_statement -> . RETURN expression
+    (45) declaration_imutable -> . ID DECLARE_ASSIGN expression
+
+    RBRACE          reduce using rule 28 (statement -> .)
+    MUT             shift and go to state 40
+    CONST           shift and go to state 42
+    ID              shift and go to state 41
+    IF              shift and go to state 43
+    FOR             shift and go to state 44
+    RETURN          shift and go to state 45
+
+    block_statement                shift and go to state 162
+    statement                      shift and go to state 32
+    var_statement                  shift and go to state 33
+    var_assignment                 shift and go to state 34
+    func_call                      shift and go to state 35
+    if_statement                   shift and go to state 36
+    for_statement                  shift and go to state 37
+    return_statement               shift and go to state 38
+    declaration_imutable           shift and go to state 39
+
+state 159
+
+    (41) elseop -> ELSE LBRACE statement RBRACE .
+
+    MUT             reduce using rule 41 (elseop -> ELSE LBRACE statement RBRACE .)
+    CONST           reduce using rule 41 (elseop -> ELSE LBRACE statement RBRACE .)
+    ID              reduce using rule 41 (elseop -> ELSE LBRACE statement RBRACE .)
+    IF              reduce using rule 41 (elseop -> ELSE LBRACE statement RBRACE .)
+    FOR             reduce using rule 41 (elseop -> ELSE LBRACE statement RBRACE .)
+    RETURN          reduce using rule 41 (elseop -> ELSE LBRACE statement RBRACE .)
+    RBRACE          reduce using rule 41 (elseop -> ELSE LBRACE statement RBRACE .)
+
+
+state 160
+
+    (43) for_statement -> FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE .
+
+    MUT             reduce using rule 43 (for_statement -> FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE .)
+    CONST           reduce using rule 43 (for_statement -> FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE .)
+    ID              reduce using rule 43 (for_statement -> FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE .)
+    IF              reduce using rule 43 (for_statement -> FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE .)
+    FOR             reduce using rule 43 (for_statement -> FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE .)
+    RETURN          reduce using rule 43 (for_statement -> FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE .)
+    RBRACE          reduce using rule 43 (for_statement -> FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE .)
+
+
+state 161
+
+    (8) function_definition_without_main -> FN ID LPAREN params RPAREN LBRACE block_statement RBRACE . function_definition_without_main
+    (8) function_definition_without_main -> . FN ID LPAREN params RPAREN LBRACE block_statement RBRACE function_definition_without_main
+    (9) function_definition_without_main -> . FN ID LPAREN params RPAREN type LBRACE block_statement RBRACE function_definition_without_main
+    (10) function_definition_without_main -> .
+
+    FN              shift and go to state 78
+    $end            reduce using rule 10 (function_definition_without_main -> .)
+
+    function_definition_without_main shift and go to state 163
+
+state 162
+
+    (9) function_definition_without_main -> FN ID LPAREN params RPAREN type LBRACE block_statement . RBRACE function_definition_without_main
+
+    RBRACE          shift and go to state 164
+
+
+state 163
+
+    (8) function_definition_without_main -> FN ID LPAREN params RPAREN LBRACE block_statement RBRACE function_definition_without_main .
+
+    $end            reduce using rule 8 (function_definition_without_main -> FN ID LPAREN params RPAREN LBRACE block_statement RBRACE function_definition_without_main .)
+
+
+state 164
+
+    (9) function_definition_without_main -> FN ID LPAREN params RPAREN type LBRACE block_statement RBRACE . function_definition_without_main
+    (8) function_definition_without_main -> . FN ID LPAREN params RPAREN LBRACE block_statement RBRACE function_definition_without_main
+    (9) function_definition_without_main -> . FN ID LPAREN params RPAREN type LBRACE block_statement RBRACE function_definition_without_main
+    (10) function_definition_without_main -> .
+
+    FN              shift and go to state 78
+    $end            reduce using rule 10 (function_definition_without_main -> .)
+
+    function_definition_without_main shift and go to state 165
+
+state 165
+
+    (9) function_definition_without_main -> FN ID LPAREN params RPAREN type LBRACE block_statement RBRACE function_definition_without_main .
+
+    $end            reduce using rule 9 (function_definition_without_main -> FN ID LPAREN params RPAREN type LBRACE block_statement RBRACE function_definition_without_main .)
+
