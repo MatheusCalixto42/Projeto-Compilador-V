@@ -39,6 +39,10 @@ class AbstractVisitor(metaclass=ABCMeta):
         pass
 
     @abstractmethod
+    def visitNoneFunction(self, noneFunction):
+        pass
+
+    @abstractmethod
     def visitDescriptionParam(self, descriptionParam):
         pass
 
@@ -79,11 +83,19 @@ class AbstractVisitor(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def visitVarDeclaration(self, varDeclaration):
+    def visitBlockStatement(self, blockStatement):
+        pass
+
+    @abstractmethod
+    def visitVarStatement(self, varStatement):
         pass
 
     @abstractmethod
     def visitVarAssignment(self, varAssignment):
+        pass
+
+    @abstractmethod
+    def visitFuncCallS(self, funcCall):
         pass
 
     @abstractmethod
@@ -96,6 +108,10 @@ class AbstractVisitor(metaclass=ABCMeta):
 
     @abstractmethod
     def visitReturnStatement(self, returnStatement):
+        pass
+
+    @abstractmethod
+    def visitNoneStatement(self, noneStatement):
         pass
     
     @abstractmethod
@@ -127,7 +143,7 @@ class AbstractVisitor(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def visitPlusExpression(self, plusExpression):
+    def visitPlusExpres(self, plusExpres):
         pass
 
     @abstractmethod#olhar aqui
@@ -151,7 +167,7 @@ class AbstractVisitor(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def visitForEachStatement(self, forEachStatement):
+    def visitForEach(self, forEach):
         pass
 
     @abstractmethod
@@ -215,7 +231,7 @@ class AbstractVisitor(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def visitExpressionNot(self, expressionNot):
+    def visitExpressionRelationalNot(self, expressionRelationalNot):
         pass
 
     @abstractmethod

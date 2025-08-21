@@ -3,282 +3,304 @@ from LexicoV import *
 import SintaxeAbstrate as sa
 
 def p_program1(p):
-    '''Program : Program_Import Function_Definition'''
+    '''program : program_Import function_definition'''
     p[0] = sa.ImportAndFuncDefinition(p[1],p[2])
 
 def p_program2(p):
-    '''Program : Function_definition'''
+    '''program : function_definition'''
     p[0] = sa.SingleFuncDefinition(p[1])
 
 def p_program_import1(p):
-    '''Program_import : IMPORT ID Program_import'''
+    '''program_Import : IMPORT ID program_Import'''
     p[0] = sa.SequenceImports(p[1],p[2],p[3])
 
 def p_program_import2(p):
-    '''Program_import : IMPORT ID'''
+    '''program_Import : IMPORT ID'''
     p[0] = sa.SingleImport(p[1], p[2])
 
 def p_function_definition1(p):
-    '''Function_definition : FN ID LPAREN Param RPAREN LBRACE Block_statement RBRACE Function_definition'''
+    '''function_definition : FN ID LPAREN params RPAREN LBRACE block_statement RBRACE function_definition'''
     p[0] = sa.FunctionVoid(p[2], p[4], p[7], p[9])
 
 def p_function_definition2(p):
-    '''Function_definition : FN ID LPAREN Param RPAREN Type LBRACE Block_statement RBRACE Function_definition'''
+    '''function_definition : FN ID LPAREN params RPAREN type LBRACE block_statement RBRACE function_definition'''
     p[0] = sa.FunctionReturnType(p[2], p[4], p[6], p[8], p[10])
 
 def p_function_definition3(p):
-    '''Function_definition : FN MAIN LPAREN RPAREN LBRACE Block_statement RBRACE Function_definition_without_main'''
+    '''function_definition : FN MAIN LPAREN RPAREN LBRACE block_statement RBRACE function_definition_without_main'''
     p[0] = sa.FunctionMain(p[2], p[6], p[8])
 
 def p_function_definition_without_main1(p):
-    '''Function_definition_without_main : FN ID LPAREN Param RPAREN LBRACE Block_statement RBRACE Function_definition_without_main'''
+    '''function_definition_without_main : FN ID LPAREN params RPAREN LBRACE block_statement RBRACE function_definition_without_main'''
     p[0] = sa.FunctionVoidWithoutMain(p[2], p[4], p[7], p[9])
 
 def p_function_definition_without_main2(p):
-    '''Function_definition_without_main : FN ID LPAREN Param RPAREN Type LBRACE Block_statement RBRACE Function_definition_without_main'''
+    '''function_definition_without_main : FN ID LPAREN params RPAREN type LBRACE block_statement RBRACE function_definition_without_main'''
     p[0] = sa.FunctionReturnTypeWithoutMain(p[2], p[4], p[6], p[8], p[10])
 
+def p_none_function(p):
+    '''function_definition_without_main : '''
+    p[0] = sa.NoneFunction()
 
 def p_params(p):
-    '''Params : Param More_Params'''
+    '''params : param more_params'''
     p[0] = sa.DescriptionParams(p[1], p[2])
 
 
 def p_more_param(p):
-    '''More_param : COMMA Param More_Params'''
+    '''more_params : COMMA param more_params'''
     p[0] = sa.MultipleParams(p[2], p[3])
 
 #isso aqui funciona?
 def p_more_param_empty(p): 
-    '''More_param :'''
+    '''more_params :'''
     p[0] = sa.MultipleParams(None, None)
 
 
 def p_param(p):
-    '''Param : ID Type'''
+    '''param : ID type'''
     p[0] = sa.DescriptionParam(p[1], p[2])
 
 def p_type1(p):
-    '''Type : INT'''
+    '''type : INT'''
     p[0] = sa.IntV(p[1])
 
 def p_type2(p):
-    '''Type : F32'''
+    '''type : F32'''
     p[0] = sa.F32(p[1])
 
 def p_type3(p):
-    '''Type : F64'''
+    '''type : F64'''
     p[0] = sa.F64(p[1])
 
 def p_type4(p):
-    '''Type : STRING'''
+    '''type : STRING'''
     p[0] = sa.String(p[1])
 
 def p_type5(p):
-    '''Type : BOOL'''
+    '''type : BOOL'''
     p[0] = sa.BoolV(p[1])
 
 def p_type6(p):
-    '''Type : RUNE'''
+    '''type : RUNE'''
     p[0] = sa.Rune(p[1])
 
 def p_block_statement(p):
-    '''Block_statement :  Var_statement'''
-    p[0] = sa.VarDeclaration(p[1])
+    '''block_statement :  statement '''
+    p[0] = sa.BlockStatement(p[1])
 
-def p_block_statement2(p):
-    '''Block_statement :  Var_assignment'''
-    p[0] = sa.VarAssignment(p[1])
+def p_statement(p):
+    '''statement :  var_statement statement'''
+    p[0] = sa.VarStatement(p[1], p[2])
 
-def p_block_statement3(p):
-    '''Block_statement :  Func_call'''
-    p[0] = sa.FuncCall(p[1])
+def p_statement2(p):
+    '''statement :  var_assignment statement'''
+    p[0] = sa.VarAssignment(p[1], p[2])
 
-def p_block_statement4(p):
-    '''Block_statement :  If_statement'''
-    p[0] = sa.IfStatement(p[1])
+def p_statement3(p):
+    '''statement :  func_call statement'''
+    p[0] = sa.FuncCallS(p[1],p[2])
 
-def p_block_statement5(p):
-    '''Block_statement :  For_statement'''
-    p[0] = sa.ForStatement(p[1])
+def p_statement4(p):
+    '''statement :  if_statement statement'''
+    p[0] = sa.IfStatement(p[1], p[2])
 
-def p_block_statement6(p):
-    '''Block_statement :  Return_statement'''
+def p_statement5(p):
+    '''statement :  for_statement statement'''
+    p[0] = sa.ForStatement(p[1], p[2])
+
+def p_statement6(p):
+    '''statement :  return_statement'''
     p[0] = sa.ReturnStatement(p[1])
 
+def p_statement7(p):
+    '''statement : '''
+    p[0] = sa.NoneStatement()
+
 def p_var_declaration(p):
-    '''Var_declaration :  DeclarationImutable'''
+    '''var_statement :  declaration_imutable'''
     p[0] = sa.DeclarationImutable(p[1])
 
 def p_var_declaration2(p):
-    '''Var_declaration :  MUT ID DECLARE_ASSIGN Expression'''
+    '''var_statement :  MUT ID DECLARE_ASSIGN expression'''
     p[0] = sa.MutableDeclaration(p[1], p[2], p[4])
 
 def p_var_declaration3(p):
-    '''Var_declaration :  CONST ID DECLARE_ASSIGN Expression '''
+    '''var_statement :  CONST ID DECLARE_ASSIGN expression '''
     p[0] = sa.ConstantDeclaration(p[1], p[2], p[4])
 
 def p_var_assignment(p):
-    '''Var_assignment :  ID ASSIGN Expression '''
+    '''var_assignment :  ID ASSIGN expression'''
     p[0] = sa.VarModification(p[1], p[3])
 
 def p_func_call(p):
-    '''Func_call : ID LPAREN id_list RPAREN'''
+    '''func_call : ID LPAREN id_list RPAREN'''
     p[0] = sa.FuncCompoundParams(p[1], p[3])
 
 def p_func_call_empty(p):
-    '''Func_call : ID LPAREN RPAREN'''
+    '''func_call : ID LPAREN RPAREN'''
     p[0] = sa.FuncNoParams(p[1])
 
 def p_id_list(p):
-    '''id_list : Expression more_Expressions'''
+    '''id_list : expression more_expressions'''
     p[0] = sa.ListId(p[1], p[2])
 
 def p_more_expression(p):
-    '''more_Expressions : COMMA Expression more_Expressions'''
+    '''more_expressions : COMMA expression more_expressions'''
     p[0] = sa.PlusExpres(p[2], p[3])
 
 #ou essa abordagem?
 def p_more_expression_empty(p):
-    '''more_Expressions :'''
+    '''more_expressions :'''
     p[0] = sa.NoneExpression()
 
 def p_if_statement(p):
-    '''If_statement : IF ExpressionRelacional LBRACE Block_statement RBRACE'''
+    '''if_statement : IF expression_relacional LBRACE statement RBRACE'''
     p[0] = sa.OnlyIf(p[2], p[4])
 
 def p_if_statement_else(p):
-    '''If_statement_else : IF ExpressionRelacional LBRACE Block_statement RBRACE Else? '''
+    '''if_statement : IF expression_relacional LBRACE statement RBRACE elseop'''
     p[0] = sa.IfAndElse(p[2], p[4], p[6])
 
 def p_else(p):
-    '''Else : ELSE If_statement'''
+    '''elseop : ELSE if_statement'''
     p[0] = sa.ElseIf(p[2])
 
 def p_else2(p):
-    '''Else2 : ELSE LBRACE Block_statement RBRACE'''
+    '''elseop : ELSE LBRACE statement RBRACE'''
     p[0] = sa.OnlyElse(p[3])
 
 def p_for_each_statement(p):
-    '''For_statement : FOR ID IN Expression LBRACE Block_statement RBRACE'''
+    '''for_statement : FOR ID IN expression LBRACE statement RBRACE'''
     p[0] = sa.ForEach(p[2], p[4], p[6])
 
 def p_for_statement(p):
-    '''For_statement : FOR DeclarationImutable SEMICOLON ExpressionRelacional SEMICOLON Increment LBRACE Block_statement RBRACE'''
+    '''for_statement : FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment LBRACE statement RBRACE'''
     p[0] = sa.ConventionalFor(p[2], p[4], p[6], p[8])
 
 def p_for_statement2(p):
-    '''For_statement : FOR ExpressionRelacional LBRACE Block_statement RBRACE'''
+    '''for_statement : FOR expression_relacional LBRACE statement RBRACE'''
     p[0] = sa.OnlyExpressionRelationalFor(p[2], p[4])
 
 def p_declaration_imutable(p):
-    '''DeclarationImutable : ID DECLARE_ASSIGN Expression'''
+    '''declaration_imutable : ID DECLARE_ASSIGN expression'''
     p[0] = sa.IdImutable(p[1], p[3])
 
 
 def p_return_statement(p):
-    '''Return_statement : RETURN Expression'''
+    '''return_statement : RETURN expression'''
     p[0] = sa.ReturnExpression(p[2])
 
 def p_expression_plus(p):
-    '''Expression : Expression PLUS Term'''
+    '''expression : expression PLUS term'''
     p[0] = sa.ExpressionPlus(p[1], p[3])
 
 def p_expression_minus(p):
-    '''Expression : Expression MINUS Term'''
+    '''expression : expression MINUS term'''
     p[0] = sa.ExpressionMinus(p[1], p[3])
 
 def p_expression_term(p):
-    '''Expression : Term'''
+    '''expression : term'''
     p[0] = sa.SingleTerm(p[1])
 
 def p_term_mult(p):
-    '''Term : Term TIMES Factor'''
+    '''term : term TIMES factor'''
     p[0] = sa.Multiplication(p[1], p[3])
 
 def p_term_divide(p):
-    '''Term : Term DIVIDE Factor'''
+    '''term : term DIVIDE factor'''
     p[0] = sa.Division(p[1], p[3])
 
 def p_term_mod(p):
-    '''Term : Term MOD Factor'''
+    '''term : term MOD factor'''
     p[0] = sa.Mod(p[1], p[3])
 
 def p_term_factor(p):
-    '''Term : Factor'''
+    '''term : factor'''
     p[0] = sa.OnlyFactor(p[1])
 
 def p_factor_id(p):
-    '''Factor : ID'''
+    '''factor : ID'''
     p[0] = sa.FactorID(p[1])
 
 def p_factor_number(p):
-    '''Factor : NUMBER'''
+    '''factor : NUMBER'''
     p[0] = sa.FactorNumber(p[1])
 
 def p_factor_string(p):
-    '''Factor : STRING'''
+    '''factor : STRING'''
     p[0] = sa.FactorString(p[1])
 
 def p_factor_true(p):
-    '''Factor : TRUE'''
+    '''factor : TRUE'''
     p[0] = sa.FactorTrue(p[1])
 
 def p_factor_false(p):
-    '''Factor : FALSE'''
+    '''factor : FALSE'''
     p[0] = sa.FactorFalse(p[1])
 
 def p_factor_rune(p):
-    '''Factor : RUNE'''
+    '''factor : RUNE'''
     p[0] = sa.FactorRune(p[1])
 
 def p_factor_expression(p):
-    '''Factor : LPAREN Expression RPAREN'''
+    '''factor : LPAREN expression RPAREN'''
     p[0] = sa.FactorExpression(p[2])
 
 def p_increment_plus(p):
-    '''Increment : ID PLUS PLUS'''
+    '''increment : ID PLUS PLUS'''
     p[0] = sa.Inc(p[1])
 
 def p_increment_minus(p):
-    '''Increment : ID MINUS MINUS'''
+    '''increment : ID MINUS MINUS'''
     p[0] = sa.Dec(p[1])
 
 def p_expression_relacional_equals(p):
-    '''ExpressionRelacional : Expression EQ Expression'''
+    '''expression_relacional : expression EQ expression'''
     p[0] = sa.ExpressionRelationalEqual(p[1], p[3])
 
 def p_expression_relacional_not_equals(p):
-    '''ExpressionRelacional : Expression NEQ Expression'''
+    '''expression_relacional : expression NEQ expression'''
     p[0] = sa.ExpressionRelationalNotEquals(p[1], p[3])
 
 def p_expression_relacional_less_than(p):
-    '''ExpressionRelacional : Expression LT Expression'''
+    '''expression_relacional : expression LT expression'''
     p[0] = sa.ExpressionRelationalLessThan(p[1], p[3])
 
 def p_expression_relacional_less_than_or_equal(p):
-    '''ExpressionRelacional : Expression LE Expression'''
+    '''expression_relacional : expression LE expression'''
     p[0] = sa.ExpressionRelationalLessThanOrEqual(p[1], p[3])
 
 def p_expression_relacional_greater_than(p):
-    '''ExpressionRelacional : Expression GT Expression'''
+    '''expression_relacional : expression GT expression'''
     p[0] = sa.ExpressionRelationalGreaterThan(p[1], p[3])
 
 def p_expression_relacional_greater_than_or_equal(p):
-    '''ExpressionRelacional : Expression GE Expression'''
+    '''expression_relacional : expression GE expression'''
     p[0] = sa.ExpressionRelationalGreaterThanOrEqual(p[1], p[3])
 
 def p_expression_relacional_and(p):
-    '''ExpressionRelacional : Expression AND Expression'''
+    '''expression_relacional : expression AND expression'''
     p[0] = sa.ExpressionRelationalAnd(p[1], p[3])
 
 def p_expression_relacional_or(p):
-    '''ExpressionRelacional : Expression OR Expression'''
+    '''expression_relacional : expression OR expression'''
     p[0] = sa.ExpressionRelationalOr(p[1], p[3])    
 
 def p_expression_relacional_not(p):
-    '''ExpressionRelacional : NOT Expression'''
+    '''expression_relacional : NOT expression'''
     p[0] = sa.ExpressionRelationalNot(p[2])
 
 def p_error(p):
     print("Syntax error in input!")
+
+def main():
+    f = open("teste.v", "r")
+    lexer = lex.lex()
+    lexer.input(f.read())
+    parser = yacc.yacc(start='program')
+    result = parser.parse(debug=True)
+
+
+if __name__ == "__main__":
+    main()
