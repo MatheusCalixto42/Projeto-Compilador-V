@@ -11,7 +11,8 @@ Function_definition* -> "fn" ID "(" Params ")" "{" Block_statement "}" Function_
            
 Function_definition_without_main -> "fn" ID "(" Params ")" "{" Block_statement "}" Function_definition_without_main | 
                          "fn" ID "(" Params ")" Type "{" Block_statement "}" Function_definition_without_main |   
-		   
+						 ε
+						 		   
 
 Params -> Param More_Params
 
@@ -23,12 +24,19 @@ Param -> ID Type
 
 Type -> INT | F32 | F64 | RUNE | STRING | BOOL 
 	  
-	  
-Block_statement -> Var_statement | Var_assignment |
-				   Func_call |
-				   If_statement |
-				   For_statement |
-				   Return_statement
+Block_statement -> statement 
+
+statement -> Var_statement statement | 
+			 Var_assignment statement |
+			 Func_call statement |
+			 If_statement statement |
+			 For_statement statement |
+			 Return_statement |
+			 ε
+
+fn soma() {
+	return 
+}
 
 Var_statement -> 
 	DeclarationImutable |
@@ -47,9 +55,9 @@ more_Expression -> "," Expression more_Expression
                   | ε
 
 If_statement ->
-	"if" ExpressionRelacional "{" Block_statement "}" | "if" ExpressionRelacional "{" Block_statement "}" Else?
+	"if" ExpressionRelacional "{" Block_statement "}" | "if" ExpressionRelacional "{" Block_statement "}" ElseOp
 
-Else? ->
+ElseOp ->
 	"else" If_statement | "else" "{" Block_statement "}"
 
 For_statement -> 
@@ -77,7 +85,7 @@ ExpressionRelacional ->	Expression "==" Expression |
 
 Term -> Term "*" Factor | Term "/" Factor | Term "%" Factor | Factor
 
-#elementos mais basico -- RUne entra?
+#elementos mais basico 
 Factor -> NUMBER | 
 	  STRING |
 	  ID     |
