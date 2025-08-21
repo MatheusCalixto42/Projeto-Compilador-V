@@ -2,6 +2,13 @@ fn soma(a int, b int) int {
 	return a + b
 }
 fn main(){
+	a := 10
+	b := 20	
+	println('Soma: ${soma(a, b)}')
+}
+
+//const teste1 := 10
+/*fn main(){
 	println('Hello World!')
 
 	nome := 'Matheus'	// Variável imutável (seria o const do C)
