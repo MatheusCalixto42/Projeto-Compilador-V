@@ -41,45 +41,30 @@ class Visitor(AbstractVisitor):
 ##################################################################
 
     def visitFunctionVoid(self,functionVoid):
-        global tab
         print('fn', end=' ', sep=' ')
         print(functionVoid.id, end=' ')
         print('(', end=' ')
         functionVoid.param.accept(self) #usar if para o caso de n ter parametro?
         print(')', end=' ')
-        print('{')
-        tab =  tab + 3
         functionVoid.block_statement.accept(self)
-        tab =  tab - 3
-        print(blank(), '}', sep=' ')
         functionVoid.function_definition.accept(self)
 
     def visitFunctionReturnType(self,functionReturnType):
-        global tab
         print('fn', end=' ', sep=' ')
         print(functionReturnType.id, end=' ')
         print('(', end=' ')
         functionReturnType.param.accept(self)
         print(')', end=' ')
         functionReturnType.type.accept(self)
-        print('{')
-        tab =  tab + 3
         functionReturnType.block_statement.accept(self)
-        tab =  tab - 3
-        print(blank(), '}', sep=' ')
         functionReturnType.function_definition.accept(self)
 
     def visitFunctionMain(self,functionMain):
-        global tab
         print('fn', end=' ', sep=' ')
         print('main', end=' ')
-        print('(', end=' ')
+        print('(', end='')
         print(')', end=' ')
-        print('{')
-        tab =  tab + 3
         functionMain.block_statement.accept(self)
-        tab =  tab - 3
-        print(blank(), '}', end=' ')
         functionMain.function_definition_without_main.accept(self)
 
 ###################################################################
@@ -87,32 +72,22 @@ class Visitor(AbstractVisitor):
 ##################################################################
 
     def visitFunctionVoidWithoutMain(self,functionvoidwithoutmain):
-        global tab
         print('fn', end = '', sep= '')
         print(functionvoidwithoutmain.id, end=' ')
         print('(', end=' ')
         functionvoidwithoutmain.param.accept(self)
         print(')', end=' ')
-        print('{')
-        tab =  tab + 3
         functionvoidwithoutmain.block_statement.accept(self)
-        tab =  tab - 3
-        print(blank(), '}', sep=' ')
         functionvoidwithoutmain.function_definition_without_main.accept(self)
 
     def visitFunctionReturnTypeWithoutMain(self,functionreturntypewithoutmain):
-        global tab
         print('fn', end = '', sep= '')
         print(functionreturntypewithoutmain.id, end=' ')
         print('(', end=' ')
         functionreturntypewithoutmain.param.accept(self)
         print(')', end=' ')
         functionreturntypewithoutmain.type.accept(self)
-        print('{')
-        tab =  tab + 3
         functionreturntypewithoutmain.block_statement.accept(self)
-        tab =  tab - 3
-        print(blank(), '}', sep=' ')
         functionreturntypewithoutmain.function_definition_without_main.accept(self)
 
     def visitNoneFunction(self, noneFunction):
@@ -173,7 +148,12 @@ class Visitor(AbstractVisitor):
 ##################################################################     
 
     def visitBlockStatement(self,blockStatement):
+        global tab
+        print('{')
+        tab = tab + 3
         blockStatement.statement.accept(self)
+        tab = tab - 3
+        print(blank(), '}')
 
 ###################################################################
 # Classes to visit the Abstract Syntax of Statement
@@ -181,14 +161,17 @@ class Visitor(AbstractVisitor):
 
     def visitVarStatement(self,varStatement):#var_statemnt
         varStatement.var_statement.accept(self)
+        print()
         varStatement.statement.accept(self)
     
     def visitVarAssignment(self,varAssignment):
         varAssignment.var_assignment.accept(self)
+        print()
         varAssignment.statement.accept(self)
 
     def visitFuncCallS(self,funcCall):
         funcCall.func_call.accept(self)
+        print()
         funcCall.statement.accept(self)
     
     def visitIfStatement(self,ifStatement):
@@ -201,6 +184,7 @@ class Visitor(AbstractVisitor):
 
     def visitReturnStatement(self,returnStatement):
         returnStatement.return_statement.accept(self)
+        print()
 
     def visitNoneStatement(self, noneStatement):
         pass
@@ -213,14 +197,13 @@ class Visitor(AbstractVisitor):
         declarationImutable.declaration_imutable.accept(self)
 
     def visitMutableDeclaration(self,mutableDeclaration):
-        print('mut', end=' ',sep=' ')
+        print(blank(), 'mut', end=' ',sep=' ')
         print(mutableDeclaration.id, end=' ')
         print(':=', end=' ',sep=' ')
-        print('\n')
         mutableDeclaration.expression.accept(self)
     
     def visitConstantDeclaration(self,constantDeclaration):
-        print('const', end=' ',sep=' ')
+        print(blank(), 'const', end=' ',sep=' ')
         print(constantDeclaration.id, end=' ')
         print(':=', end=' ',sep=' ')
         constantDeclaration.expression.accept(self)
@@ -230,7 +213,7 @@ class Visitor(AbstractVisitor):
 ##################################################################
 
     def visitVarModification(self,varModification):
-        print(varModification.id, end=' ')
+        print(blank(), varModification.id, end=' ')
         print('=', end=' ',sep=' ') 
         varModification.expression.accept(self)
 
@@ -239,13 +222,13 @@ class Visitor(AbstractVisitor):
 ##################################################################
 
     def visitFuncCompoundParams(self,funcCompoundParams):
-        print(funcCompoundParams.id, end=' ')
+        print(blank(), funcCompoundParams.id, end=' ')
         print('(', end=' ')
         funcCompoundParams.id_list.accept(self)
         print(')', end=' ')
 
     def visitFuncNoParams(self,funcNoParams):
-        print(funcNoParams.id, end=' ')
+        print(blank(), funcNoParams.id, end=' ')
         print('(', end=' ')
         print(')', end=' ')
 
@@ -275,24 +258,25 @@ class Visitor(AbstractVisitor):
 
     def visitOnlyIf(self,onlyIf):
         global tab
-        print('if', end=' ', sep=' ')
+        print(blank(), 'if', end=' ', sep=' ')
         onlyIf.expressionrelational.accept(self)
         print('{')
-        tab =  tab + 3
+        tab = tab + 3
         onlyIf.blockstatement.accept(self)
-        tab =  tab - 3
-        print(blank(),'}', sep=' ')
+        tab = tab - 3
+        print(blank(), '}')
 
     def visitIfAndElse(self,ifAndElse):
         global tab
-        print('if', end=' ', sep=' ')
+        print(blank(), 'if', end=' ', sep=' ')
         ifAndElse.expressionrelational.accept(self)
         print('{')
-        tab =  tab + 3
+        tab = tab + 3
         ifAndElse.blockstatement.accept(self)
-        tab =  tab - 3
-        print(blank(), '}',sep=' ')
+        tab = tab - 3
+        print(blank(), '}', end=' ')
         ifAndElse.elseV.accept(self)
+     
 
 ###################################################################
 # Classes to visit the Abstract Syntax of Else
@@ -304,12 +288,11 @@ class Visitor(AbstractVisitor):
 
     def visitOnlyElse(self,onlyElse):
         global tab
-        print('else', end=' ', sep=' ')
-        print('{')
-        tab =  tab + 3   
+        print('else {')
+        tab = tab + 3
         onlyElse.blockstatement.accept(self)
-        tab =  tab - 3
-        print(blank(),'}', sep=' ')
+        tab = tab - 3
+        print(blank(), '}')
 
 ###################################################################
 # Classes to visit the Abstract Syntax of For
@@ -317,41 +300,46 @@ class Visitor(AbstractVisitor):
 
     def visitForEach(self,forEach):
         global tab
-        print('for', end=' ', sep=' ')
+        print(blank(), 'for', end=' ', sep=' ')
         print(forEach.id, end=' ')
         print('in', end=' ', sep=' ')
         forEach.expression.accept(self)
         print('{')
-        tab =  tab + 3
+        tab = tab + 3
         forEach.blockstatement.accept(self)
-        tab =  tab - 3
-        print(blank(),'}', sep=' ')
+        tab = tab - 3
+        print(blank(), '}')
 
     def visitConventionalFor(self,conventionalFor):
         global tab
-        print('for', end=' ', sep=' ')
+        print(blank(), 'for', end=' ', sep=' ')
+        tabAux = tab
+        tab = 0
         conventionalFor.declarationmutable.accept(self)
+        tab = tabAux
         print(';', end=' ', sep=' ')
         conventionalFor.expressionrelational.accept(self)
         print(';', end=' ', sep=' ')
+        tabAux = tab
+        tab = 0
         conventionalFor.increment.accept(self)
+        tab = tabAux
         print('{')
-        tab =  tab + 3
+        tab = tab + 3
         conventionalFor.statement.accept(self)
-        tab =  tab - 3
-        print(blank(), '}', sep=' ')
-       
+        tab = tab - 3
+        print(blank(), '}')
        
 
     def visitOnlyExpressionRelationalFor(self,onlyExpressionRelationalFor):
         global tab
-        print('for', end=' ', sep=' ')
+        print(blank(), 'for', end=' ', sep=' ')
         onlyExpressionRelationalFor.expressionrelational.accept(self)
         print('{')
-        tab =  tab + 3
+        tab = tab + 3
         onlyExpressionRelationalFor.blockstatement.accept(self)
-        tab =  tab - 3
-        print(blank(), '}', sep=' ')
+        tab = tab - 3
+        print(blank(), '}')
         
 
 ###################################################################
@@ -359,10 +347,9 @@ class Visitor(AbstractVisitor):
 ##################################################################
 
     def visitIdImutable(self,idImutable):
-        print(idImutable.id, end=' ')
+        print(blank(), idImutable.id, end=' ')
         print(':=', end=' ',sep=' ')
         idImutable.expression.accept(self)
-        print()
         
 
 ###################################################################
@@ -370,7 +357,7 @@ class Visitor(AbstractVisitor):
 ##################################################################    
 
     def visitReturnExpression(self,returnExpression):
-        print('return', end=' ')
+        print(blank(), 'return', end=' ')
         if(returnExpression.expression == None):
             pass
 
@@ -497,19 +484,17 @@ class Visitor(AbstractVisitor):
 ##################################################################
 
     def visitInc(self, inc):
-        print(inc.id, end=' ')
-        print('++', end=' ')
+        print(blank(), inc.id + '++', end=' ')
 
     def visitDec(self, dec):
-        print(dec.id, end=' ')
-        print('--', end=' ')
+        print(blank(), dec.id + '--', end=' ')
 
 def main():
     f = open("teste.v", "r")
     lexer = lex.lex()
     lexer.input(f.read())
     parser = yacc.yacc(start='program')
-    result = parser.parse(debug=True)
+    result = parser.parse(debug=False)
     print("#imprime o programa que foi passado como entrada")
     visitor = Visitor()
     result.accept(visitor)
