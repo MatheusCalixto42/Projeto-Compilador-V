@@ -21,11 +21,8 @@ V apresenta apenas as seguintes palavras reservas ou palavras-chave:
 * `if`: Inicia uma estrutura condicional.
 * `else`: Define o bloco a ser executado caso a condição do `if` seja falsa.
 * `for`: Inicia um loop; V utiliza `for` para todas as estruturas de repetição.
-* `match`: Estrutura de controle semelhante ao `switch` em outras linguagens.
 * `break`: Interrompe a execução de loops ou estruturas de controle.
-* `continue`: Pula para a próxima iteração de um loop.
 * `return`: Retorna um valor de uma função.
-* `or`: Utilizado para tratamento de erros, especificando um bloco a ser executado em caso de erro.
 
 ### **1.3. Definição e Organização**
 
@@ -39,7 +36,6 @@ V apresenta apenas as seguintes palavras reservas ou palavras-chave:
 ### **1.4. Modificadores**
 
 * `mut`: Indica que uma variável ou argumento é mutável.
-* `unsafe`: Marca um bloco de código como inseguro, permitindo operações de baixo nível.
 
 ### **1.5. Outros**
 
@@ -50,7 +46,6 @@ V apresenta apenas as seguintes palavras reservas ou palavras-chave:
 * `sizeof`: Retorna o tamanho em bytes de um tipo ou variável.
 * `typeof`: Retorna o tipo de uma variável.
 * `__global`: Declara uma variável global; requer a flag `-enable-globals` para uso.
-* `assert`: Verifica se uma condição é verdadeira; caso contrário, interrompe a execução.
 
 
 ---
