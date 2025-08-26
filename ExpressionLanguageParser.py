@@ -117,6 +117,22 @@ def p_statement7(p):
     '''statement : '''
     p[0] = sa.NoneStatement()
 
+def p_statement8(p):
+    '''statement : list_statement statement'''
+    p[0] = sa.ListStatement(p[1], p[2])
+
+def p_statement9(p):
+    '''statement :  list_assignment statement'''
+    p[0] = sa.ListAssignment(p[1], p[2])
+
+def p_statement10(p):
+    '''statement :  increment_rule statement'''
+    p[0] = sa.IncrementStatement(p[1], p[2])
+
+def p_statement_assignment(p):
+    '''statement : assignment statement'''
+    p[0] = sa.AssignmentStatement(p[1], p[2])
+
 def p_var_declaration(p):
     '''var_statement :  declaration_imutable'''
     p[0] = sa.DeclarationImutable(p[1])
@@ -132,6 +148,18 @@ def p_var_declaration3(p):
 def p_var_assignment(p):
     '''var_assignment :  ID ASSIGN expression'''
     p[0] = sa.VarModification(p[1], p[3])
+
+def p_list_declaration_imutable(p):
+    '''list_statement : declaration_imutable_list'''
+    p[0] = sa.DeclarationImutableList(p[1])
+
+def p_list_declaration_mutable(p):
+    '''list_statement : MUT ID DECLARE_ASSIGN LBRACKET id_list RBRACKET'''
+    p[0] = sa.DeclarationMutableList(p[1], p[2], p[5])
+
+def p_list_assignment(p):
+    '''list_assignment : ID LBRACKET NUMBER RBRACKET ASSIGN expression'''
+    p[0] = sa.ListModification(p[1], p[3], p[6])
 
 def p_func_call(p):
     '''func_call : ID LPAREN id_list RPAREN'''
@@ -186,6 +214,10 @@ def p_declaration_imutable(p):
     '''declaration_imutable : ID DECLARE_ASSIGN expression'''
     p[0] = sa.IdImutable(p[1], p[3])
 
+def p_declaration_imutable_list(p):
+    '''declaration_imutable_list : ID DECLARE_ASSIGN LBRACKET id_list RBRACKET'''
+    p[0] = sa.DeclarationImutableListRule(p[1], p[4])
+
 
 def p_return_statement(p):
     '''return_statement : RETURN expression'''
@@ -198,6 +230,14 @@ def p_expression_plus(p):
 def p_expression_minus(p):
     '''expression : expression MINUS term'''
     p[0] = sa.ExpressionMinus(p[1], p[3])
+
+def p_expression_increment(p):
+    '''expression :  increment_rule'''
+    p[0] = sa.ExpressionIncrement(p[1])
+
+def p_expression_func_call(p):
+    '''expression : func_call'''
+    p[0] = sa.ExpressionFuncCall(p[1])
 
 def p_expression_term(p):
     '''expression : term'''
@@ -227,6 +267,10 @@ def p_factor_number(p):
     '''factor : NUMBER'''
     p[0] = sa.FactorNumber(p[1])
 
+def p_factor_number_float(p):
+    '''factor : NUMBERFLOAT'''
+    p[0] = sa.FactorNumberFloat(p[1])
+
 def p_factor_string(p):
     '''factor : STRING'''
     p[0] = sa.FactorString(p[1])
@@ -246,6 +290,10 @@ def p_factor_rune(p):
 def p_factor_expression(p):
     '''factor : LPAREN expression RPAREN'''
     p[0] = sa.FactorExpression(p[2])
+
+def p_factor_list(p):
+    '''factor : ID LBRACKET NUMBER RBRACKET'''
+    p[0] = sa.FactorList(p[1], p[3])
 
 def p_increment_plus(p):
     '''increment_rule : ID INCREMENT'''
@@ -291,6 +339,47 @@ def p_expression_relacional_not(p):
     '''expression_relacional : NOT expression'''
     p[0] = sa.ExpressionRelationalNot(p[2])
 
+def p_assignment_plus_equals(p):
+    '''assignment : ID PLUS_ASSIGN expression'''
+    p[0] = sa.AssignmentPlusEquals(p[1], p[3])
+
+def p_assignment_minus_equal(p):
+    '''assignment : ID MINUS_ASSIGN expression'''
+    p[0] = sa.AssignmentMinusEquals(p[1], p[3])
+
+def p_assignment_multiply_equals(p):
+    '''assignment : ID TIMES_ASSIGN expression'''
+    p[0] = sa.AssignmentMultiplicationEquals(p[1], p[3])
+
+def p_assignment_divide_equals(p):
+    '''assignment : ID DIVIDE_ASSIGN expression'''
+    p[0] = sa.AssignmentDivideEquals(p[1], p[3])
+
+def p_assignment_mod_equals(p):
+    '''assignment : ID MOD_ASSIGN expression'''
+    p[0] = sa.AssignmentModEquals(p[1], p[3])
+
+def p_assignment_and_equals(p):
+    '''assignment : ID BIT_AND_ASSIGN expression'''
+    p[0] = sa.AssignmentAndEquals(p[1], p[3])
+
+def p_assignment_or_equals(p):
+    '''assignment : ID BIT_OR_ASSIGN expression'''
+    p[0] = sa.AssignmentOrEquals(p[1], p[3])
+
+def p_assignment_exp_equals(p):
+    '''assignment : ID BIT_XOR_ASSIGN expression'''
+    p[0] = sa.AssignmentExpEquals(p[1], p[3])
+
+def p_assignment_lshift(p):
+    '''assignment : ID BIT_LSHIFT_ASSIGN expression'''
+    p[0] = sa.AssignmentDeslocationLeft(p[1], p[3])
+
+def p_assignment_rshift(p):
+    '''assignment : ID BIT_RSHIFT_ASSIGN expression'''
+    p[0] = sa.AssignmentDeslocationRight(p[1], p[3])
+
+
 def p_error(p):
     print("Syntax error in input!")
 
@@ -298,7 +387,7 @@ def main():
     f = open("teste.v", "r")
     lexer = lex.lex()
     lexer.input(f.read())
-    parser = yacc.yacc(start='program')
+    parser = yacc.yacc(debug=True)
     result = parser.parse(debug=True)
 
 

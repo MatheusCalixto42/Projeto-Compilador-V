@@ -5,7 +5,7 @@ Program ->  Program_import Function_definition
 Program_import -> IMPORT ID Program_import
                 | IMPORT ID 
 
-Function_definition* -> "fn" ID "(" Params ")" "{" Block_statement "}" Function_definition | 
+Function_definition -> "fn" ID "(" Params ")" "{" Block_statement "}" Function_definition | 
             "fn" ID "(" Params ")" Type "{" Block_statement "}" Function_definition |
             "fn" MAIN "(" ")" "{" Block_statement "}" Function_definition_without_main |
            
@@ -28,28 +28,42 @@ Block_statement -> statement
 
 statement -> Var_statement statement | 
 			 Var_assignment statement |
+			 List_statement statement |
+			 List_assignment statement |
 			 Func_call statement |
 			 If_statement statement |
 			 For_statement statement |
+			 Increment statement |
+			 Assignment statement |
 			 Return_statement |
 			 ε
-
-fn soma() {
-	return 
-}
+			 
 
 Var_statement -> 
 	DeclarationImutable |
 	MUT ID ":=" Expression |
 	CONST ID ":=" Expression ** const can only be defined at the top level (outside of functions)
 
+
 Var_assignment ->
 	ID "=" Expression
-				   
+
+	
+List_statement ->
+	DeclarationImutableList |
+	MUT ID ":=" "[" id_list "]"
+
+List_assignment ->
+	ID "[" NUMBER "]" "=" Expression
+
+DeclarationImutableList ->		
+	ID ":=" "[" id_list "]"
+
 Func_call -> ID "(" id_list ")" |
 	     ID "(" ")"
 
-id_list -> Expression more_Expression
+id_list -> Expression more_Expression 
+
 
 more_Expression -> "," Expression more_Expression
                   | ε
@@ -71,7 +85,7 @@ DeclarationImutable ->
 Return_statement ->
 	"return" Expression
 
-Expression -> Expression "+" Term | Expression "-" Term | Term	      
+Expression -> Expression "+" Term | Expression "-" Term | Term | Increment | Func_call    
 
 ExpressionRelacional ->	Expression "==" Expression |
 	     		Expression "!=" Expression |
@@ -90,9 +104,25 @@ Factor -> NUMBER |
 	  STRING |
 	  ID     |
 	  "(" Expression ")" |
+	  
 	  TRUE |
 	  FALSE	|
-	  RUNE
+	  RUNE |
+	  NUMBERFLOAT|
+	  ID "[" NUMBER "]"
 
 Increment -> 
 	ID"++" | ID"--"
+
+
+Assignment -> ID "+=" Expression
+			  ID "-=" Expression
+			  ID "*=" Expression
+			  ID "/=" Expression
+			  ID "%=" Expression
+			  ID "&=" Expression
+			  ID "|=" Expression
+			  ID "^=" Expression
+			  ID "<<=" Expression
+			  ID ">>=" Expression
+

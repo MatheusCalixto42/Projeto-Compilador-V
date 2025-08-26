@@ -17,10 +17,16 @@ fn main(){
 
 	println('\n---------------------------------------\n')
 
-	//saldo := 100.50	// Padrão f64
-	esta_ativo := true	// booleano
-	//letras := ['a', 'b', 'c']	// []rune (array de caracteres)
+	saldo := 100.50	// Padrão f64
 
+	
+	esta_ativo := true	// booleano
+	letras := ['a', 'b', 'c']	// []rune (array de caracteres)
+	listaboolean := [true, false, true] // []bool (array de booleanos)
+	mut listateste := [(1+1),2]
+	listateste[1] = 3
+	println(listateste)
+	
 	println('Saldo: ${saldo}')
 	println('Ativo: ${esta_ativo}')
 	println('Primeira letra: ${letras[0]}')
@@ -41,23 +47,24 @@ fn main(){
 		println('Contador: ${i}')
 	}
 	
-	//numeros := [1,2,3,4,5]
+	numeros := [1,2,3,4,5]
 	for i in numeros {
 		println('Número: ${i}')
 	}
     mut x := 0
     for x < 5{
         println('Contador: ${x}')
-        //x++
+        x++
     }
-
+	x--
 	println('\n---------------------------------------\n')
-    //somar += soma((2+3), numeros[1]) + 3
+    somar += soma((2+3), numeros[1]) + 3
+	soma(3,5)
 	println('Função soma: ${somar}')
     mut soma2 := 5
-    //mut soma1 := 5 + 4 * (soma2++)
-    //soma1 = (soma2++) + 2
+    mut soma1 := 5 + 4 * (soma2++)
+    soma1 = (soma2++) + 2
     println(soma1)
 	println(teste1)
-
+	
 }
