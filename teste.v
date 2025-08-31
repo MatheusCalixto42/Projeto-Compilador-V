@@ -1,10 +1,22 @@
 fn soma(a int, b int) int {
+	mut fnum := [3]int
 	return a + b
 }
 
+fn teste(a int){
+	a = 5
+	mut list := [3]int
+	list[0] = 1
+	list[1] = 2
+	list[2] = list[0]
+	println(list[..])
+	println(list[1])
+	println(list[0..1])
+}
 
-const teste1 := 10
+
 fn main(){
+
 	println('Hello World!')
 
 	nome := 'Matheus'	// Variável imutável (seria o const do C)
@@ -21,9 +33,15 @@ fn main(){
 	println('\n---------------------------------------\n')
 
 	saldo := 100.50	// Padrão f64
+
+	
 	esta_ativo := true	// booleano
 	letras := ['a', 'b', 'c']	// []rune (array de caracteres)
-
+	listaboolean := [true, false, true] // []bool (array de booleanos)
+	mut listateste := [(1+1),2]
+	listateste[1] = 3
+	println(listateste)
+	
 	println('Saldo: ${saldo}')
 	println('Ativo: ${esta_ativo}')
 	println('Primeira letra: ${letras[0]}')
@@ -53,16 +71,20 @@ fn main(){
         println('Contador: ${x}')
         x++
     }
-
+	x--
 	println('\n---------------------------------------\n')
-    somar += soma((2+3), numeros[1]) + 3
+  somar += soma((2+3), numeros[1]) + 3
+	somar ^= 4
+	soma(3,5)
 	println('Função soma: ${somar}')
-    mut soma2 := 5
-    mut soma1 := 5 + 4 * (soma2++)
-    //soma1 = (soma2++) + 2
-    println(soma1)
+  mut soma2 := 5
+	mut soma1 := 5 + 4 * (soma2++)
+  soma1 = (soma2++) + 2
+  println(soma1)
 	println(teste1)
-
+	a := 0x7B
+	b := 0b01111011
+	c := 0o173
+	
+	
 }
-
-const t2 := 0 

@@ -3,10 +3,8 @@ from tabulate import tabulate
 
 reservadas = { # Analisar defer, as, suporte a global
     'as': 'AS',
-    'assert': 'ASSERT',
     'break': 'BREAK',
     'const': 'CONST',
-    'continue': 'CONTINUE',
     'defer': 'DEFER',
     'else': 'ELSE',
     'enum': 'ENUM',
@@ -24,9 +22,7 @@ reservadas = { # Analisar defer, as, suporte a global
     'is': 'IS',
     'isreftype': 'ISREFTYPE',
     'main' : 'MAIN',
-    'match': 'MATCH',
     'mut': 'MUT',
-    'none': 'NONE',
     'or': 'OR',
     'return': 'RETURN',
     'sizeof': 'SIZEOF',
@@ -34,17 +30,15 @@ reservadas = { # Analisar defer, as, suporte a global
     'type': 'TYPE',
     'typeof': 'TYPEOF',
     'union': 'UNION',
-    'unsafe': 'UNSAFE',
     '__global': 'GLOBAL',
 }
 
 tokens = ['PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'MOD', 'ASSIGN', 'PLUS_ASSIGN', 'MINUS_ASSIGN',
   'TIMES_ASSIGN', 'DIVIDE_ASSIGN', 'MOD_ASSIGN', 'BIT_AND_ASSIGN', 'BIT_OR_ASSIGN',
   'BIT_XOR_ASSIGN', 'BIT_LSHIFT_ASSIGN', 'BIT_RSHIFT_ASSIGN', 'EQ', 'NEQ', 'LT',
-  'LE', 'GT', 'GE', 'AND','NOT', 'BIT_AND', 'BIT_OR', 'BIT_XOR', 'LSHIFT', 'RSHIFT',
-  'BIT_NOT', 'INCREMENT', 'DECREMENT', 'DOTDOT', 'DECLARE_ASSIGN', 'QUESTION',
+  'LE', 'GT', 'GE', 'AND','NOT', 'INCREMENT', 'DECREMENT', 'DOTDOT', 'DECLARE_ASSIGN', 'QUESTION',
   'EXCLAMATION', 'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE', 'LBRACKET', 'RBRACKET',
-  'DOT', 'COMMA', 'SEMICOLON', 'COLON','DOLLAR','ID','NUMBER','BINARY','OCTAL'
+  'DOT', 'COMMA', 'SEMICOLON', 'COLON','DOLLAR','ID','NUMBER','BINARY','OCTAL',
   'HEX','NOTACAOCIENTIFICA','NUMBERFLOAT','ASPASSIMPLES','ASPASDUPLAS', 'STRING'] + list(reservadas.values())
 
 t_PLUS         = r'\+'
@@ -75,13 +69,6 @@ t_GE  = r'>='
 t_AND = r'&&'
 t_OR  = r'\|\|'
 t_NOT = r'!'
-
-t_BIT_AND = r'&'
-t_BIT_OR  = r'\|'
-t_BIT_XOR = r'\^'
-t_LSHIFT  = r'<<'
-t_RSHIFT  = r'>>'
-t_BIT_NOT = r'~'
 
 t_INCREMENT = r'\+\+'
 t_DECREMENT = r'--'
@@ -144,7 +131,7 @@ def t_NUMBER(t):
     t.value = int(t.value)
     return t
 
-def t_XOMENTARIOSIMPLES(t):
+def t_COMENTARIOSIMPLES(t):
     r'//.*'
     pass
 
@@ -164,86 +151,15 @@ def t_error(t):
 
 t_ignore  = ' \t' 
 
-
-lexer = lex.lex()
-
-
-#codigo  de exemplo em V para testar
-codigo_v = """
-fn soma(a int, b int) int {
-	return a + b
-}
-
-fn main(){
-	println('Hello World!')
-
-    n_O_me := 20
-    
-	nome := 'Matheus'	// Variável imutável (seria o const do C)
-	mut idade := 30		// Variável mutável (igual a uma variável comum no C)
-
-	println('Nome: ${nome}')
-	println('Idade: ${idade}')
-
-	idade = 25
- 
-    idade = 'matheus'
-
-	print('Idade atualizada: ${idade}\n')
-
-	println('\n---------------------------------------\n')
-
-	saldo := 100.50	// Padrão f64
-	esta_ativo := true	// booleano
-	letras := ['a', 'b', 'c']	// []rune (array de caracteres)
-
-	println('Saldo: ${saldo}')
-	println('Ativo: ${esta_ativo}')
-	println('Primeira letra: ${letras[0]}')
-
-	println('\n---------------------------------------\n')
-
-	if idade < 25 {
-		println('Idade menor que 25 anos')
-	} else if idade == 25 {
-		println('Idade igual a 25 anos')
-	} else {
-		println('Idade maior que 25 anos')
-	}
-
-	println('\n---------------------------------------\n')
-
-	for i := 0; i < 5; i++ {
-		println('Contador: ${i}')
-	}
-	
-	numeros := [1,2,3,4,5]
-	for i in numeros {
-		println('Número: ${i}')
-	}
-
-	println('\n---------------------------------------\n')
-
-	println('Função soma: ${soma(numeros[0],numeros[1])}')
+def main():
+   f = open("teste.v", "r")
+   lexer = lex.lex(debug=1)
+   lexer.input(f.read())
+   print('\n\n# lexer output:')
+   for tok in lexer:
+      print ('type:', tok.type, ', value:',tok.value)
 
 
-}
-"""
-lexer.input(codigo_v)
+if __name__ == "__main__":
+   main()
 
-tabela = []
-
-# Função para calcular coluna
-def find_column(input_text, token):
-    last_cr = input_text.rfind('\n', 0, token.lexpos)
-    if last_cr < 0:
-        last_cr = -1
-    return token.lexpos - last_cr
-
-for tok in lexer:
-    coluna = find_column(codigo_v, tok)
-    tabela.append([tok.type, tok.value, tok.lineno, tok.lexpos])
-
-cabecalho = ["Token", "Lexema", "Linha", "Posição"]
-
-#print(tabulate(tabela, headers=cabecalho, tablefmt="grid"))
