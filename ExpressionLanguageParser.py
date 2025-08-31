@@ -3,12 +3,12 @@ from LexicoV import *
 import SintaxeAbstrate as sa
 
 def p_program1(p):
-    '''program : program_Import function_definition'''
+    '''program : program_Import program_items'''
     p[0] = sa.ImportAndFuncDefinition(p[1],p[2])
 
 def p_program2(p):
-    '''program : function_definition'''
-    p[0] = sa.SingleFuncDefinition(p[1])
+    '''program : program_items'''
+    p[0] = sa.ProgramItems(p[1])
 
 def p_program_import1(p):
     '''program_Import : IMPORT ID program_Import'''
@@ -18,13 +18,33 @@ def p_program_import2(p):
     '''program_Import : IMPORT ID'''
     p[0] = sa.SingleImport(p[1], p[2])
 
+def p_program_items_multiple(p):
+    '''program_items : program_item program_items'''
+    p[0] = sa.MultipleProgramItems(p[1], p[2])
+
+def p_program_items_empty(p):
+    '''program_items :'''
+    p[0] = sa.NoneItems()
+
+def p_program_item_const(p):
+    '''program_item : const_declaration'''
+    p[0] = sa.ConstanteDeclaration(p[1])
+
+def p_program_item_function(p):
+    '''program_item : function_definition'''
+    p[0] = sa.FunctionDeclaration(p[1])
+
+def p_program_const_declaration_rule(p):
+    '''const_declaration : CONST ID DECLARE_ASSIGN expression'''
+    p[0] = sa.ConstanteDeclarationRule(p[2], p[4])
+
 def p_function_definition1(p):
-    '''function_definition : FN ID LPAREN params RPAREN LBRACE block_statement RBRACE function_definition'''
-    p[0] = sa.FunctionVoid(p[2], p[4], p[7], p[9])
+    '''function_definition : FN ID LPAREN params RPAREN LBRACE block_statement RBRACE '''
+    p[0] = sa.FunctionVoid(p[2], p[4], p[7])
 
 def p_function_definition2(p):
-    '''function_definition : FN ID LPAREN params RPAREN type LBRACE block_statement RBRACE function_definition'''
-    p[0] = sa.FunctionReturnType(p[2], p[4], p[6], p[8], p[10])
+    '''function_definition : FN ID LPAREN params RPAREN type LBRACE block_statement RBRACE '''
+    p[0] = sa.FunctionReturnType(p[2], p[4], p[6], p[8])
 
 def p_function_definition3(p):
     '''function_definition : FN MAIN LPAREN RPAREN LBRACE block_statement RBRACE function_definition_without_main'''
@@ -109,6 +129,10 @@ def p_statement5(p):
     '''statement :  for_statement statement'''
     p[0] = sa.ForStatement(p[1], p[2])
 
+def p_break_statement_rule(p):
+    '''statement : break_statement'''
+    p[0] = sa.BreakStatement(p[1])
+
 def p_statement6(p):
     '''statement :  return_statement'''
     p[0] = sa.ReturnStatement(p[1])
@@ -158,7 +182,7 @@ def p_list_declaration_mutable(p):
     p[0] = sa.DeclarationMutableList(p[1], p[2], p[5])
 
 def p_list_declaration_mutable_list_lenght_definition(p):
-    '''list_statement : MUT ID DECLARE_ASSIGN LBRACKET NUMBER RBRACKET type'''
+    '''list_statement : MUT ID DECLARE_ASSIGN LBRACKET id_list RBRACKET type'''
     p[0] = sa.DeclarationMutableListLengthDefinition(p[1], p[2], p[5], p[7])
 
 def p_list_assignment(p):
@@ -239,6 +263,9 @@ def p_declaration_imutable_list(p):
     '''declaration_imutable_list : ID DECLARE_ASSIGN LBRACKET id_list RBRACKET'''
     p[0] = sa.DeclarationImutableListRule(p[1], p[4])
 
+def p_break_only(p):
+    '''break_statement : BREAK'''
+    p[0] = sa.OnlyBreak()
 
 def p_return_statement(p):
     '''return_statement : RETURN expression'''
@@ -293,7 +320,7 @@ def p_factor_number_float(p):
     p[0] = sa.FactorNumberFloat(p[1])
 
 def p_factor_string(p):
-    '''factor : STRING'''
+    '''factor : WORD'''
     p[0] = sa.FactorString(p[1])
 
 def p_factor_true(p):
@@ -305,7 +332,7 @@ def p_factor_false(p):
     p[0] = sa.FactorFalse(p[1])
 
 def p_factor_rune(p):
-    '''factor : RUNE'''
+    '''factor : RUNEVALOR'''
     p[0] = sa.FactorRune(p[1])
 
 def p_factor_expression(p):
@@ -331,6 +358,22 @@ def p_factor_octal(p):
 def p_factor_hex(p):
     '''factor : HEX'''
     p[0] = sa.FactorHex(p[1])
+
+def p_factor_interpolation_string(p):
+    '''factor : INTERPOLATIONSTRING'''
+    p[0] = sa.FactorInterpolationString(p[1])
+
+def p_factor_size_of_expression_rule(p):
+    '''factor : size_of_expression'''
+    p[0] = sa.FactorSizeOfExpression(p[1])
+
+def p_size_of_expression(p):
+    '''size_of_expression : SIZEOF LPAREN expression RPAREN'''
+    p[0] = sa.SizeOfExpression(p[3])
+
+def p_size_of_type(p):
+    '''size_of_expression : SIZEOF LPAREN type RPAREN'''
+    p[0] = sa.SizeOfType(p[3])
 
 def p_increment_plus(p):
     '''increment_rule : ID INCREMENT'''

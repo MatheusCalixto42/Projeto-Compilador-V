@@ -21,8 +21,8 @@ class Visitor(AbstractVisitor):
         importAndFuncDefinition.program_import.accept(self)
         importAndFuncDefinition.function_definition.accept(self)
 
-    def visitSingleFuncDefinition(self,singleFuncDefinition):
-        singleFuncDefinition.function_definition.accept(self)
+    def visitProgramItems(self,programItems):
+        programItems.program_items.accept(self)
 
 ###################################################################
 # Classes to visit the Abstract Syntax of Import
@@ -38,6 +38,38 @@ class Visitor(AbstractVisitor):
         print(singleImport.id, end=' ')
 
 ###################################################################
+# Classes to visit the Abstract Syntax of Program Items
+################################################################## 
+
+    def visitMultipleProgramItems(self,multipleProgramItems):
+        multipleProgramItems.item.accept(self)
+        multipleProgramItems.items_recursao.accept(self)
+
+    def visitNoneItems(self,noneItems):
+        pass
+
+###################################################################
+# Classes to visit the Abstract Syntax of Program Item
+################################################################## 
+
+    def visitConstanteDeclaration(self, constanteDeclaration):
+        constanteDeclaration.constante.accept(self)
+
+    def visitFunctionDeclaration(self, functionDeclaration):
+        functionDeclaration.function.accept(self)
+
+###################################################################
+# Classes to visit the Abstract Syntax of Const
+################################################################## 
+
+    def visitConstanteDeclarationRule(self, constanteDeclarationRule):
+        print('const', end=' ')
+        print(constanteDeclarationRule.id, end=' ')
+        print(':=', end=' ')
+        constanteDeclarationRule.expression.accept(self)
+        print()
+
+###################################################################
 # Classes to visit the Abstract Syntax of Function Definition
 ##################################################################
 
@@ -48,7 +80,7 @@ class Visitor(AbstractVisitor):
         functionVoid.param.accept(self) #usar if para o caso de n ter parametro?
         print(')', end=' ')
         functionVoid.block_statement.accept(self)
-        functionVoid.function_definition.accept(self)
+        
 
     def visitFunctionReturnType(self,functionReturnType):
         print('fn', end=' ', sep=' ')
@@ -58,7 +90,6 @@ class Visitor(AbstractVisitor):
         print(')', end=' ')
         functionReturnType.type.accept(self)
         functionReturnType.block_statement.accept(self)
-        functionReturnType.function_definition.accept(self)
 
     def visitFunctionMain(self,functionMain):
         print('fn', end=' ', sep=' ')
@@ -67,6 +98,7 @@ class Visitor(AbstractVisitor):
         print(')', end=' ')
         functionMain.block_statement.accept(self)
         functionMain.function_definition_without_main.accept(self)
+
 
 ###################################################################
 # Classes to visit the Abstract Syntax of Function Definition without main
@@ -203,6 +235,10 @@ class Visitor(AbstractVisitor):
         print()
         assignmentStatement.statement.accept(self)
 
+    def visitBreakStatement(self, breakStatement):
+        breakStatement.break_statement.accept(self)
+        print()
+
     def visitReturnStatement(self,returnStatement):
         returnStatement.return_statement.accept(self)
         print()
@@ -262,7 +298,7 @@ class Visitor(AbstractVisitor):
         print(listLengthDefinition.id, end=' ')
         print(':=', end=' ',sep=' ')
         print('[', end=' ', sep=' ')
-        print(listLengthDefinition.number, end=' ')
+        listLengthDefinition.number.accept(self) #aqui
         print(']', end=' ', sep=' ')
         listLengthDefinition.type.accept(self)
 
@@ -454,6 +490,13 @@ class Visitor(AbstractVisitor):
         print(']', end=' ', sep=' ')
 
 ###################################################################
+# Classes to visit the Abstract Syntax of Break Statement
+##################################################################    
+
+    def visitOnlyBreak(self, onlyBreak):
+        print(blank(), 'break', end=' ')
+
+###################################################################
 # Classes to visit the Abstract Syntax of Return Statement
 ##################################################################    
 
@@ -611,6 +654,27 @@ class Visitor(AbstractVisitor):
     def visitFactorHex(self, hex):
         print(hex.factorHex, end=' ')
 
+    def visitFactorInterpolationString(self, factorInterpolationString):
+        print(factorInterpolationString.interpolationString, end=' ')
+
+    def visitFactorSizeOfExpression(self, factorSizeofExpression):
+        factorSizeofExpression.sizeofexpression.accept(self)
+
+###################################################################
+# Classes to visit the Abstract Syntax of Size of Expression
+##################################################################
+
+    def visitSizeOfExpression(self, sizeOfExpression):
+        print('sizeof', end=' ')
+        print('(', end=' ')
+        sizeOfExpression.expression.accept(self)
+        print(')', end=' ')
+
+    def visitSizeOfType(self, sizeOfType):
+        print('sizeof', end=' ')
+        print('(', end=' ')
+        sizeOfType.type.accept(self)
+        print(')', end=' ')
 
 ###################################################################
 # Classes to visit the Abstract Syntax of Increment

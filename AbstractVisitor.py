@@ -7,7 +7,7 @@ class AbstractVisitor(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def visitSingleFuncDefinition(self, singleFuncDefinition):
+    def visitProgramItems(self, programItems):
         pass
 
     @abstractmethod
@@ -16,6 +16,26 @@ class AbstractVisitor(metaclass=ABCMeta):
 
     @abstractmethod
     def visitSingleImport(self, singleImport):
+        pass
+
+    @abstractmethod
+    def visitMultipleProgramItems(self, multipleProgramItems):
+        pass
+
+    @abstractmethod
+    def visitNoneItems(self, noneItems):
+        pass
+
+    @abstractmethod
+    def visitConstanteDeclaration(self, constanteDeclaration):
+        pass
+
+    @abstractmethod
+    def visitFunctionDeclaration(self, functionDeclaration):
+        pass
+
+    @abstractmethod
+    def visitConstanteDeclarationRule(self, constanteDeclarationRule):
         pass
 
     @abstractmethod
@@ -40,7 +60,7 @@ class AbstractVisitor(metaclass=ABCMeta):
 
     @abstractmethod
     def visitNoneFunction(self, noneFunction):
-        pass
+       pass
 
     @abstractmethod
     def visitDescriptionParam(self, descriptionParam):
@@ -51,7 +71,7 @@ class AbstractVisitor(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def visitNoneParam(self, noneParam):#olhar esse noneParam
+    def visitNoneParam(self, noneParam):
         pass
 
     @abstractmethod
@@ -124,6 +144,10 @@ class AbstractVisitor(metaclass=ABCMeta):
 
     @abstractmethod
     def visitAssignmentStatement(self, assignment_statement):
+        pass
+
+    @abstractmethod
+    def visitBreakStatement(self, breakStatement):
         pass
 
     @abstractmethod
@@ -232,6 +256,10 @@ class AbstractVisitor(metaclass=ABCMeta):
 
     @abstractmethod
     def visitDeclarationImutableListRule(self, declarationImutableListRule):
+        pass
+
+    @abstractmethod
+    def visitOnlyBreak(self, onlyBreak):
         pass
 
     @abstractmethod
@@ -360,6 +388,22 @@ class AbstractVisitor(metaclass=ABCMeta):
 
     @abstractmethod
     def visitFactorHex(self, hex):
+        pass
+
+    @abstractmethod
+    def visitFactorInterpolationString(self, factorInterpolationString):
+        pass
+
+    @abstractmethod
+    def visitFactorSizeOfExpression(self, factorSizeOfExpression):
+        pass
+
+    @abstractmethod
+    def visitSizeOfExpression(self, sizeOfExpression):
+        pass
+
+    @abstractmethod
+    def visitSizeOfType(self, sizeOfType):
         pass
 
     @abstractmethod

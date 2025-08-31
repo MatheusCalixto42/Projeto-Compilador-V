@@ -2,12 +2,9 @@ import ply.lex as lex
 from tabulate import tabulate
 
 reservadas = { # Analisar defer, as, suporte a global
-    'as': 'AS',
     'break': 'BREAK',
     'const': 'CONST',
-    'defer': 'DEFER',
     'else': 'ELSE',
-    'enum': 'ENUM',
     'false': 'FALSE',
     'fn': 'FN',
     'for': 'FOR',
@@ -19,27 +16,22 @@ reservadas = { # Analisar defer, as, suporte a global
 	'f64' : 'F64',
 	'bool' : 'BOOL', 
 	'rune' : 'RUNE',
-    'is': 'IS',
-    'isreftype': 'ISREFTYPE',
     'main' : 'MAIN',
     'mut': 'MUT',
     'or': 'OR',
     'return': 'RETURN',
     'sizeof': 'SIZEOF',
+    'string': 'STRING',
     'true': 'TRUE',
-    'type': 'TYPE',
-    'typeof': 'TYPEOF',
-    'union': 'UNION',
-    '__global': 'GLOBAL',
 }
 
 tokens = ['PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'MOD', 'ASSIGN', 'PLUS_ASSIGN', 'MINUS_ASSIGN',
   'TIMES_ASSIGN', 'DIVIDE_ASSIGN', 'MOD_ASSIGN', 'BIT_AND_ASSIGN', 'BIT_OR_ASSIGN',
   'BIT_XOR_ASSIGN', 'BIT_LSHIFT_ASSIGN', 'BIT_RSHIFT_ASSIGN', 'EQ', 'NEQ', 'LT',
-  'LE', 'GT', 'GE', 'AND','NOT', 'INCREMENT', 'DECREMENT', 'DOTDOT', 'DECLARE_ASSIGN', 'QUESTION',
-  'EXCLAMATION', 'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE', 'LBRACKET', 'RBRACKET',
-  'DOT', 'COMMA', 'SEMICOLON', 'COLON','DOLLAR','ID','NUMBER','BINARY','OCTAL',
-  'HEX','NOTACAOCIENTIFICA','NUMBERFLOAT','ASPASSIMPLES','ASPASDUPLAS', 'STRING'] + list(reservadas.values())
+  'LE', 'GT', 'GE', 'AND','NOT', 'INCREMENT', 'DECREMENT', 'DOTDOT', 'DECLARE_ASSIGN',
+ 'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE', 'LBRACKET', 'RBRACKET',
+   'COMMA', 'SEMICOLON','ID','NUMBER','BINARY','OCTAL',
+  'HEX','NOTACAOCIENTIFICA','NUMBERFLOAT', 'WORD', 'INTERPOLATIONSTRING', 'RUNEVALOR'] + list(reservadas.values())
 
 t_PLUS         = r'\+'
 t_MINUS        = r'-'
@@ -74,9 +66,7 @@ t_INCREMENT = r'\+\+'
 t_DECREMENT = r'--'
 
 t_DOTDOT         = r'\.\.'     
-t_DECLARE_ASSIGN = r':='       
-t_QUESTION       = r'\?'       
-t_EXCLAMATION    = r'!' 
+t_DECLARE_ASSIGN = r':='              
 
 t_LPAREN    = r'\('
 t_RPAREN    = r'\)'
@@ -84,16 +74,19 @@ t_LBRACE    = r'\{'
 t_RBRACE    = r'\}'
 t_LBRACKET  = r'\['
 t_RBRACKET  = r'\]'
-t_DOT       = r'\.'
 t_COMMA     = r','
 t_SEMICOLON = r';'
-t_COLON     = r':'
-t_DOLLAR    = r'\$'
-t_ASPASSIMPLES = r'\''
-t_ASPASDUPLAS = r'\"'
 
-def t_STRING(t):
+def t_INTERPOLATIONSTRING(t):
+    r'\$\{[^\}]*\}'
+    return t
+
+def t_WORD(t):
     r'\'[^\']*\'|\"[^\"]*\"'
+    return t
+
+def t_RUNEVALOR(t):
+    r'`[^`]{1}`'
     return t
 
 def t_ID(t):
