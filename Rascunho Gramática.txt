@@ -1,3 +1,20 @@
+Program -> Program_import Program_items |
+		   Program_items
+
+Program_import -> IMPORT ID Program_import
+                | IMPORT ID
+
+Program_items -> Program_item Program_items
+               | ε
+
+Program_item -> Const_declaration
+              | Function_definition
+
+Const_declaration -> CONST ID ":=" Expression
+
+
+
+
 Program ->  Program_import Function_definition
            | Function_definition
 
@@ -5,8 +22,8 @@ Program ->  Program_import Function_definition
 Program_import -> IMPORT ID Program_import
                 | IMPORT ID 
 
-Function_definition* -> "fn" ID "(" Params ")" "{" Block_statement "}" Function_definition | 
-            "fn" ID "(" Params ")" Type "{" Block_statement "}" Function_definition |
+Function_definition -> "fn" ID "(" Params ")" "{" Block_statement "}"  | 
+            "fn" ID "(" Params ")" Type "{" Block_statement "}"  |
             "fn" MAIN "(" ")" "{" Block_statement "}" Function_definition_without_main |
            
 Function_definition_without_main -> "fn" ID "(" Params ")" "{" Block_statement "}" Function_definition_without_main | 
@@ -17,39 +34,62 @@ Function_definition_without_main -> "fn" ID "(" Params ")" "{" Block_statement "
 Params -> Param More_Params
 
 More_Params -> "," Param More_Params
-             | ε
+              |ε
 
 Param -> ID Type
 
 
-Type -> INT | F32 | F64 | RUNE | STRING | BOOL 
+Type -> INT | F32 | F64 | RUNETYPE | STRINGTYPE | BOOL 
 	  
 Block_statement -> statement 
 
 statement -> Var_statement statement | 
 			 Var_assignment statement |
+			 List_statement statement |
+			 List_assignment statement |
 			 Func_call statement |
 			 If_statement statement |
 			 For_statement statement |
+			 Increment statement |
+			 Assignment statement |
+			 Break_statement
 			 Return_statement |
 			 ε
-
-fn soma() {
-	return 
-}
+			 
 
 Var_statement -> 
 	DeclarationImutable |
 	MUT ID ":=" Expression |
 	CONST ID ":=" Expression ** const can only be defined at the top level (outside of functions)
 
+
 Var_assignment ->
 	ID "=" Expression
-				   
-Func_call -> ID "(" id_list ")" |
-	     ID "(" ")"
 
-id_list -> Expression more_Expression
+	
+List_statement ->
+	DeclarationImutableList |
+	MUT ID ":=" "[" id_list "]" |
+	MUT ID ":=" "[" NUMBER "]" Type |  vou trocar 'NUMBER' por 'id'
+	
+
+List_assignment ->
+	ID "[" NUMBER "]" "=" Expression 
+
+DeclarationImutableList ->		
+	ID ":=" "[" id_list "]"
+
+Func_call -> ID "(" id_list ")" |
+	     ID "(" ")" |
+			 FuncCallList 
+
+FuncCallList -> ID "[" DOTDOT "]" |
+								ID "[" NUMBER DOTDOT NUMBER "]" |
+								
+
+								
+id_list -> Expression more_Expression 
+
 
 more_Expression -> "," Expression more_Expression
                   | ε
@@ -68,10 +108,13 @@ For_statement ->
 DeclarationImutable ->
 	ID ":=" Expression
 
+Break_statement ->
+	"break"
+
 Return_statement ->
 	"return" Expression
 
-Expression -> Expression "+" Term | Expression "-" Term | Term	      
+Expression -> Expression "+" Term | Expression "-" Term | Term | Increment | Func_call    
 
 ExpressionRelacional ->	Expression "==" Expression |
 	     		Expression "!=" Expression |
@@ -90,9 +133,34 @@ Factor -> NUMBER |
 	  STRING |
 	  ID     |
 	  "(" Expression ")" |
+	  ID "[" NUMBER "]" |
 	  TRUE |
 	  FALSE	|
-	  RUNE
+	  RUNE |
+	  NUMBERFLOAT|
+      NOTACAOCIENTIFICA |
+	  BINARY |
+	  OCTAL |
+	  HEX   |
+	  INTERPOLATIONSTRING |
+	  SizeofExpression
+
+SizeofExpression ->
+				    "sizeof" "(" Expression ")"|
+                    "sizeof" "(" Type ")"
 
 Increment -> 
 	ID"++" | ID"--"
+
+
+Assignment -> ID "+=" Expression
+			  ID "-=" Expression
+			  ID "*=" Expression
+			  ID "/=" Expression
+			  ID "%=" Expression
+			  ID "&=" Expression
+			  ID "|=" Expression
+			  ID "^=" Expression
+			  ID "<<=" Expression
+			  ID ">>=" Expression
+
