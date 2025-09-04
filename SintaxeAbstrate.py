@@ -132,47 +132,11 @@ class FunctionReturnType(FunctionDefinition): #função com retorno de algum tip
         return visitor.visitFunctionReturnType(self)
 
 class FunctionMain(FunctionDefinition): #função main
-    def __init__(self, main, block_statement, function_definition_without_main):
-        self.main = main
-        self.block_statement = block_statement
-        self.function_definition_without_main = function_definition_without_main
-    def accept(self, visitor):
-        return visitor.visitFunctionMain(self)
-    
-
-#######################################################
-# Classes da Sintaxe Abstrata para Function Definition without main
-######################################################
-
-class function_definition_without_main(metaclass=ABCMeta):
-    @abstractmethod
-    def accept(self,visitor):
-        pass
-
-class FunctionVoidWithoutMain(function_definition_without_main): #funções voids sem ter main
-    def __init__(self,id,param,block_statement,function_definition_without_main):
+    def __init__(self, id, block_statement):
         self.id = id
-        self.param = param
         self.block_statement = block_statement
-        self.function_definition_without_main = function_definition_without_main 
     def accept(self, visitor):
-        return visitor.visitFunctionVoidWithoutMain(self)
-
-class FunctionReturnTypeWithoutMain(function_definition_without_main): #funções sem main que retornam algo
-    def __init__(self,id,param,type,block_statement,function_definition_without_main):
-        self.id = id
-        self.param = param
-        self.type = type
-        self.block_statement = block_statement
-        self.function_definition_without_main = function_definition_without_main
-    def accept(self, visitor):
-        return visitor.visitFunctionReturnTypeWithoutMain(self)
-
-class NoneFunction(function_definition_without_main):
-    def __init__(self):
-        pass
-    def accept(self, visitor):
-        return visitor.visitNoneFunction(self)
+        return visitor.visitFunctionMain(self)   
 
 #######################################################
 # Classes da Sintaxe Abstrata para Param
@@ -286,11 +250,38 @@ class BlockStatementAbstract(metaclass=ABCMeta):
         pass
 
 class BlockStatement(BlockStatementAbstract):
+    def __init__(self, statements):
+        self.statements = statements
+    def accept(self, visitor):
+        return visitor.visitBlockStatement(self)
+
+class NoneBlockStatement(BlockStatementAbstract):
+    def __init__(self):
+        pass
+    def accept(self, visitor):
+        return visitor.visitNoneBlockStatement(self)
+    
+#######################################################
+# Classes da Sintaxe Abstrata para Statements
+#######################################################
+
+class StatementsAbstract(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, visitor):
+        pass
+
+class MultipleStatement(StatementsAbstract):
+    def __init__(self, statement, statements):
+        self.statement = statement
+        self.statements = statements
+    def accept(self, visitor):
+        return visitor.visitMultipleStatement(self)
+
+class SingleStatement(StatementsAbstract):
     def __init__(self, statement):
         self.statement = statement
     def accept(self, visitor):
-        return visitor.visitBlockStatement(self)
-        
+        return visitor.visitSingleStatement(self)
 
 ########################################################
 # Classes da Sintaxe Abstrata para Statement
@@ -302,51 +293,44 @@ class StatementAbstract(metaclass=ABCMeta):
         pass
 
 class VarStatement(StatementAbstract):
-    def __init__(self, var_statement, statement):
+    def __init__(self, var_statement ):
         self.var_statement = var_statement
-        self.statement = statement
     def accept(self, visitor):
         return visitor.visitVarStatement(self)
 
 class VarAssignment(StatementAbstract):
-    def __init__(self, var_assignment, statement):
+    def __init__(self, var_assignment):
         self.var_assignment = var_assignment
-        self.statement = statement
     def accept(self, visitor):
         return visitor.visitVarAssignment(self)
 
 class ListStatement(StatementAbstract):
-    def __init__(self, list_statement, statement):
+    def __init__(self, list_statement):
         self.list_statement = list_statement
-        self.statement = statement
     def accept(self, visitor):
         return visitor.visitListStatement(self)
 
 class ListAssignment(StatementAbstract):
-    def __init__(self, list_assignment, statement):
+    def __init__(self, list_assignment ):
         self.list_assignment = list_assignment
-        self.statement = statement
     def accept(self, visitor):
         return visitor.visitListAssignment(self)
 
 class FuncCallS(StatementAbstract):
-    def __init__(self, func_call,statement):
+    def __init__(self, func_call):
         self.func_call = func_call
-        self.statement = statement
     def accept(self, visitor):
         return visitor.visitFuncCallS(self)
 
 class IfStatement(StatementAbstract):
-    def __init__(self, if_statement, statement):
+    def __init__(self, if_statement ):
         self.if_statement = if_statement
-        self.statement = statement
     def accept(self, visitor):
         return visitor.visitIfStatement(self)
 
 class ForStatement(StatementAbstract):
-    def __init__(self, for_statement, statement):
+    def __init__(self, for_statement ):
         self.for_statement = for_statement
-        self.statement = statement
     def accept(self, visitor):
         return visitor.visitForStatement(self)
     
@@ -363,24 +347,17 @@ class ReturnStatement(StatementAbstract):
         return visitor.visitReturnStatement(self)
     
 class IncrementStatement(StatementAbstract):
-    def __init__(self, increment_statement, statement):
+    def __init__(self, increment_statement):
         self.increment_statement = increment_statement
-        self.statement = statement
     def accept(self, visitor):
         return visitor.visitIncrementStatement(self)
 
 class AssignmentStatement(StatementAbstract):
-    def __init__(self, assignment_statement, statement):
+    def __init__(self, assignment_statement):
         self.assignment_statement = assignment_statement
-        self.statement = statement
     def accept(self, visitor):
         return visitor.visitAssignmentStatement(self)
 
-class NoneStatement(StatementAbstract):
-    def __init__(self):
-        pass
-    def accept(self, visitor):
-        return visitor.visitNoneStatement(self)
 
 #########################################################
 # Classes da Sintaxe Abstrata para Var Statement

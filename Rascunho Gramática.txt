@@ -12,23 +12,9 @@ Program_item -> Const_declaration
 
 Const_declaration -> CONST ID ":=" Expression
 
-
-
-
-Program ->  Program_import Function_definition
-           | Function_definition
-
-
-Program_import -> IMPORT ID Program_import
-                | IMPORT ID 
-
-Function_definition -> "fn" ID "(" Params ")" "{" Block_statement "}"  | 
-            "fn" ID "(" Params ")" Type "{" Block_statement "}"  |
-            "fn" MAIN "(" ")" "{" Block_statement "}" Function_definition_without_main |
-           
-Function_definition_without_main -> "fn" ID "(" Params ")" "{" Block_statement "}" Function_definition_without_main | 
-                         "fn" ID "(" Params ")" Type "{" Block_statement "}" Function_definition_without_main |   
-						 ε
+Function_definition -> "fn" ID "(" Params ")"  Block_statement  | 
+            "fn" ID "(" Params ")" Type  Block_statement  |
+            "fn" ID "(" ")"  Block_statement   
 						 		   
 
 Params -> Param More_Params
@@ -41,20 +27,24 @@ Param -> ID Type
 
 Type -> INT | F32 | F64 | RUNETYPE | STRINGTYPE | BOOL 
 	  
-Block_statement -> statement 
+Block_statement -> {Stms} 
+				| {}
 
-statement -> Var_statement statement | 
-			 Var_assignment statement |
-			 List_statement statement |
-			 List_assignment statement |
-			 Func_call statement |
-			 If_statement statement |
-			 For_statement statement |
-			 Increment statement |
-			 Assignment statement |
+Stms -> Stm Stms 
+	   |Stm
+
+stm -> Var_statement  | 
+			 Var_assignment  |
+			 List_statement  |
+			 List_assignment  |
+			 Func_call  |
+			 If_statement  |
+			 For_statement  |
+			 Increment  |
+			 Assignment  |
 			 Break_statement
 			 Return_statement |
-			 ε
+
 			 
 
 Var_statement -> 
@@ -84,7 +74,7 @@ Func_call -> ID "(" id_list ")" |
 			 FuncCallList 
 
 FuncCallList -> ID "[" DOTDOT "]" |
-								ID "[" NUMBER DOTDOT NUMBER "]" |
+				ID "[" NUMBER DOTDOT NUMBER "]" |
 								
 
 								
@@ -95,15 +85,15 @@ more_Expression -> "," Expression more_Expression
                   | ε
 
 If_statement ->
-	"if" ExpressionRelacional "{" Block_statement "}" | "if" ExpressionRelacional "{" Block_statement "}" ElseOp
+	"if" ExpressionRelacional  Block_statement  | "if" ExpressionRelacional  Block_statement  ElseOp
 
 ElseOp ->
-	"else" If_statement | "else" "{" Block_statement "}"
+	"else" If_statement | "else"  Block_statement 
 
 For_statement -> 
-	"for" ID "in" Expression "{" Block_statement "}" | **For each precisa ser uma lista desse jeito ta tratando?
-	"for" DeclarationImutable ";" ExpressionRelacional ";" Increment"{" Block_statement "}" | **Logica do increment ta certa?
-	"for" ExpressionRelacional "{" Block_statement "}"
+	"for" ID "in" Expression  Block_statement | **For each precisa ser uma lista desse jeito ta tratando?
+	"for" DeclarationImutable ";" ExpressionRelacional ";" Increment Block_statement  | **Logica do increment ta certa?
+	"for" ExpressionRelacional  Block_statement 
 
 DeclarationImutable ->
 	ID ":=" Expression
