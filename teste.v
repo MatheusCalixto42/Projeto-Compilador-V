@@ -97,11 +97,5 @@ fn main(){
 	b := 0b01111011
 	c := 0o173
 	
-	
 }
 
-
-fn soma222(a int, b int) int {
-	mut fnum := [3]int
-	return a + b
-}

@@ -58,9 +58,9 @@ class AbstractVisitor(metaclass=ABCMeta):
     def visitFunctionReturnTypeWithoutMain(self, functionReturnTypeWithoutMain):
         pass
 
-    @abstractmethod
-    def visitNoneFunction(self, noneFunction):
-       pass
+    #@abstractmethod
+    #def visitNoneFunction(self, noneFunction):
+    #   pass
 
     @abstractmethod
     def visitDescriptionParam(self, descriptionParam):

@@ -13,22 +13,21 @@ Program_item -> Const_declaration
 Const_declaration -> CONST ID ":=" Expression
 
 
-
-
-Program ->  Program_import Function_definition
-           | Function_definition
-
-
-Program_import -> IMPORT ID Program_import
-                | IMPORT ID 
-
 Function_definition -> "fn" ID "(" Params ")" "{" Block_statement "}"  | 
             "fn" ID "(" Params ")" Type "{" Block_statement "}"  |
             "fn" MAIN "(" ")" "{" Block_statement "}" Function_definition_without_main |
+			fn" MAIN "(" ")" "{" Block_statement "}"
+
+
            
 Function_definition_without_main -> "fn" ID "(" Params ")" "{" Block_statement "}" Function_definition_without_main | 
                          "fn" ID "(" Params ")" Type "{" Block_statement "}" Function_definition_without_main |   
-						 ε
+						 "fn" ID "(" ")" "{" Block_statement "}" Function_definition_without_main |
+						 "fn" ID "(" Params ")" "{" Block_statement "}" |
+						 "fn" ID "(" Params ")" Type "{" Block_statement "}" |
+						 "fn" ID "(" ")" "{" Block_statement "}"
+
+						 
 						 		   
 
 Params -> Param More_Params
@@ -41,7 +40,10 @@ Param -> ID Type
 
 Type -> INT | F32 | F64 | RUNETYPE | STRINGTYPE | BOOL 
 	  
-Block_statement -> statement 
+Block_statement -> { statements } |
+				   { }
+
+stms -> stm stms
 
 statement -> Var_statement statement | 
 			 Var_assignment statement |
@@ -84,7 +86,7 @@ Func_call -> ID "(" id_list ")" |
 			 FuncCallList 
 
 FuncCallList -> ID "[" DOTDOT "]" |
-								ID "[" NUMBER DOTDOT NUMBER "]" |
+				ID "[" NUMBER DOTDOT NUMBER "]" |
 								
 
 								

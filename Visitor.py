@@ -100,7 +100,8 @@ class Visitor(AbstractVisitor):
         print('(', end='')
         print(')', end=' ')
         functionMain.block_statement.accept(self)
-        functionMain.function_definition_without_main.accept(self)
+        if functionMain.function_definition_without_main != None:
+            functionMain.function_definition_without_main.accept(self)
 
 
 ###################################################################
@@ -116,7 +117,9 @@ class Visitor(AbstractVisitor):
         functionvoidwithoutmain.block_statement.accept(self)
         tab =  tab - 3
         print(blank(), '}', sep=' ')
-        functionvoidwithoutmain.function_definition_without_main.accept(self)
+        if functionvoidwithoutmain.function_definition_without_main != None:
+            functionvoidwithoutmain.function_definition_without_main.accept(self)
+
 
     def visitFunctionReturnTypeWithoutMain(self,functionreturntypewithoutmain):
         print('fn', end = '', sep= '')
@@ -130,10 +133,11 @@ class Visitor(AbstractVisitor):
         functionreturntypewithoutmain.block_statement.accept(self)
         tab =  tab - 3
         print(blank(), '}', sep=' ')
-        functionreturntypewithoutmain.function_definition_without_main.accept(self)
+        if functionreturntypewithoutmain.function_definition_without_main != None:
+            functionreturntypewithoutmain.function_definition_without_main.accept(self)
 
-    def visitNoneFunction(self, noneFunction):
-        pass
+    #def visitNoneFunction(self, noneFunction):
+     #   pass
 
 ###################################################################
 # Classes to visit the Abstract Syntax of Param

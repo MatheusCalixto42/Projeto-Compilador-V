@@ -50,6 +50,10 @@ def p_function_definition3(p):
     '''function_definition : FN MAIN LPAREN RPAREN LBRACE block_statement RBRACE function_definition_without_main'''
     p[0] = sa.FunctionMain(p[2], p[6], p[8])
 
+def p_function_definition_main_no_loop(p):
+    '''function_definition : FN MAIN LPAREN RPAREN LBRACE block_statement RBRACE '''
+    p[0] = sa.FunctionMain(p[2], p[6], None)
+
 def p_function_definition_without_main1(p):
     '''function_definition_without_main : FN ID LPAREN params RPAREN LBRACE block_statement RBRACE function_definition_without_main'''
     p[0] = sa.FunctionVoidWithoutMain(p[2], p[4], p[7], p[9])
@@ -58,9 +62,17 @@ def p_function_definition_without_main2(p):
     '''function_definition_without_main : FN ID LPAREN params RPAREN type LBRACE block_statement RBRACE function_definition_without_main'''
     p[0] = sa.FunctionReturnTypeWithoutMain(p[2], p[4], p[6], p[8], p[10])
 
-def p_none_function(p):
-    '''function_definition_without_main : '''
-    p[0] = sa.NoneFunction()
+def p_function_definition_without_main1_no_loop(p):
+    '''function_definition_without_main : FN ID LPAREN params RPAREN LBRACE block_statement RBRACE '''
+    p[0] = sa.FunctionVoidWithoutMain(p[2], p[4], p[7], None)
+
+def p_function_definition_without_main2_no_loop(p):
+    '''function_definition_without_main : FN ID LPAREN params RPAREN type LBRACE block_statement RBRACE '''
+    p[0] = sa.FunctionReturnTypeWithoutMain(p[2], p[4], p[6], p[8], None)
+
+#def p_none_function(p):
+#   '''function_definition_without_main : '''
+#    p[0] = sa.NoneFunction()
 
 def p_params(p):
     '''params : param more_params'''

@@ -168,11 +168,11 @@ class FunctionReturnTypeWithoutMain(function_definition_without_main): #funçõe
     def accept(self, visitor):
         return visitor.visitFunctionReturnTypeWithoutMain(self)
 
-class NoneFunction(function_definition_without_main):
-    def __init__(self):
-        pass
-    def accept(self, visitor):
-        return visitor.visitNoneFunction(self)
+#class NoneFunction(function_definition_without_main):
+#    def __init__(self):
+#        pass
+#    def accept(self, visitor):
+#        return visitor.visitNoneFunction(self)
 
 #######################################################
 # Classes da Sintaxe Abstrata para Param
