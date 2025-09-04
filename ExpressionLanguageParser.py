@@ -39,40 +39,16 @@ def p_program_const_declaration_rule(p):
     p[0] = sa.ConstanteDeclarationRule(p[2], p[4])
 
 def p_function_definition1(p):
-    '''function_definition : FN ID LPAREN params RPAREN LBRACE block_statement RBRACE '''
-    p[0] = sa.FunctionVoid(p[2], p[4], p[7])
+    '''function_definition : FN ID LPAREN params RPAREN  block_statement  '''
+    p[0] = sa.FunctionVoid(p[2], p[4], p[6])
 
 def p_function_definition2(p):
-    '''function_definition : FN ID LPAREN params RPAREN type LBRACE block_statement RBRACE '''
-    p[0] = sa.FunctionReturnType(p[2], p[4], p[6], p[8])
+    '''function_definition : FN ID LPAREN params RPAREN type  block_statement  '''
+    p[0] = sa.FunctionReturnType(p[2], p[4], p[6], p[7])
 
 def p_function_definition3(p):
-    '''function_definition : FN MAIN LPAREN RPAREN LBRACE block_statement RBRACE function_definition_without_main'''
-    p[0] = sa.FunctionMain(p[2], p[6], p[8])
-
-def p_function_definition_main_no_loop(p):
-    '''function_definition : FN MAIN LPAREN RPAREN LBRACE block_statement RBRACE '''
-    p[0] = sa.FunctionMain(p[2], p[6], None)
-
-def p_function_definition_without_main1(p):
-    '''function_definition_without_main : FN ID LPAREN params RPAREN LBRACE block_statement RBRACE function_definition_without_main'''
-    p[0] = sa.FunctionVoidWithoutMain(p[2], p[4], p[7], p[9])
-
-def p_function_definition_without_main2(p):
-    '''function_definition_without_main : FN ID LPAREN params RPAREN type LBRACE block_statement RBRACE function_definition_without_main'''
-    p[0] = sa.FunctionReturnTypeWithoutMain(p[2], p[4], p[6], p[8], p[10])
-
-def p_function_definition_without_main1_no_loop(p):
-    '''function_definition_without_main : FN ID LPAREN params RPAREN LBRACE block_statement RBRACE '''
-    p[0] = sa.FunctionVoidWithoutMain(p[2], p[4], p[7], None)
-
-def p_function_definition_without_main2_no_loop(p):
-    '''function_definition_without_main : FN ID LPAREN params RPAREN type LBRACE block_statement RBRACE '''
-    p[0] = sa.FunctionReturnTypeWithoutMain(p[2], p[4], p[6], p[8], None)
-
-#def p_none_function(p):
-#   '''function_definition_without_main : '''
-#    p[0] = sa.NoneFunction()
+    '''function_definition : FN MAIN LPAREN RPAREN  block_statement  '''
+    p[0] = sa.FunctionMain(p[2], p[5])
 
 def p_params(p):
     '''params : param more_params'''
@@ -118,28 +94,40 @@ def p_type6(p):
     p[0] = sa.Rune(p[1])
 
 def p_block_statement(p):
-    '''block_statement :  statement '''
-    p[0] = sa.BlockStatement(p[1])
+    '''block_statement :  LBRACE statements RBRACE'''
+    p[0] = sa.BlockStatement(p[2])
+
+def p_none_block_statement(p):
+    '''block_statement : LBRACE RBRACE'''
+    p[0] = sa.NoneBlockStatement()
+
+def p_multiple_statement(p):
+    '''statements : statement statements'''
+    p[0] = sa.MultipleStatement(p[1], p[2])
+
+def p_single_statement(p):
+    '''statements : statement'''
+    p[0] = sa.SingleStatement(p[1])
 
 def p_statement(p):
-    '''statement :  var_statement statement'''
-    p[0] = sa.VarStatement(p[1], p[2])
+    '''statement :  var_statement '''
+    p[0] = sa.VarStatement(p[1])
 
 def p_statement2(p):
-    '''statement :  var_assignment statement'''
-    p[0] = sa.VarAssignment(p[1], p[2])
+    '''statement :  var_assignment '''
+    p[0] = sa.VarAssignment(p[1])
 
 def p_statement3(p):
-    '''statement :  func_call statement'''
-    p[0] = sa.FuncCallS(p[1],p[2])
+    '''statement :  func_call '''
+    p[0] = sa.FuncCallS(p[1])
 
 def p_statement4(p):
-    '''statement :  if_statement statement'''
-    p[0] = sa.IfStatement(p[1], p[2])
+    '''statement :  if_statement '''
+    p[0] = sa.IfStatement(p[1])
 
 def p_statement5(p):
-    '''statement :  for_statement statement'''
-    p[0] = sa.ForStatement(p[1], p[2])
+    '''statement :  for_statement '''
+    p[0] = sa.ForStatement(p[1])
 
 def p_break_statement_rule(p):
     '''statement : break_statement'''
@@ -149,25 +137,21 @@ def p_statement6(p):
     '''statement :  return_statement'''
     p[0] = sa.ReturnStatement(p[1])
 
-def p_statement7(p):
-    '''statement : '''
-    p[0] = sa.NoneStatement()
-
 def p_statement8(p):
-    '''statement : list_statement statement'''
-    p[0] = sa.ListStatement(p[1], p[2])
+    '''statement : list_statement '''
+    p[0] = sa.ListStatement(p[1])
 
 def p_statement9(p):
-    '''statement :  list_assignment statement'''
-    p[0] = sa.ListAssignment(p[1], p[2])
+    '''statement :  list_assignment '''
+    p[0] = sa.ListAssignment(p[1])
 
 def p_statement10(p):
-    '''statement :  increment_rule statement'''
-    p[0] = sa.IncrementStatement(p[1], p[2])
+    '''statement :  increment_rule '''
+    p[0] = sa.IncrementStatement(p[1])
 
 def p_statement_assignment(p):
-    '''statement : assignment statement'''
-    p[0] = sa.AssignmentStatement(p[1], p[2])
+    '''statement : assignment '''
+    p[0] = sa.AssignmentStatement(p[1])
 
 def p_var_declaration(p):
     '''var_statement :  declaration_imutable'''
@@ -234,38 +218,38 @@ def p_more_expression(p):
     '''more_expressions : COMMA expression more_expressions'''
     p[0] = sa.PlusExpres(p[2], p[3])
 
-#ou essa abordagem?
+
 def p_more_expression_empty(p):
     '''more_expressions :'''
     p[0] = sa.NoneExpression()
 
 def p_if_statement(p):
-    '''if_statement : IF expression_relacional LBRACE statement RBRACE'''
-    p[0] = sa.OnlyIf(p[2], p[4])
+    '''if_statement : IF expression_relacional block_statement '''
+    p[0] = sa.OnlyIf(p[2], p[3])
 
 def p_if_statement_else(p):
-    '''if_statement : IF expression_relacional LBRACE statement RBRACE elseop'''
-    p[0] = sa.IfAndElse(p[2], p[4], p[6])
+    '''if_statement : IF expression_relacional block_statement  elseop'''
+    p[0] = sa.IfAndElse(p[2], p[3], p[4])
 
 def p_else(p):
     '''elseop : ELSE if_statement'''
     p[0] = sa.ElseIf(p[2])
 
 def p_else2(p):
-    '''elseop : ELSE LBRACE statement RBRACE'''
-    p[0] = sa.OnlyElse(p[3])
+    '''elseop : ELSE block_statement '''
+    p[0] = sa.OnlyElse(p[2])
 
 def p_for_each_statement(p):
-    '''for_statement : FOR ID IN expression LBRACE statement RBRACE'''
-    p[0] = sa.ForEach(p[2], p[4], p[6])
+    '''for_statement : FOR ID IN expression block_statement '''
+    p[0] = sa.ForEach(p[2], p[4], p[5])
 
 def p_for_statement(p):
-    '''for_statement : FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule LBRACE statement RBRACE'''
-    p[0] = sa.ConventionalFor(p[2], p[4], p[6], p[8])
+    '''for_statement : FOR declaration_imutable SEMICOLON expression_relacional SEMICOLON increment_rule block_statement '''
+    p[0] = sa.ConventionalFor(p[2], p[4], p[6], p[7])
 
 def p_for_statement2(p):
-    '''for_statement : FOR expression_relacional LBRACE statement RBRACE'''
-    p[0] = sa.OnlyExpressionRelationalFor(p[2], p[4])
+    '''for_statement : FOR expression_relacional block_statement '''
+    p[0] = sa.OnlyExpressionRelationalFor(p[2], p[3])
 
 def p_declaration_imutable(p):
     '''declaration_imutable : ID DECLARE_ASSIGN expression'''

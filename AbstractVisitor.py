@@ -51,18 +51,6 @@ class AbstractVisitor(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def visitFunctionVoidWithoutMain(self, functionVoidWithoutMain):
-        pass
-
-    @abstractmethod
-    def visitFunctionReturnTypeWithoutMain(self, functionReturnTypeWithoutMain):
-        pass
-
-    #@abstractmethod
-    #def visitNoneFunction(self, noneFunction):
-    #   pass
-
-    @abstractmethod
     def visitDescriptionParam(self, descriptionParam):
         pass
 
@@ -111,6 +99,18 @@ class AbstractVisitor(metaclass=ABCMeta):
         pass
 
     @abstractmethod
+    def visitNoneBlockStatement(self, noneBlockStatement):
+        pass
+
+    @abstractmethod
+    def visitMultipleStatement(self, multipleStatement):
+        pass
+
+    @abstractmethod
+    def visitSingleStatement(self, singleStatement):
+        pass
+
+    @abstractmethod
     def visitVarStatement(self, varStatement):
         pass
 
@@ -152,10 +152,6 @@ class AbstractVisitor(metaclass=ABCMeta):
 
     @abstractmethod
     def visitReturnStatement(self, returnStatement):
-        pass
-
-    @abstractmethod
-    def visitNoneStatement(self, noneStatement):
         pass
     
     @abstractmethod

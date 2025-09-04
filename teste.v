@@ -22,7 +22,6 @@ fn main(){
 	nome := 'Matheus'	// Variável imutável (seria o const do C)
 	mut idade := 30		// Variável mutável (igual a uma variável comum no C)
     mut somar := 10
-    //const teste1 := 10
 	println('Nome: ${nome}')
 	println('Idade: ${idade}')
 
@@ -98,4 +97,10 @@ fn main(){
 	c := 0o173
 	
 }
+const teste4 := 10
 
+fn soma222(a int, b int) int {
+	mut fnum := [3]int
+	return a + b
+}
+const teste5 := 10
