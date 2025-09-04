@@ -291,7 +291,27 @@ class SemanticVisitor(AbstractVisitor):
             self.n_errors += 1
             print(f"Erro: Tipo incompatível na atribuição ao elemento da lista '{varName}'. Esperado '{bindable[st.TYPE]}', mas recebeu '{exprType}'.")
 
+##########################################################
+#Semantico para Func call
+#########################################################
 
+    def visitFuncCompoundParams(self, funcCompoundParams):
+       bindable = st.getBindable(funcCompoundParams.id)
+       if bindable != None and bindable[st.BINDABLE] == st.FUNCTION:
+           typeIdlist = funcCompoundParams.id_list.accept(self)
+           if (list(bindable[st.PARAMS][1::2]) == typeIdlist):
+               return bindable[st.TYPE]
+           funcCompoundParams.accept(self.printer)
+           self.n_errors += 1
+           print("\n\t[Erro] Chamada de função invalida. Tipos passados na chamada são:", typeIdlist)
+           print('\tenquanto os tipos definidos no metoso são:', bindable[st.PARAMS][1::2], '\n')
+       else:     
+            funcCompoundParams.accept(self.printer)
+            self.n_errors += 1
+            print("\n\t[Erro] Chamada de funcao invalida. O id", funcCompoundParams.id, " não é uma funcao, nao foi definido ou foi definido apos esta funcao.\n")
+       return None 
+
+           
 
 def main():
     f = open("testeSemanticoV.v", "r")
@@ -300,7 +320,7 @@ def main():
     parser = yacc.yacc()
     result = parser.parse(debug=False)
     print("#imprime erros semanticos encontrados")
-    svisitor = SemanticVisitor(debug=-1)
+    svisitor = SemanticVisitor()
     result.accept(svisitor)
     print(f"Foram encontrados {svisitor.getnerros()} erros")
 

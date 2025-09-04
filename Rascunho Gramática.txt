@@ -14,7 +14,8 @@ Const_declaration -> CONST ID ":=" Expression
 
 Function_definition -> "fn" ID "(" Params ")"  Block_statement  | 
             "fn" ID "(" Params ")" Type  Block_statement  |
-            "fn" ID "(" ")"  Block_statement   
+            
+			 
 						 		   
 
 Params -> Param More_Params

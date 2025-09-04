@@ -704,7 +704,7 @@ def main():
     lexer = lex.lex()
     lexer.input(f.read())
     parser = yacc.yacc(start='program')
-    result = parser.parse(debug=False)
+    result = parser.parse(debug=True)
     print("imprime o programa que foi passado como entrada")
     visitor = Visitor()
     result.accept(visitor)
