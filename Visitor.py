@@ -408,7 +408,7 @@ class Visitor(AbstractVisitor):
     def visitConventionalFor(self,conventionalFor):
         global tab
         print(blank(), 'for', end=' ', sep=' ')
-        conventionalFor.declarationmutable.accept(self)
+        conventionalFor.declarationimutable.accept(self)
         print(';', end=' ', sep=' ')
         conventionalFor.expressionrelational.accept(self)
         print(';', end=' ', sep=' ')

@@ -2,37 +2,37 @@ from abc import abstractmethod
 from abc import ABCMeta
 
 #####################################################
-# Classes da Sintaxe Abstrata para Program
+# Class for Program
 ####################################################
 
-class Program(metaclass=ABCMeta):
+class ProgramAbstract(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, visitor):
         pass
 
-class ImportAndFuncDefinition(Program):
+class CompoundImportItems(ProgramAbstract):
     def __init__(self, program_import, program_items):
         self.program_import = program_import
         self.program_items = program_items
     def accept(self, visitor):
-        return visitor.visitImportAndFuncDefinition(self)
+        return visitor.visitCompoundImportItems(self)
 
-class ProgramItems(Program):
+class ProgramItems(ProgramAbstract):
     def __init__(self, program_items):
         self.program_items = program_items
     def accept(self, visitor):
         return visitor.visitProgramItems(self)
 
 #######################################################
-# Classes da Sintaxe Abstrata para Import
+# Class for Program_import
 ######################################################
 
-class ProgramImport(metaclass=ABCMeta):
+class ProgramImportAbstract(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, visitor):
         pass    
 
-class SequenceImports(ProgramImport):
+class SequenceImports(ProgramImportAbstract):
     def __init__(self, import_token, id, program_import):
         self.import_token = import_token 
         self.id = id          
@@ -40,7 +40,7 @@ class SequenceImports(ProgramImport):
     def accept(self, visitor):
         return visitor.visitSequenceImports(self)
 
-class SingleImport(ProgramImport):
+class SingleImport(ProgramImportAbstract):
     def __init__(self, id, import_token):
         self.id = id
         self.import_token = import_token
@@ -48,7 +48,7 @@ class SingleImport(ProgramImport):
         return visitor.visitSingleImport(self)
     
 #######################################################
-# Classes da Sintaxe Abstrata para Program Items
+# Class for Program_items
 ######################################################
 
 class ProgramItemsAbstract(metaclass=ABCMeta):
@@ -56,32 +56,32 @@ class ProgramItemsAbstract(metaclass=ABCMeta):
     def accept(self, visitor):
         pass
 
-class MultipleProgramItems(ProgramItemsAbstract):
-    def __init__(self, item, items_recursao):
-        self.item = item
-        self.items_recursao = items_recursao
+class SequenceProgramItems(ProgramItemsAbstract):
+    def __init__(self, program_item, program_items):
+        self.program_item = program_item
+        self.program+items = program_items
     def accept(self, visitor):
-        return visitor.visitMultipleProgramItems(self)
+        return visitor.visitSequenceProgramItems(self)
 
-class NoneItems(ProgramItemsAbstract):
-    def __init__(self):
-        pass
+class SingleProgramItem(ProgramItemsAbstract):
+    def __init__(self, program_item):
+        self.program_item = program_item
     def accept(self, visitor):
-        return visitor.visitNoneItems(self)
+        return visitor.visitSingleProgramItem(self)
 
 #######################################################
-# Classes da Sintaxe Abstrata para Program Item
+# Class for Program_item
 ######################################################
 class ProgramItemAbstract(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, visitor):
         pass
 
-class ConstanteDeclaration(ProgramItemAbstract):
-    def __init__(self, constante):
-        self.constante = constante
+class ConstantDeclaration(ProgramItemAbstract):
+    def __init__(self, constant):
+        self.constant = constant
     def accept(self, visitor):
-        return visitor.visitConstanteDeclaration(self)
+        return visitor.visitConstantDeclaration(self)
 
 class FunctionDeclaration(ProgramItemAbstract):
     def __init__(self, function):
@@ -90,7 +90,7 @@ class FunctionDeclaration(ProgramItemAbstract):
         return visitor.visitFunctionDeclaration(self)
 
 #######################################################
-# Classes da Sintaxe Abstrata para Const
+# Class for Const_declaration
 # ######################################################
 
 class ConstanteDeclarationAbstract(metaclass=ABCMeta):
@@ -99,14 +99,14 @@ class ConstanteDeclarationAbstract(metaclass=ABCMeta):
         pass
 
 class ConstanteDeclarationRule(ConstanteDeclarationAbstract):
-    def __init__(self, id, expression):
+    def __init__(self, id, exp):
         self.id = id
-        self.expression = expression
+        self.exp = exp
     def accept(self, visitor):
         return visitor.visitConstanteDeclarationRule(self)
 
 #######################################################
-# Classes da Sintaxe Abstrata para Function Definition
+# Class for Function_definition
 ######################################################
 
 class FunctionDefinition(metaclass=ABCMeta):
@@ -115,321 +115,262 @@ class FunctionDefinition(metaclass=ABCMeta):
         pass   
 
 class FunctionVoid(FunctionDefinition): # função com retorno void
-    def __init__(self, id, param, block_statement):
-        self.id = id
-        self.param = param
-        self.block_statement = block_statement
+    def __init__(self, signature, blockStm):
+        self.signature = signature
+        self.blockStm = blockStm
     def accept(self, visitor):
         return visitor.visitFunctionVoid(self)
 
 class FunctionReturnType(FunctionDefinition): #função com retorno de algum tipo
-    def __init__(self,id, param, type , block_statement):
+    def __init__(self,signature, id, blockStm):
+        self.signature = signature
         self.id = id
-        self.param = param
-        self.type = type
-        self.block_statement = block_statement
+        self.blockStm = blockStm
     def accept(self, visitor):
         return visitor.visitFunctionReturnType(self)
 
-class FunctionMain(FunctionDefinition): #função main
-    def __init__(self, id, block_statement):
-        self.id = id
-        self.block_statement = block_statement
-    def accept(self, visitor):
-        return visitor.visitFunctionMain(self)   
 
 #######################################################
-# Classes da Sintaxe Abstrata para Param
+# Class for Signature
 ######################################################
 
-class Param(metaclass=ABCMeta):
+class SignatureAbstract(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, visitor):
         pass
-
-class DescriptionParam(Param):
-    def __init__(self,id, type):
+    
+class SignatureWithParams(SignatureAbstract):
+    def __init__(self,id, sigparams):
         self.id = id
-        self.type = type
+        self.sigparams = sigparams  #Lembrar de colocar passando nada para NoneParams
     def accept(self, visitor):
-        return visitor.visitDescriptionParam(self)
+        return visitor.visitSignatureWithParams(self)
+
+#######################################################
+# Class for SigParams
+######################################################
+
+class SigParamsAbstract(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, visitor):
+        pass
+
+class SingleSigParam(SigParamsAbstract):
+    def __init__(self,id, idType):
+        self.id = id
+        self.idType = idType
+    def accept(self, visitor):
+        return visitor.visitSingleSigParam(self)
+    
+class SequenceSigParams(SigParamsAbstract):
+    def __init__(self,id, idType, sigparams):
+        self.id = id
+        self.idType = idType
+        self.sigparams = sigparams
+    def accept(self, visitor):
+        return visitor.visitSequenceSigParams(self)
 
 ########################################################
-# Classes da Sintaxe Abstrata para MoreParams
+# Class for Params
+########################################################
+
+class ParamsAbstract(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, visitor):
+        pass
+
+class SequenceParams(ParamsAbstract):
+    def __init__(self, exp, params):
+        self.exp = exp
+        self.params = params
+    def accept(self, visitor):
+        return visitor.visitSequenceParams(self)
+
+class SingleParams(ParamsAbstract):
+    def __init__(self, exp):
+        self.exp = exp
+    def accept(self, visitor):
+        return visitor.visitSigParams(self)
+
+########################################################
+# Class for BlockStmt
 #######################################################
+
+class BlockStmAbstract(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, visitor):
+        pass
+
+class BlockStm(BlockStmAbstract):
+    def __init__(self, stms):
+        self.stms = stms  #Lembrar de colocar passando nada para NoneStms
+    def accept(self, visitor):
+        return visitor.visitBlockStm(self)
     
-class MoreParams(metaclass=ABCMeta):
+#######################################################
+# Class for Stms
+#######################################################
+
+class StmsAbstract(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, visitor):
+        pass
+
+class SequenceStm(StmsAbstract):
+    def __init__(self, stm, stms):
+        self.stm = stm
+        self.stms = stms
+    def accept(self, visitor):
+        return visitor.visitSequenceStm(self)
+
+class SingleStm(StmsAbstract):
+    def __init__(self, stm):
+        self.stm = stm
+    def accept(self, visitor):
+        return visitor.visitSingleStm(self)
+
+########################################################
+# Class for Stm
+#######################################################
+
+class StmAbstract(metaclass=ABCMeta):
     @abstractmethod
     def accept(self,visitor):
         pass
 
-class MultipleParams(MoreParams):
-    def __init__(self, param, more_params):
-        self.param = param
-        self.more_params = more_params
+class VarStm(StmAbstract):
+    def __init__(self, var_stm ):
+        self.var_stm = var_stm
     def accept(self, visitor):
-        return visitor.visitMultipleParams(self)
+        return visitor.visitVarStm(self)
 
-class NoneParam(MoreParams):
-    def __init__(self):
-        pass
+class VarAssign(StmAbstract):
+    def __init__(self, var_assign):
+        self.var_assign = var_assign
     def accept(self, visitor):
-        return visitor.visitNoneParam(self)
-#Testar a ideia da linguagem sua -> criar uma regra no arquivo expressionlanguageparser em q tem o NONE sendo passado
+        return visitor.visitVarAssign(self)
 
-
-########################################################
-# Classe da Sintaxe Abstrata para Params
-########################################################
-
-class Params(metaclass=ABCMeta):
-    @abstractmethod
+class ListStm(StmAbstract):
+    def __init__(self, list_stm):
+        self.list_stm = list_stm
     def accept(self, visitor):
-        pass
-#tiramos uma classe para vazio e colocamos uma regra no Expressionlanguageparser
-class DescriptionParams(Params):
-    def __init__(self, param, more_params):
-        self.param = param
-        self.more_params = more_params
+        return visitor.visitListStm(self)
+
+class ListAssign(StmAbstract):
+    def __init__(self, list_assign):
+        self.list_assign = list_assign
     def accept(self, visitor):
-        return visitor.visitDescriptionParams(self)
+        return visitor.visitListAssign(self)
 
-########################################################
-# Classes da Sintaxe Abstrata para Type
-#######################################################
-
-class Type(metaclass=ABCMeta):
-    @abstractmethod
-    def accept(self,visitor):
-        pass
-    
-class IntV(Type):
-    def __init__(self, intv):
-        self.intv = intv
-    def accept(self, visitor):
-        return visitor.visitIntV(self)
-
-class F32(Type):
-    def __init__(self, f32):
-        self.f32 = f32
-    def accept(self, visitor):
-        return visitor.visitF32(self)
-
-class F64(Type):
-    def __init__(self,f64):
-        self.f64 = f64
-    def accept(self, visitor):
-        return visitor.visitF64(self)
-
-class Rune(Type):
-    def __init__(self,rune):
-        self.rune = rune
-    def accept(self, visitor):
-        return visitor.visitRune(self)
-
-class String(Type):
-    def __init__(self,string):
-        self.string = string
-    def accept(self, visitor):
-        return visitor.visitString(self)
-
-class BoolV(Type):
-    def __init__(self,boolv):
-        self.boolv = boolv
-    def accept(self, visitor):
-        return visitor.visitBoolV(self)
-    
-
-########################################################
-# Classes da Sintaxe Abstrata para BlockStatement
-#######################################################
-
-class BlockStatementAbstract(metaclass=ABCMeta):
-    @abstractmethod
-    def accept(self, visitor):
-        pass
-
-class BlockStatement(BlockStatementAbstract):
-    def __init__(self, statements):
-        self.statements = statements
-    def accept(self, visitor):
-        return visitor.visitBlockStatement(self)
-
-class NoneBlockStatement(BlockStatementAbstract):
-    def __init__(self):
-        pass
-    def accept(self, visitor):
-        return visitor.visitNoneBlockStatement(self)
-    
-#######################################################
-# Classes da Sintaxe Abstrata para Statements
-#######################################################
-
-class StatementsAbstract(metaclass=ABCMeta):
-    @abstractmethod
-    def accept(self, visitor):
-        pass
-
-class MultipleStatement(StatementsAbstract):
-    def __init__(self, statement, statements):
-        self.statement = statement
-        self.statements = statements
-    def accept(self, visitor):
-        return visitor.visitMultipleStatement(self)
-
-class SingleStatement(StatementsAbstract):
-    def __init__(self, statement):
-        self.statement = statement
-    def accept(self, visitor):
-        return visitor.visitSingleStatement(self)
-
-########################################################
-# Classes da Sintaxe Abstrata para Statement
-#######################################################
-
-class StatementAbstract(metaclass=ABCMeta):
-    @abstractmethod
-    def accept(self,visitor):
-        pass
-
-class VarStatement(StatementAbstract):
-    def __init__(self, var_statement ):
-        self.var_statement = var_statement
-    def accept(self, visitor):
-        return visitor.visitVarStatement(self)
-
-class VarAssignment(StatementAbstract):
-    def __init__(self, var_assignment):
-        self.var_assignment = var_assignment
-    def accept(self, visitor):
-        return visitor.visitVarAssignment(self)
-
-class ListStatement(StatementAbstract):
-    def __init__(self, list_statement):
-        self.list_statement = list_statement
-    def accept(self, visitor):
-        return visitor.visitListStatement(self)
-
-class ListAssignment(StatementAbstract):
-    def __init__(self, list_assignment ):
-        self.list_assignment = list_assignment
-    def accept(self, visitor):
-        return visitor.visitListAssignment(self)
-
-class FuncCallS(StatementAbstract):
+class FuncCalls(StmAbstract):
     def __init__(self, func_call):
         self.func_call = func_call
     def accept(self, visitor):
-        return visitor.visitFuncCallS(self)
+        return visitor.visitFuncCalls(self)
 
-class IfStatement(StatementAbstract):
-    def __init__(self, if_statement ):
-        self.if_statement = if_statement
+class IfStm(StmAbstract):
+    def __init__(self, if_stm):
+        self.if_stm = if_stm
     def accept(self, visitor):
-        return visitor.visitIfStatement(self)
+        return visitor.visitIfStm(self)
 
-class ForStatement(StatementAbstract):
-    def __init__(self, for_statement ):
-        self.for_statement = for_statement
+class ForStm(StmAbstract):
+    def __init__(self, for_stm):
+        self.for_stm = for_stm
     def accept(self, visitor):
-        return visitor.visitForStatement(self)
+        return visitor.visitForStm(self)
     
-class BreakStatement(StatementAbstract):
-    def __init__(self, break_statement):
-        self.break_statement = break_statement
+class Break(StmAbstract):
+    def __init__(self):
+        pass
     def accept(self, visitor):
-        return visitor.visitBreakStatement(self)
+        return visitor.visitBreak(self)
 
-class ReturnStatement(StatementAbstract):
-    def __init__(self, return_statement):
-        self.return_statement = return_statement
+class Return(StmAbstract):
+    def __init__(self, exp):
+        self.exp = exp
     def accept(self, visitor):
-        return visitor.visitReturnStatement(self)
+        return visitor.visitReturnStm(self)
     
-class IncrementStatement(StatementAbstract):
-    def __init__(self, increment_statement):
-        self.increment_statement = increment_statement
+class IncrementStm(StmAbstract):
+    def __init__(self, increment_stm):
+        self.increment_stm = increment_stm
     def accept(self, visitor):
-        return visitor.visitIncrementStatement(self)
+        return visitor.visitIncrementStm(self)
 
-class AssignmentStatement(StatementAbstract):
-    def __init__(self, assignment_statement):
-        self.assignment_statement = assignment_statement
+class AssignStm(StmAbstract):
+    def __init__(self, assign_stm):
+        self.assign_stm = assign_stm
     def accept(self, visitor):
-        return visitor.visitAssignmentStatement(self)
+        return visitor.visitAssignStm(self)
 
 
 #########################################################
-# Classes da Sintaxe Abstrata para Var Statement
+# Class for Var_Stm
 ########################################################
 
-class VarStatementAbstract(metaclass=ABCMeta):
+class VarStmAbstract(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, visitor):
         pass
 
-class DeclarationImutable(VarStatementAbstract):
-    def __init__(self, declaration_imutable):
-        self.declaration_imutable = declaration_imutable
+class ImutableDeclaratio(VarStmAbstract):
+    def __init__(self, id, exp):
+        self.id = id
+        self.exp = exp
     def accept(self, visitor):
-        return visitor.visitDeclarationImutable(self)
+        return visitor.visitImutableDeclaration(self)
 
-class MutableDeclaration(VarStatementAbstract):
-    def __init__(self, mut, id, expression):
+class MutableDeclaration(VarStmAbstract):
+    def __init__(self, mut, id, exp):
         self.mut = mut
         self.id = id
-        self.expression = expression
+        self.exp = exp
     def accept(self, visitor):
         return visitor.visitMutableDeclaration(self)
 
-class ConstantDeclaration(VarStatementAbstract):
-    def __init__(self, const, id, expression):
-        self.const = const
-        self.id = id
-        self.expression = expression
-    def accept(self, visitor):
-        return visitor.visitConstantDeclaration(self)
 
 ##########################################################
-# Classes da Sintaxe Abstrata para Var Assignment
+# Class for Var_assign
 #########################################################
 
-class VarAssignmentAbstract(metaclass=ABCMeta):
+class VarAssignAbstract(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, visitor):
         pass
 
-class VarModification(VarAssignmentAbstract):
-    def __init__(self, id, expression):
+class VarModification(VarAssignAbstract):
+    def __init__(self, id, exp):
         self.id = id
-        self.expression = expression
+        self.exp = exp
     def accept(self, visitor):
         return visitor.visitVarModification(self)
 
 ##########################################################
-# Classes da Sintaxe Abstrata para List Statement
+# Class for List_stm
 #########################################################
 
-class ListStatementAbstract(metaclass=ABCMeta):
+class ListStmAbstract(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, visitor):
         pass
 
-class DeclarationImutableList(ListStatementAbstract):
-    def __init__(self, declaration_imutable_list):
-        self.declaration_imutable_list = declaration_imutable_list
+class DeclarationImutableListRule(ListStmAbstract):
+    def __init__(self, id, params):
+        self.id = id
+        self.params = params  
     def accept(self, visitor):
-        return visitor.visitDeclarationImutableList(self)
+        return visitor.visitDeclarationImutableListRule(self)
 
-class DeclarationMutableList(ListStatementAbstract):
-    def __init__(self, mut, id, id_list):
+class DeclarationMutableList(ListStmAbstract):
+    def __init__(self, mut, id, params):
         self.mut = mut
         self.id = id
-        self.id_list = id_list
+        self.params = params #lembrar de colocar sem nd para o None nesses casos
     def accept(self, visitor):
         return visitor.visitDeclarationMutableList(self)
 
-class DeclarationMutableListLengthDefinition(ListStatementAbstract):
+class DeclarationMutableListLengthDefinition(ListStmAbstract):
     def __init__(self, mut, id, number, type):
         self.mut = mut
         self.id = id
@@ -440,92 +381,46 @@ class DeclarationMutableListLengthDefinition(ListStatementAbstract):
 
 
 ##########################################################
-# Classes da Sintaxe Abstrata para List Assignment
+# Class for List_assign
 #########################################################
 
-class ListAssignmentAbstract(metaclass=ABCMeta):
+class ListAssignAbstract(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, visitor):
         pass
 
-class ListModification(ListAssignmentAbstract):
-    def __init__(self, id, number, expression):
+class ListModification(ListAssignAbstract):
+    def __init__(self, id, number, exp):
         self.id = id
         self.number = number
-        self.expression = expression
+        self.exp = exp
     def accept(self, visitor):
         return visitor.visitListModification(self)
     
-
 ##########################################################
-# Classes da Sintaxe Abstrata para Declaration Imutable List
+# Class for Call_list
 #########################################################
 
-class DeclarationImutableListAbstract(metaclass=ABCMeta):
-    @abstractmethod
-    def accept(self, visitor):
-        pass
-
-class DeclarationImutableListRule(DeclarationImutableListAbstract):
-    def __init__(self, id, id_list):
-        self.id = id
-        self.id_list = id_list  
-    def accept(self, visitor):
-        return visitor.visitDeclarationImutableListRule(self)
-
-##########################################################
-# Classes da Sintaxe Abstrata para Func Call
-#########################################################
-
-class FuncCall(metaclass=ABCMeta):
-    @abstractmethod
-    def accept(self, visitor):
-        pass
-    
-class FuncCompoundParams(FuncCall):
-    def __init__(self, id, id_list):
-        self.id = id
-        self.id_list = id_list
-    def accept(self, visitor):
-        return visitor.visitFuncCompoundParams(self)
-
-class FuncNoParams(FuncCall):
-    def __init__(self, id):
-        self.id = id
-    def accept(self, visitor):
-        return visitor.visitFuncNoParams(self)
-
-class FuncCallList(FuncCall):
-    def __init__(self, funcCallList):
-        self.funcCallList = funcCallList
-    def accept(self, visitor):
-        return visitor.visitFuncCallList(self)
-
-
-##########################################################
-# Classes da Sintaxe Abstrata para Func Call List
-#########################################################
-
-class FuncCallListAbstract(metaclass=ABCMeta):
+class CallListAbstract(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, visitor):    
         pass
 
-class FuncCallListAll(FuncCallListAbstract):
+class CallListAll(CallListAbstract):
     def __init__(self, id, dotdot):
         self.id = id
         self.dotdot = dotdot
     def accept(self, visitor):
-        return visitor.visitFuncCallListAll(self)
+        return visitor.FuncCallListAll(self)
 
-class FuncCallListRange(FuncCallListAbstract):
+class CallListRange(CallListAbstract):
     def __init__(self, id, number, dotdot, number2):
         self.id = id
         self.number = number
         self.dotdot = dotdot
         self.number2 = number2
     def accept(self, visitor):
-        return visitor.visitFuncCallListRange(self)
+        return visitor.visitCallListRange(self)
 
 # class FuncCallListSingle(FuncCallListAbstract):
 #     def __init__(self, id, number):
@@ -534,284 +429,224 @@ class FuncCallListRange(FuncCallListAbstract):
 #     def accept(self, visitor):
 #         return visitor.visitFuncCallListSingle(self)
 
+
 ##########################################################
-# Classes da Sintaxe Abstrata para If Statement
+# Class for Func_call
 #########################################################
 
-class IdList(metaclass=ABCMeta):
+class FuncCallAbstract(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, visitor):
         pass
     
-class ListId(IdList):
-    def __init__(self,expression, more_expression):
-        self.expression = expression
-        self.more_expression = more_expression
+class FuncCallWithParams(FuncCallAbstract):
+    def __init__(self, id, params):
+        self.id = id
+        self.params = params #lembrar de colocar passando vazio
     def accept(self, visitor):
-        return visitor.visitListId(self)
+        return visitor.visitFuncCallWithParams(self)
 
-##########################################################
-# Classes da Sintaxe Abstrata para More Expression
-#########################################################
-
-class MoreExpression(metaclass=ABCMeta):
-    @abstractmethod
-    def accept(self, visitor):
-        pass
-    
-class PlusExpres(MoreExpression):
-    def __init__(self, expression, more_expression):
-        self.expression = expression
-        self.more_expression = more_expression
-    def accept(self, visitor):
-        return visitor.visitPlusExpres(self)
-
-class NoneExpression(MoreExpression):
-    def __init__(self):
-        pass
-    def accept(self, visitor):
-        return visitor.visitNoneExpression(self)
 
 ############################################################ 
-# Classes da Sintaxe Abstrata para If Statement
+# Class for If_stm
 ###########################################################
 
-class IfStatementAbstract(metaclass=ABCMeta):
+class IfStmAbstract(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, visitor):
         pass
 
-class OnlyIf(IfStatementAbstract):
-    def __init__(self,expressionrelational,blockstatement):
-        self.expressionrelational = expressionrelational
-        self.blockstatement = blockstatement
+class OnlyIf(IfStmAbstract):
+    def __init__(self,expRel,blockstm):
+        self.expRel = expRel
+        self.blockstm = blockstm
     def accept(self, visitor):
         return visitor.visitOnlyIf(self)
 
-class IfAndElse(IfStatementAbstract):
-    def __init__(self,expressionrelational,blockstatement,elseV):
-        self.expressionrelational = expressionrelational
-        self.blockstatement = blockstatement
+class IfAndElse(IfStmAbstract):
+    def __init__(self, expRel, blockstm, elseV):
+        self.expRel = expRel
+        self.blockstm = blockstm
         self.elseV = elseV
     def accept(self, visitor):
         return visitor.visitIfAndElse(self)
 
 ############################################################ 
-# Classes da Sintaxe Abstrata para Else
+# Class for ElseOp
 ###########################################################
 
-class Else(metaclass=ABCMeta):
+class ElseAbstract(metaclass=ABCMeta):
     @abstractmethod
     def accept(self,visitor):
         pass
 
-class ElseIf(Else):
-    def __init__(self,if_statement):
-        self.if_statement = if_statement
+class ElseIf(ElseAbstract):
+    def __init__(self,if_stm):
+        self.if_stm = if_stm
     def accept(self, visitor):
         return visitor.visitElseIf(self)
 
-class OnlyElse(Else):
-    def __init__(self,blockstatement):
-        self.blockstatement = blockstatement
+class OnlyElse(ElseAbstract):
+    def __init__(self,blockstm):
+        self.blockstm = blockstm
     def accept(self, visitor):
         return visitor.visitOnlyElse(self)
 
 ############################################################ 
-# Classes da Sintaxe Abstrata para For
+# Class for For
 ###########################################################
 
-class For(metaclass=ABCMeta):
+class ForAbstract(metaclass=ABCMeta):
     @abstractmethod
     def accept(self,visitor):
         pass
 
-class ForEach(For):
-    def __init__(self,id,expression,blockstatement):
+class ForEach(ForAbstract):
+    def __init__(self,id,exp,blockstm):
         self.id = id
-        self.expression = expression
-        self.blockstatement = blockstatement
+        self.exp = exp
+        self.blockstm = blockstm
     def accept(self, visitor):
         return visitor.visitForEach(self)
 
-class ConventionalFor(For):
-    def __init__(self,declarationimutable,expressionrelational,increment, statement):
-        self.declarationmutable = declarationimutable
-        self.expressionrelational = expressionrelational
+class ConventionalFor(ForAbstract):
+    def __init__(self,id ,expRel,increment, blockstm):
+        self.id = id
+        self.expRel = expRel
         self.increment = increment
-        self.statement = statement
+        self.blockstm = blockstm
     def accept(self, visitor):
         return visitor.visitConventionalFor(self)
 
-class OnlyExpressionRelationalFor(For):
-    def __init__(self,expressionrelational,blockstatement):
-        self.expressionrelational = expressionrelational
-        self.blockstatement = blockstatement
+class OnlyexpRelFor(ForAbstract):
+    def __init__(self,expRel,blockstm):
+        self.expRel = expRel
+        self.blockstm = blockstm
     def accept(self, visitor):
-        return visitor.visitOnlyExpressionRelationalFor(self)
+        return visitor.visitOnlyexpRelFor(self)
 
-#######################################################
-# Classes da Sintaxe Abstrata para Declaration Imutable
-######################################################
-
-class DeclarationImutableAbstract(metaclass=ABCMeta):
-    @abstractmethod
-    def accept(self, visitor):
-        pass
-
-class IdImutable(DeclarationImutableAbstract):
-    def __init__(self, id, expression):
-        self.id = id
-        self.expression = expression
-    def accept(self, visitor):
-        return visitor.visitIdImutable(self)
-
-
-#######################################################
-# Classes da Sintaxe Abstrata para Break Statement
-######################################################
-
-class BreakStatementAbstract(metaclass=ABCMeta):
-    @abstractmethod
-    def accept(self, visitor):
-        pass
-
-class OnlyBreak(BreakStatementAbstract):
-    def __init__(self):
-        pass
-    def accept(self, visitor):
-        return visitor.visitOnlyBreak(self)
-
-#######################################################
-# Classes da Sintaxe Abstrata para Return Statement
-######################################################
-
-class Return(metaclass=ABCMeta):
-    @abstractmethod
-    def accept(self, visitor):
-        pass
-
-class ReturnExpression(Return):
-    def __init__(self, expression):
-        self.expression = expression
-    def accept(self, visitor):
-        return visitor.visitReturnExpression(self)
 
 ########################################################
-# Classes da Sintaxe Abstrata para Expression
+# Class for Exp
 #######################################################
 
-class Expression(metaclass=ABCMeta):
+class Exp(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, visitor):
         pass
 
-class ExpressionPlus(Expression):
-    def __init__(self, expression, term):
-        self.expression = expression
+class ExpPlus(Exp):
+    def __init__(self, exp, term):
+        self.exp = exp
         self.term = term
     def accept(self, visitor):
-        return visitor.visitExpressionPlus(self)
+        return visitor.visitExpPlus(self)
 
-class ExpressionMinus(Expression):
-    def __init__(self, expression, term):
-        self.expression = expression
+class ExpMinus(Exp):
+    def __init__(self, exp, term):
+        self.exp = exp
         self.term = term
     def accept(self, visitor):
-        return visitor.visitExpressionMinus(self)
-    
-class ExpressionIncrement(Expression):
-    def __init__(self, increment):
-        self.increment = increment
-    def accept(self, visitor):
-        return visitor.visitExpressionIncrement(self)
-    
-class ExpressionFuncCall(Expression):
-    def __init__(self,funcCall):
-        self.funcCall = funcCall
-    def accept(self, visitor):
-        return visitor.visitExpressionFuncCall(self)
+        return visitor.visitExpMinus(self)
 
-class SingleTerm(Expression):
+class SingleTerm(Exp):
     def __init__(self, term):
         self.term = term
     def accept(self, visitor):
-        return visitor.visitSingleTerm(self)
+        return visitor.visitSingleTerm(self)    
+
+class ExpIncrement(Exp):
+    def __init__(self, increment):
+        self.increment = increment
+    def accept(self, visitor):
+        return visitor.visitExpIncrement(self)
+    
+class ExpFuncCall(Exp):
+    def __init__(self,funcCall):
+        self.funcCall = funcCall
+    def accept(self, visitor):
+        return visitor.visitExpFuncCall(self)
+
+class ExpCallList(Exp):
+    def __init__(self,calllist):
+        self.calllist = calllist
+    def accept(self, visitor):
+        return visitor.visitExpCallList(self)
+
 
 ########################################################
-# Classes da Sintaxe Abstrata para Expression Relational
+# Class for ExpRel
 #######################################################
 
-class ExpressionRelational(metaclass=ABCMeta):
+class ExpRelAbstract(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, visitor):
         pass
 
-class ExpressionRelationalEqual(ExpressionRelational):
-    def __init__(self, expression1, expression2):
-        self.expression1 = expression1
-        self.expression2 = expression2
+class ExpRelEqual(ExpRelAbstract):
+    def __init__(self, exp1, exp2):
+        self.exp1 = exp1
+        self.exp2 = exp2
     def accept(self, visitor):
-        return visitor.visitExpressionRelationalEqual(self)
+        return visitor.visitExpRelEqual(self)
 
-class ExpressionRelationalNotEqual(ExpressionRelational):
-    def __init__(self, expression1, expression2):
-        self.expression1 = expression1
-        self.expression2 = expression2
+class ExpRelNotEqual(ExpRelAbstract):
+    def __init__(self, exp1, exp2):
+        self.exp1 = exp1
+        self.exp2 = exp2
     def accept(self, visitor):
-        return visitor.visitExpressionRelationalNotEqual(self)
+        return visitor.visitExpRelNotEqual(self)
 
-
-class ExpressionRelationalLessThan(ExpressionRelational):
-    def __init__(self, expression1, expression2):
-        self.expression1 = expression1
-        self.expression2 = expression2
+class ExpRelLessThan(ExpRelAbstract):
+    def __init__(self, exp1, exp2):
+        self.exp1 = exp1
+        self.exp2 = exp2
     def accept(self, visitor):
-        return visitor.visitExpressionRelationalLessThan(self)
+        return visitor.visitExpRelLessThan(self)
 
-class ExpressionRelationalGreaterThan(ExpressionRelational):
-    def __init__(self, expression1, expression2):
-        self.expression1 = expression1
-        self.expression2 = expression2
+class ExpRelGreaterThan(ExpRelAbstract):
+    def __init__(self, exp1, exp2):
+        self.exp1 = exp1
+        self.exp2 = exp2
     def accept(self, visitor):
-        return visitor.visitExpressionRelationalGreaterThan(self)
+        return visitor.visitExpRelGreaterThan(self)
 
-class ExpressionRelationalLessThanOrEqual(ExpressionRelational):
-    def __init__(self, expression1, expression2):
-        self.expression1 = expression1
-        self.expression2 = expression2
+class ExpRelLessThanOrEqual(ExpRelAbstract):
+    def __init__(self, exp1, exp2):
+        self.exp1 = exp1
+        self.exp2 = exp2
     def accept(self, visitor):
-        return visitor.visitExpressionRelationalLessThanOrEqual(self)
+        return visitor.visitExpRelLessThanOrEqual(self)
 
-class ExpressionRelationalGreaterThanOrEqual(ExpressionRelational):
-    def __init__(self, expression1, expression2):
-        self.expression1 = expression1
-        self.expression2 = expression2
+class ExpRelGreaterThanOrEqual(ExpRelAbstract):
+    def __init__(self, exp1, exp2):
+        self.exp1 = exp1
+        self.exp2 = exp2
     def accept(self, visitor):
-        return visitor.visitExpressionRelationalGreaterThanOrEqual(self)
+        return visitor.visitExpRelGreaterThanOrEqual(self)
 
-class ExpressionRelationalAnd(ExpressionRelational):
-    def __init__(self, expression1, expression2):
-        self.expression1 = expression1
-        self.expression2 = expression2
+class ExpRelAnd(ExpRelAbstract):
+    def __init__(self, exp1, exp2):
+        self.exp1 = exp1
+        self.exp2 = exp2
     def accept(self, visitor):
-        return visitor.visitExpressionRelationalAnd(self)
+        return visitor.visitExpRelAnd(self)
 
-class ExpressionRelationalOr(ExpressionRelational):
-    def __init__(self, expression1, expression2):
-        self.expression1 = expression1
-        self.expression2 = expression2
+class ExpRelOr(ExpRelAbstract):
+    def __init__(self, exp1, exp2):
+        self.exp1 = exp1
+        self.exp2 = exp2
     def accept(self, visitor):
-        return visitor.visitExpressionRelationalOr(self)
+        return visitor.visitExpRelOr(self)
 
-class ExpressionRelationalNot(ExpressionRelational):
-    def __init__(self, expression):
-        self.expression = expression 
+class ExpRelNot(ExpRelAbstract):
+    def __init__(self, exp):
+        self.exp = exp 
     def accept(self, visitor):
-        return visitor.visitExpressionRelationalNot(self)
+        return visitor.visitExpRelNot(self)
 
 ############################################################ 
-# Classes da Sintaxe Abstrata para Term
+# Class for Term
 ###########################################################
 
 class Term(metaclass=ABCMeta):
@@ -847,7 +682,7 @@ class OnlyFactor(Term):
         return visitor.visitOnlyFactor(self)
 
 ########################################################
-# Classes da Sintaxe Abstrata para Factor
+# Class for Factor
 #######################################################
 
 class Factor(metaclass=ABCMeta):
@@ -897,11 +732,11 @@ class FactorRune(Factor):
     def accept(self, visitor):
         return visitor.visitFactorRune(self)
 
-class FactorExpression(Factor):
-    def __init__(self, expression):
-        self.expression = expression
+class FactorExp(Factor):
+    def __init__(self, exp):
+        self.exp = exp
     def accept(self, visitor):
-        return visitor.visitFactorExpression(self)
+        return visitor.visitFactorExp(self)
 
 class FactorList(Factor):
     def __init__(self, id, number):
@@ -934,41 +769,35 @@ class FactorOctal(Factor):
     def accept(self, visitor):
         return visitor.visitFactorOctal(self)
 
-class FactorInterpolationString(Factor):
-    def __init__(self, interpolationString):
-        self.interpolationString = interpolationString
+class FactorSizeOfExp(Factor):
+    def __init__(self, sizeofexp):
+        self.sizeofexp = sizeofexp
     def accept(self, visitor):
-        return visitor.visitFactorInterpolationString(self)
-
-class FactorSizeOfExpression(Factor):
-    def __init__(self, sizeofexpression):
-        self.sizeofexpression = sizeofexpression
-    def accept(self, visitor):
-        return visitor.visitFactorSizeOfExpression(self)
+        return visitor.visitFactorSizeOfExp(self)
 
 ############################################################ 
-# Classes da Sintaxe Abstrata para Size of Expression
+# Class for Size of Exp
 ############################################################
 
-class SizeOfExpressionAbstract(metaclass=ABCMeta):
+class SizeOfExpAbstract(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, visitor):
         pass
 
-class SizeOfExpression(SizeOfExpressionAbstract):
-    def __init__(self, expression):
-        self.expression = expression
+class SizeOfExp(SizeOfExpAbstract):
+    def __init__(self, exp):
+        self.exp = exp
     def accept(self, visitor):
-        return visitor.visitSizeOfExpression(self)
+        return visitor.visitSizeOfExp(self)
 
-class SizeOfType(SizeOfExpressionAbstract):
-    def __init__(self, type):
-        self.type = type
+class SizeOfType(SizeOfExpAbstract):
+    def __init__(self, idType):
+        self.idType = idType
     def accept(self, visitor):
         return visitor.visitSizeOfType(self)
 
 ############################################################ 
-# Classes da Sintaxe Abstrata para Increment
+# Class for Increment
 ############################################################
 
 class Increment(metaclass=ABCMeta):
@@ -989,80 +818,80 @@ class Dec(Increment):
         return visitor.visitDec(self)
     
 ############################################################ 
-# Classes da Sintaxe Abstrata para Assignment
+# Class for Assign
 ############################################################
 
-class AssignmentAbstract(metaclass=ABCMeta):
+class AssignAbstract(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, visitor):
         pass
 
-class AssignmentPlusEquals(AssignmentAbstract):
-    def __init__(self,id,expression):
+class AssignPlusEquals(AssignAbstract):
+    def __init__(self,id,exp):
         self.id = id
-        self.expression = expression
+        self.exp = exp
     def accept(self,visitor):
-        return visitor.visitMaisIgual(self)
+        return visitor.visitAssignPlusEquals(self)
 
-class AssignmentMinusEquals(AssignmentAbstract):
-    def __init__(self,id,expression):
+class AssignMinusEquals(AssignAbstract):
+    def __init__(self,id,exp):
         self.id = id
-        self.expression = expression
+        self.exp = exp
     def accept(self,visitor):
-        return visitor.visitMenosIgual(self)
+        return visitor.visitAssignMinusEquals(self)
 
-class AssignmentMultiplicationEquals(AssignmentAbstract):
-    def __init__(self,id,expression):
+class AssignMultiplicationEquals(AssignAbstract):
+    def __init__(self,id,exp):
         self.id = id
-        self.expression = expression
+        self.exp = exp
     def accept(self,visitor):
-        return visitor.visitMultiIgual(self)
+        return visitor.visitAssignMultiplicationEquals(self)
 
-class AssignmentDivideEquals(AssignmentAbstract):
-    def __init__(self,id,expression):
+class AssignDivideEquals(AssignAbstract):
+    def __init__(self,id,exp):
         self.id = id
-        self.expression = expression
+        self.exp = exp
     def accept(self,visitor):
-        return visitor.visitDivIgual(self)
+        return visitor.visitDivideEquals(self)
 
-class AssignmentModEquals(AssignmentAbstract):
-    def __init__(self,id,expression):
+class AssignModEquals(AssignAbstract):
+    def __init__(self,id,exp):
         self.id = id
-        self.expression = expression
+        self.exp = exp
     def accept(self,visitor):
-        return visitor.visitModIgual(self)
+        return visitor.visitAssignModEquals(self)
 
-class AssignmentAndEquals(AssignmentAbstract):
-    def __init__(self,id,expression):
+class AssignAndEquals(AssignAbstract):
+    def __init__(self,id,exp):
         self.id = id
-        self.expression = expression
+        self.exp = exp
     def accept(self,visitor):
-        return visitor.visitAndIgual(self)
+        return visitor.visitAssignAndEquals(self)
 
-class AssignmentOrEquals(AssignmentAbstract):
-    def __init__(self,id,expression):
+class AssignOrEquals(AssignAbstract):
+    def __init__(self,id,exp):
         self.id = id
-        self.expression = expression
+        self.exp = exp
     def accept(self,visitor):
-        return visitor.visitOrIgual(self)
+        return visitor.visitAssignOrEquals(self)
 
-class AssignmentXOREquals(AssignmentAbstract):
-    def __init__(self,id,expression):
+class AssignXOREquals(AssignAbstract):
+    def __init__(self,id,exp):
         self.id = id
-        self.expression = expression
+        self.exp = exp
     def accept(self,visitor):
-        return visitor.visitXORIgual(self)
+        return visitor.visitAssignXOREquals(self)
     
-class AssignmentDeslocationLeft(AssignmentAbstract):
-    def __init__(self,id,expression):
+class AssignDeslocationLeft(AssignAbstract):
+    def __init__(self,id,exp):
         self.id = id
-        self.expression = expression
+        self.exp = exp
     def accept(self,visitor):
-        return visitor.visitDeslocaEsqIgual(self)
+        return visitor.visitAssignDeslocationLeft(self)
 
-class AssignmentDeslocationRight(AssignmentAbstract):
-    def __init__(self,id,expression):
+class AssignDeslocationRight(AssignAbstract):
+    def __init__(self,id,exp):
         self.id = id
-        self.expression = expression
+        self.exp = exp
     def accept(self,visitor):
-        return visitor.visitDeslocaDirIgual(self)
+        return visitor.visitAssignDeslocationRight(self)

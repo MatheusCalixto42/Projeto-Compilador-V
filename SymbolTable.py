@@ -11,6 +11,7 @@ PARAMS = 'params'
 BINDABLE = 'bindable'
 FUNCTION = 'fn'
 VARIABLE = 'var'
+ARRAY = 'array'
 CONSTANTE = 'const'
 SCOPE = 'scope'
 MUTABLEVAR = 'mutvar'
@@ -47,6 +48,12 @@ def addModule(name):
     # Adiciona um módulo/import na tabela de símbolos
     global symbolTable
     symbolTable[-1][name] = {BINDABLE: MODULE, TYPE: MODULE}
+    printTable()
+
+def addArray(name):
+    # Adiciona um módulo/import na tabela de símbolos
+    global symbolTable
+    symbolTable[-1][name] = {BINDABLE: ARRAY, TYPE: MODULE}
     printTable()
 
 def addMutableVar(name, type, offset = None):

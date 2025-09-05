@@ -1,156 +1,93 @@
-Program -> Program_import Program_items |
-		   Program_items
+Program -> Program_import Program_items | Program_items
 
-Program_import -> IMPORT ID Program_import
-                | IMPORT ID
+Program_import -> IMPORT ID Program_import | IMPORT ID
 
-Program_items -> Program_item Program_items
-               | ε
+Program_items -> Program_item Program_items | Program_item 		# Aqui era um vazio
+               
+Program_item -> Const_declaration | Function_definition
+              
+Const_declaration -> CONST ID ":=" Exp
 
-Program_item -> Const_declaration
-              | Function_definition
+Function_definition -> Signature BlockStm | Signature ID BlockStm
+             
+Signature -> "fn" ID "(" SigParams ")" |  "fn" ID "(" ")"
 
-Const_declaration -> CONST ID ":=" Expression
+	# Mudamos Type para ID, resolver no semantico
+SigParams -> ID ID | ID ID "," SigParams
 
-Function_definition -> "fn" ID "(" Params ")"  Block_statement  | 
-            "fn" ID "(" Params ")" Type  Block_statement  |
-            "fn" ID "(" ")"  Block_statement   
-						 		   
-
-Params -> Param More_Params
-
-More_Params -> "," Param More_Params
-              |ε
-
-Param -> ID Type
-
-
-Type -> INT | F32 | F64 | RUNETYPE | STRINGTYPE | BOOL 
+Params -> Exp "," Params | Exp
 	  
-Block_statement -> {Stms} 
-				| {}
+BlockStm -> "{" Stms "}" | "{" "}"
+				
+Stms -> Stm Stms | Stm
 
-Stms -> Stm Stms 
-	   |Stm
+stm ->  Var_stm     | 
+		Var_assign  |
+		List_stm    |
+		List_assign |
+		Func_calls  |
+		If_stm      |
+		For_stm     |
+		Increment   |
+		Assign      |
+		BREAK       |
+		RETURN Exp
 
-stm -> Var_statement  | 
-			 Var_assignment  |
-			 List_statement  |
-			 List_assignment  |
-			 Func_call  |
-			 If_statement  |
-			 For_statement  |
-			 Increment  |
-			 Assignment  |
-			 Break_statement
-			 Return_statement |
+Var_stm -> ID ":=" Exp | MUT ID ":=" Exp 
 
-			 
+Var_assign -> ID "=" Exp
 
-Var_statement -> 
-	DeclarationImutable |
-	MUT ID ":=" Expression |
-	CONST ID ":=" Expression ** const can only be defined at the top level (outside of functions)
+List_stm -> ID ":=" "[" Params "]"        | 
+			MUT ID ":=" "[" Params "]"    | 
+			MUT ID ":=" "[" NUMBER "]" ID |
+			ID ":=" "[" "]"               | 
+			MUT ID ":=" "[" "]"
 
+List_assign -> ID "[" NUMBER "]" "=" Exp
 
-Var_assignment ->
-	ID "=" Expression
+List_call -> ID "[" DOT DOT "]" | ID "[" NUMBER DOT DOT NUMBER "]"
 
-	
-List_statement ->
-	DeclarationImutableList |
-	MUT ID ":=" "[" id_list "]" |
-	MUT ID ":=" "[" NUMBER "]" Type |  vou trocar 'NUMBER' por 'id'
-	
+Func_call -> ID "(" Params ")" | ID "(" ")"
 
-List_assignment ->
-	ID "[" NUMBER "]" "=" Expression 
+If_stm -> IF ExpRel BlockStm | IF ExpRel BlockStm ElseOp
 
-DeclarationImutableList ->		
-	ID ":=" "[" id_list "]"
+ElseOp -> ELSE If_stm | ELSE BlockStm 
 
-Func_call -> ID "(" id_list ")" |
-	     ID "(" ")" |
-			 FuncCallList 
+For_stm -> FOR ID IN Exp BlockStm | FOR ID ";" ExpRel ";" Increment BlockStm | FOR ExpRel BlockStm 
 
-FuncCallList -> ID "[" DOTDOT "]" |
-				ID "[" NUMBER DOTDOT NUMBER "]" |
-								
+Exp -> Exp "+" Term | Exp "-" Term | Term | Increment | Func_call | List_call  
 
-								
-id_list -> Expression more_Expression 
-
-
-more_Expression -> "," Expression more_Expression
-                  | ε
-
-If_statement ->
-	"if" ExpressionRelacional  Block_statement  | "if" ExpressionRelacional  Block_statement  ElseOp
-
-ElseOp ->
-	"else" If_statement | "else"  Block_statement 
-
-For_statement -> 
-	"for" ID "in" Expression  Block_statement | **For each precisa ser uma lista desse jeito ta tratando?
-	"for" DeclarationImutable ";" ExpressionRelacional ";" Increment Block_statement  | **Logica do increment ta certa?
-	"for" ExpressionRelacional  Block_statement 
-
-DeclarationImutable ->
-	ID ":=" Expression
-
-Break_statement ->
-	"break"
-
-Return_statement ->
-	"return" Expression
-
-Expression -> Expression "+" Term | Expression "-" Term | Term | Increment | Func_call    
-
-ExpressionRelacional ->	Expression "==" Expression |
-	     		Expression "!=" Expression |
-	      		Expression "<" Expression |
-	      		Expression "<=" Expression |
-	    	  	Expression ">" Expression |
-	      		Expression ">=" Expression |
-	      		Expression "&&" Expression |
-	      		Expression "||" Expression |
-	      		"!" Expression 
+ExpRel -> Exp "==" Exp | Exp "!=" Exp | Exp "<" Exp | Exp "<=" Exp | Exp ">" Exp | Exp ">=" Exp | Exp "&&" Exp | Exp "||" Exp | "!" Exp 
 
 Term -> Term "*" Factor | Term "/" Factor | Term "%" Factor | Factor
 
-#elementos mais basico 
-Factor -> NUMBER | 
-	  STRING |
-	  ID     |
-	  "(" Expression ")" |
-	  ID "[" NUMBER "]" |
-	  TRUE |
-	  FALSE	|
-	  RUNE |
-	  NUMBERFLOAT|
-      NOTACAOCIENTIFICA |
-	  BINARY |
-	  OCTAL |
-	  HEX   |
-	  INTERPOLATIONSTRING |
-	  SizeofExpression
+Factor -> NUMBER            | 
+	      STRING            | 
+	      ID                | 
+	      "(" Exp ")"       | 
+	      ID "[" NUMBER "]" |
+	      TRUE 				|
+	      FALSE				|
+	      RUNE 				|
+	      NUMBERFLOAT		|
+	      NOTACAOCIENTIFICA |
+	      BINARY			|
+	      OCTAL 			|
+	      HEX   			|
+	      SizeofExp
 
-SizeofExpression ->
-				    "sizeof" "(" Expression ")"|
-                    "sizeof" "(" Type ")"
+SizeofExp -> SIZEOF "(" Exp ")" | SIZEOF "(" ID ")"
 
-Increment -> 
-	ID"++" | ID"--"
+Increment -> ID "++" | ID "--"
 
-
-Assignment -> ID "+=" Expression
-			  ID "-=" Expression
-			  ID "*=" Expression
-			  ID "/=" Expression
-			  ID "%=" Expression
-			  ID "&=" Expression
-			  ID "|=" Expression
-			  ID "^=" Expression
-			  ID "<<=" Expression
-			  ID ">>=" Expression
+Assign -> ID "+=" Exp  | 
+		  ID "-=" Exp  |
+		  ID "*=" Exp  |
+		  ID "/=" Exp  |
+		  ID "%=" Exp  |
+		  ID "&=" Exp  |
+		  ID "|=" Exp  |
+		  ID "^=" Exp  |
+		  ID "<<=" Exp |
+		  ID ">>=" Exp
 

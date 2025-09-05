@@ -74,8 +74,8 @@ fn main(){
 
 	for i in numeros {
 		println('Número: ${i}')
-
 	}
+	
     mut x := 0
     for x < 5{
         println('Contador: ${x}')
