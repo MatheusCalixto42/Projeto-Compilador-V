@@ -74,6 +74,7 @@ class Visitor(AbstractVisitor):
 ##################################################################
 
     def visitFunctionVoid(self,functionVoid):
+        global tab
         print('fn', end=' ', sep=' ')
         print(functionVoid.id, end=' ')
         print('(', end=' ')
@@ -83,6 +84,7 @@ class Visitor(AbstractVisitor):
         
 
     def visitFunctionReturnType(self,functionReturnType):
+        global tab
         print('fn', end=' ', sep=' ')
         print(functionReturnType.id, end=' ')
         print('(', end=' ')
@@ -92,6 +94,7 @@ class Visitor(AbstractVisitor):
         functionReturnType.block_statement.accept(self)
 
     def visitFunctionMain(self,functionMain):
+        global tab
         print('fn', end=' ', sep=' ')
         print(functionMain.id, end=' ')
         print('(', end='')
@@ -701,7 +704,7 @@ def main():
     lexer = lex.lex()
     lexer.input(f.read())
     parser = yacc.yacc(start='program')
-    result = parser.parse(debug=False)
+    result = parser.parse(debug=True)
     print("imprime o programa que foi passado como entrada")
     visitor = Visitor()
     result.accept(visitor)

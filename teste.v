@@ -79,7 +79,7 @@ fn main(){
     mut x := 0
     for x < 5{
         println('Contador: ${x}')
-        x++
+        //x++
     }
 	x--
 	println('\n---------------------------------------\n')
@@ -95,7 +95,6 @@ fn main(){
 	a := 0x7B
 	b := 0b01111011
 	c := 0o173
-	
 	
 }
 const teste4 := 10

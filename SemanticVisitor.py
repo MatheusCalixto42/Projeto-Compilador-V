@@ -806,6 +806,7 @@ def main():
     result = parser.parse(debug=False)
     print("#imprime erros semanticos encontrados")
     svisitor = SemanticVisitor()
+    svisitor = SemanticVisitor()
     result.accept(svisitor)
     print(f"Foram encontrados {svisitor.n_errors} erros")
 
