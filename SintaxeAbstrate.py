@@ -41,7 +41,7 @@ class SequenceImports(ProgramImportAbstract):
         return visitor.visitSequenceImports(self)
 
 class SingleImport(ProgramImportAbstract):
-    def __init__(self, id, import_token):
+    def __init__(self, import_token, id):
         self.id = id
         self.import_token = import_token
     def accept(self, visitor):
@@ -59,7 +59,7 @@ class ProgramItemsAbstract(metaclass=ABCMeta):
 class SequenceProgramItems(ProgramItemsAbstract):
     def __init__(self, program_item, program_items):
         self.program_item = program_item
-        self.program+items = program_items
+        self.program_items = program_items
     def accept(self, visitor):
         return visitor.visitSequenceProgramItems(self)
 
@@ -93,17 +93,17 @@ class FunctionDeclaration(ProgramItemAbstract):
 # Class for Const_declaration
 # ######################################################
 
-class ConstanteDeclarationAbstract(metaclass=ABCMeta):
+class ConstantDeclarationAbstract(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, visitor):
         pass
 
-class ConstanteDeclarationRule(ConstanteDeclarationAbstract):
+class ConstantDeclarationRule(ConstantDeclarationAbstract):
     def __init__(self, id, exp):
         self.id = id
         self.exp = exp
     def accept(self, visitor):
-        return visitor.visitConstanteDeclarationRule(self)
+        return visitor.visitConstantDeclarationRule(self)
 
 #######################################################
 # Class for Function_definition
@@ -190,7 +190,7 @@ class SingleParams(ParamsAbstract):
     def __init__(self, exp):
         self.exp = exp
     def accept(self, visitor):
-        return visitor.visitSigParams(self)
+        return visitor.visitSingleParams(self)
 
 ########################################################
 # Class for BlockStmt
@@ -284,7 +284,7 @@ class Break(StmAbstract):
     def __init__(self):
         pass
     def accept(self, visitor):
-        return visitor.visitBreak(self)
+        return visitor.visitBreakStm(self)
 
 class Return(StmAbstract):
     def __init__(self, exp):
@@ -314,7 +314,7 @@ class VarStmAbstract(metaclass=ABCMeta):
     def accept(self, visitor):
         pass
 
-class ImutableDeclaratio(VarStmAbstract):
+class ImutableDeclaration(VarStmAbstract):
     def __init__(self, id, exp):
         self.id = id
         self.exp = exp
@@ -398,7 +398,7 @@ class ListModification(ListAssignAbstract):
         return visitor.visitListModification(self)
     
 ##########################################################
-# Class for Call_list
+# Class for List Call
 #########################################################
 
 class CallListAbstract(metaclass=ABCMeta):

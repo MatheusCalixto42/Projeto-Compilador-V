@@ -17,9 +17,9 @@ class Visitor(AbstractVisitor):
 # Classes to visit the Abstract Syntax of Program
 ##################################################################
 
-    def visitImportAndFuncDefinition(self,importAndFuncDefinition):
-        importAndFuncDefinition.program_import.accept(self)
-        importAndFuncDefinition.program_items.accept(self)
+    def visitCompoundImportItems(self,compoundImportItems):
+        compoundImportItems.program_import.accept(self)
+        compoundImportItems.program_items.accept(self)
 
     def visitProgramItems(self,programItems):
         programItems.program_items.accept(self)
@@ -41,19 +41,19 @@ class Visitor(AbstractVisitor):
 # Classes to visit the Abstract Syntax of Program Items
 ################################################################## 
 
-    def visitMultipleProgramItems(self,multipleProgramItems):
-        multipleProgramItems.item.accept(self)
-        multipleProgramItems.items_recursao.accept(self)
+    def visitSequenceProgramItems(self,sequenceProgramItems):
+        sequenceProgramItems.program_item.accept(self)
+        sequenceProgramItems.program_items.accept(self)
 
-    def visitNoneItems(self,noneItems):
-        pass
+    def visitSingleProgramItem(self, singleProgramItem):
+        singleProgramItem.program_item.accept(self)
 
 ###################################################################
 # Classes to visit the Abstract Syntax of Program Item
 ################################################################## 
 
-    def visitConstanteDeclaration(self, constanteDeclaration):
-        constanteDeclaration.constante.accept(self)
+    def visitConstantDeclaration(self, constantDeclaration):
+        constantDeclaration.constant.accept(self)
 
     def visitFunctionDeclaration(self, functionDeclaration):
         functionDeclaration.function.accept(self)
@@ -62,11 +62,11 @@ class Visitor(AbstractVisitor):
 # Classes to visit the Abstract Syntax of Const
 ################################################################## 
 
-    def visitConstanteDeclarationRule(self, constanteDeclarationRule):
+    def visitConstantDeclarationRule(self, constantDeclarationRule):
         print('const', end=' ')
-        print(constanteDeclarationRule.id, end=' ')
+        print(constantDeclarationRule.id, end=' ')
         print(':=', end=' ')
-        constanteDeclarationRule.expression.accept(self)
+        constantDeclarationRule.exp.accept(self)
         print()
 
 ###################################################################
@@ -74,161 +74,125 @@ class Visitor(AbstractVisitor):
 ##################################################################
 
     def visitFunctionVoid(self,functionVoid):
-        global tab
-        print('fn', end=' ', sep=' ')
-        print(functionVoid.id, end=' ')
-        print('(', end=' ')
-        functionVoid.param.accept(self) #usar if para o caso de n ter parametro?
-        print(')', end=' ')
-        functionVoid.block_statement.accept(self)
+        functionVoid.signature.accept(self)
+        functionVoid.blockStm.accept(self)
         
 
     def visitFunctionReturnType(self,functionReturnType):
-        global tab
-        print('fn', end=' ', sep=' ')
-        print(functionReturnType.id, end=' ')
-        print('(', end=' ')
-        functionReturnType.param.accept(self)
-        print(')', end=' ')
-        functionReturnType.type.accept(self)
-        functionReturnType.block_statement.accept(self)
+        functionReturnType.signature.accept(self)
+        functionReturnType.id.accept(self)
+        functionReturnType.blockStm.accept(self)
 
-    def visitFunctionMain(self,functionMain):
+###################################################################
+# Classes to visit the Abstract Syntax of Signature
+##################################################################
+    
+    def visitSignatureWithParams(self, signatureWithParams):
         global tab
         print('fn', end=' ', sep=' ')
-        print(functionMain.id, end=' ')
-        print('(', end='')
+        print(signatureWithParams.id, end=' ')
+        print('(', end=' ')
+        signatureWithParams.s.accept(self) #usar if para o caso de n ter parametro?
         print(')', end=' ')
-        functionMain.block_statement.accept(self)
+
+###################################################################
+# Classes to visit the Abstract Syntax of Sigparams
+##################################################################
+
+    def visitSingleSigParam(self, singleSigParam):
+        print(singleSigParam.id, end=' ')
+        singleSigParam.idType.accept(self)
+
+    def visitSequenceSigParams(self, sequenceSigParams):
+        print(sequenceSigParams.id, end = '')
+        print(sequenceSigParams.idType, end = ' ')
+        print(',', end=' ')
+        sequenceSigParams.sigparams.accept(self)
+
 
 ###################################################################
 # Classes to visit the Abstract Syntax of Params
 ##################################################################
-
-    def visitDescriptionParams(self,descriptionparams):
-        descriptionparams.param.accept(self)
-        descriptionparams.more_params.accept(self)
-
-###################################################################
-# Classes to visit the Abstract Syntax of MoreParams
-##################################################################    
-
-    def visitMultipleParams(self,multipleparams):
+    
+    def visitSequenceParams(self,sequenceParams):
+        sequenceParams.exp.accept(self)
         print(',', end=' ')
-        multipleparams.param.accept(self)
-        multipleparams.more_params.accept(self)
+        sequenceParams.params.accept(self)
 
-    def visitNoneParam(self, noneParam):
-        pass
+    def visitSingleParams(self, singleParams):
+        singleParams.exp.accept(self)
 
-###################################################################
-# Classes to visit the Abstract Syntax of Param
-##################################################################
-    
-    def visitDescriptionParam(self,descriptionparam):
-        print(descriptionparam.id, end=' ')
-        descriptionparam.type.accept(self)
-
-###################################################################
-# Classes to visit the Abstract Syntax of Type
-##################################################################
-
-    def visitIntV(self,intV):
-        print(intV.intv, end=' ')
-
-    def visitF32(self,f32):
-        print(f32.f32, end=' ')
-
-    def visitF64(self,f64):
-        print(f64.f64, end=' ')
-
-    def visitRune(self,rune):
-        print(rune.rune, end=' ')
-
-    def visitString(self,string):
-        print(string.string, end=' ')
-    
-    def visitBoolV(self,boolV):
-        print(boolV.boolv, end=' ')
 
 ###################################################################
 # Classes to visit the Abstract Syntax of BlockStatement
 ##################################################################     
 
-    def visitBlockStatement(self,blockStatement):
+    def visitBlockStm(self, blockStm):
         global tab
         print('{')
         tab = tab + 3
-        blockStatement.statements.accept(self)
+        blockStm.stms.accept(self)
         tab = tab - 3
         print(blank(), '}')
 
-    def visitNoneBlockStatement(self, noneBlockStatement):
-        global tab
-        print('{')
-        print(blank(), '}')
-
-
 ###################################################################
-# Classes to visit the Abstract Syntax of Statements
+# Classes to visit the Abstract Syntax of Stms
 ##################################################################
 
-    def visitMultipleStatement(self, multipleStatement):
-        multipleStatement.statement.accept(self)
-        multipleStatement.statements.accept(self)
+    def visitSequenceStm(self, sequenceStm):
+        sequenceStm.stm.accept(self)
+        sequenceStm.stms.accept(self)
 
     def visitSingleStatement(self, singleStatement):
-        singleStatement.statement.accept(self)
+        singleStatement.stm.accept(self)
 
 ###################################################################
-# Classes to visit the Abstract Syntax of Statement
+# Classes to visit the Abstract Syntax of Stm
 ##################################################################
 
-    def visitVarStatement(self,varStatement):#var_statemnt
-        varStatement.var_statement.accept(self)
+    def visitVarStm(self,varStm):#var_statemnt
+        varStm.var_stm.accept(self)
         print()
         
     
-    def visitVarAssignment(self,varAssignment):
-        varAssignment.var_assignment.accept(self)
+    def visitVarAssign(self,varAssign):
+        varAssign.var_assign.accept(self)
         print()
    
-    def visitListStatement(self, listStatement):
-        listStatement.list_statement.accept(self)
+    def visitListStm(self, listStm):
+        listStm.list_stm.accept(self)
         print()
         
-    def visitListAssignment(self, listAssignment):
-        listAssignment.list_assignment.accept(self)
+    def visitListAssign(self, listAssign):
+        listAssign.list_assign.accept(self)
         print()
 
-    def visitFuncCallS(self,funcCall):
-        funcCall.func_call.accept(self)
+    def visitFuncCalls(self,funcCalls):
+        funcCalls.func_call.accept(self)
         print()
          
-    def visitIfStatement(self,ifStatement):
-        ifStatement.if_statement.accept(self)
+    def visitIfStm(self,ifStm):
+        ifStm.if_stm.accept(self)
 
+    def visitForStm(self,forStm):
+        forStm.for_stm.accept(self)
 
-    def visitForStatement(self,forStatement):
-        forStatement.for_statement.accept(self)
+    def visitBreakStm(self, breakStm):
+        print(blank(), 'break', end=' ')
 
+    def visitReturnStm(self,returnStm):
+        print(blank(), 'return', end=' ')
+        if(returnStm.expression == None):
+            pass
 
-    def visitIncrementStatement(self, incrementStatement):
-        incrementStatement.increment_statement.accept(self)
+        returnStm.expression.accept(self)
+
+    def visitIncrementStm(self, incrementStm):
+        incrementStm.increment_stm.accept(self)
         print()
 
-
-    def visitAssignmentStatement(self, assignmentStatement):
-        assignmentStatement.assignment_statement.accept(self)
-        print()
-
-
-    def visitBreakStatement(self, breakStatement):
-        breakStatement.break_statement.accept(self)
-        print()
-
-    def visitReturnStatement(self,returnStatement):
-        returnStatement.return_statement.accept(self)
+    def visitAssignStm(self, assignStm):
+        assignStm.assign_stm.accept(self)
         print()
 
 
@@ -236,20 +200,17 @@ class Visitor(AbstractVisitor):
 # Classes to visit the Abstract Syntax of Var Statement
 ##################################################################   
 
-    def visitDeclarationImutable(self,declarationImutable):
-        declarationImutable.declaration_imutable.accept(self)
+    def visitImutableDeclaration(self,imutableDeclaration):
+        print(blank(), imutableDeclaration.id, end=' ')
+        print(':=', end=' ',sep=' ')
+        imutableDeclaration.exp.accept(self)
 
     def visitMutableDeclaration(self,mutableDeclaration):
         print(blank(), 'mut', end=' ',sep=' ')
         print(mutableDeclaration.id, end=' ')
         print(':=', end=' ',sep=' ')
-        mutableDeclaration.expression.accept(self)
+        mutableDeclaration.exp.accept(self)
     
-    def visitConstantDeclaration(self,constantDeclaration):
-        print(blank(), 'const', end=' ',sep=' ')
-        print(constantDeclaration.id, end=' ')
-        print(':=', end=' ',sep=' ')
-        constantDeclaration.expression.accept(self)
 
 ###################################################################
 # Classes to visit the Abstract Syntax of Var Assignment
@@ -258,15 +219,19 @@ class Visitor(AbstractVisitor):
     def visitVarModification(self,varModification):
         print(blank(), varModification.id, end=' ')
         print('=', end=' ',sep=' ') 
-        varModification.expression.accept(self)   
+        varModification.exp.accept(self)   
 
 
 ###################################################################
 # Classes to visit the Abstract Syntax of List Statement
 ##################################################################
 
-    def visitDeclarationImutableList(self, declarationImutableList):
-        declarationImutableList.declaration_imutable_list.accept(self)
+    def visitDeclarationImutableListRule(self, declarationImutableListRule):
+        print(blank(), declarationImutableListRule.id, end=' ')
+        print(':=', end=' ',sep=' ')
+        print('[', end=' ', sep=' ')
+        declarationImutableListRule.id_list.accept(self)
+        print(']', end=' ', sep=' ')
         
 
     def visitDeclarationMutableList(self, declarationMutableList):
@@ -274,7 +239,7 @@ class Visitor(AbstractVisitor):
         print(declarationMutableList.id, end=' ')
         print(':=', end=' ',sep=' ')
         print('[', end=' ', sep=' ')
-        declarationMutableList.id_list.accept(self)
+        declarationMutableList.params.accept(self)
         print(']', end=' ', sep=' ')
 
     def visitDeclarationMutableListLengthDefinition(self, listLengthDefinition):
@@ -297,44 +262,24 @@ class Visitor(AbstractVisitor):
         print(listModification.number, end=' ')
         print(']', end=' ', sep=' ')
         print('=', end=' ', sep=' ')
-        listModification.expression.accept(self)
-
-
-###################################################################
-# Classes to visit the Abstract Syntax of Func Call
-##################################################################
-
-    def visitFuncCompoundParams(self,funcCompoundParams):
-        print(blank(), funcCompoundParams.id, end=' ')
-        print('(', end=' ')
-        funcCompoundParams.id_list.accept(self)
-        print(')', end=' ')
-
-    def visitFuncNoParams(self,funcNoParams):
-        print(blank(), funcNoParams.id, end=' ')
-        print('(', end=' ')
-        print(')', end=' ')
-
-    def visitFuncCallList(self, funcCallList):
-        funcCallList.funcCallList.accept(self)
-
+        listModification.exp.accept(self)
 
 ###################################################################
 # Classes to visit the Abstract Syntax of Func Call List
 ##################################################################
 
-    def visitFuncCallListAll(self, funcCallListAll):
-        print(blank(), funcCallListAll.id, end=' ')
+    def visitCallListAll(self, callListAll):
+        print(blank(), callListAll.id, end=' ')
         print('[', end=' ')
-        print(funcCallListAll.dotdot, end=' ')
+        print(callListAll.dotdot, end=' ')
         print(']', end=' ')
 
-    def visitFuncCallListRange(self, funcCallRange):
-        print(blank(), funcCallRange.id, end=' ')
+    def visitCallListRange(self, callRange):
+        print(blank(), callRange.id, end=' ')
         print('[', end=' ')
-        print(funcCallRange.number, end=' ')
-        print(funcCallRange.dotdot, end=' ')
-        print(funcCallRange.number2, end=' ')
+        print(callRange.number, end=' ')
+        print(callRange.dotdot, end=' ')
+        print(callRange.number2, end=' ')
         print(']', end=' ')
 
     # def visitFuncCallListSingle(self, funcCallSingle):
@@ -344,24 +289,15 @@ class Visitor(AbstractVisitor):
     #     print(']', end=' ')
 
 ###################################################################
-# Classes to visit the Abstract Syntax of id list
+# Classes to visit the Abstract Syntax of Func Call
 ##################################################################
 
-    def visitListId(self,listId):
-        listId.expression.accept(self)
-        listId.more_expression.accept(self)
+    def visitFuncCallWithParams(self,funcCallWithParams):
+        print(blank(), funcCallWithParams.id, end=' ')
+        print('(', end=' ')
+        funcCallWithParams.id_list.accept(self)
+        print(')', end=' ')
 
-###################################################################
-# Classes to visit the Abstract Syntax of More Expression
-##################################################################    
-
-    def visitPlusExpres(self,plusExpres):
-        print(',' , end=' ', sep=' ')
-        plusExpres.expression.accept(self)
-        plusExpres.more_expression.accept(self)
-    
-    def visitNoneExpression(self,noneExpression):
-        pass
 
 ###################################################################
 # Classes to visit the Abstract Syntax of If Statement
@@ -370,15 +306,15 @@ class Visitor(AbstractVisitor):
     def visitOnlyIf(self,onlyIf):
         global tab
         print(blank(), 'if', end=' ', sep=' ')
-        onlyIf.expressionrelational.accept(self)
-        onlyIf.blockstatement.accept(self)
+        onlyIf.expRel.accept(self)
+        onlyIf.blockStm.accept(self)
         
 
     def visitIfAndElse(self,ifAndElse):
         global tab
         print(blank(), 'if', end=' ', sep=' ')
-        ifAndElse.expressionrelational.accept(self)
-        ifAndElse.blockstatement.accept(self)
+        ifAndElse.expRel.accept(self)
+        ifAndElse.blockStm.accept(self)
         ifAndElse.elseV.accept(self)
      
 
@@ -388,12 +324,12 @@ class Visitor(AbstractVisitor):
 
     def visitElseIf(self,elseIf):
         print('else', end=' ', sep=' ')
-        elseIf.if_statement.accept(self)
+        elseIf.if_stm.accept(self)
 
     def visitOnlyElse(self,onlyElse):
         global tab
         print('else', end=' ', sep=' ')
-        onlyElse.blockstatement.accept(self)
+        onlyElse.blockstm.accept(self)
 
 ###################################################################
 # Classes to visit the Abstract Syntax of For
@@ -404,143 +340,104 @@ class Visitor(AbstractVisitor):
         print(blank(), 'for', end=' ', sep=' ')
         print(forEach.id, end=' ')
         print('in', end=' ', sep=' ')
-        forEach.expression.accept(self)
-        forEach.blockstatement.accept(self)
+        forEach.exp.accept(self)
+        forEach.blockstm.accept(self)
     
 
     def visitConventionalFor(self,conventionalFor):
         global tab
         print(blank(), 'for', end=' ', sep=' ')
-        conventionalFor.declarationimutable.accept(self)
-        print(';', end=' ', sep=' ')
-        conventionalFor.expressionrelational.accept(self)
+        print(conventionalFor.id, end=' ')
+        print(';', end=' ')
+        conventionalFor.expRel.accept(self)
         print(';', end=' ', sep=' ')
         conventionalFor.increment.accept(self)
-        conventionalFor.statement.accept(self)
-       
+        conventionalFor.blockstm.accept(self)
 
-    def visitOnlyExpressionRelationalFor(self,onlyExpressionRelationalFor):
+    def visitOnlyexpRelFor(self,onlyexpRelFor):
         global tab
         print(blank(), 'for', end=' ', sep=' ')
-        onlyExpressionRelationalFor.expressionrelational.accept(self)
-        onlyExpressionRelationalFor.blockstatement.accept(self)
+        onlyexpRelFor.expRel.accept(self)
+        onlyexpRelFor.blockStm.accept(self)
 
         
-
-###################################################################
-# Classes to visit the Abstract Syntax of Imutable Declaration
-##################################################################
-
-    def visitIdImutable(self,idImutable):
-        print(blank(), idImutable.id, end=' ')
-        print(':=', end=' ',sep=' ')
-        idImutable.expression.accept(self)
-
-###################################################################
-# Classes to visit the Abstract Syntax of Imutable Declaration List Rule
-##################################################################
-
-    def visitDeclarationImutableListRule(self,declarationImutableListRule):
-        print(blank(), declarationImutableListRule.id, end=' ')
-        print(':=', end=' ',sep=' ')
-        print('[', end=' ', sep=' ')
-        declarationImutableListRule.id_list.accept(self)
-        print(']', end=' ', sep=' ')
-
-###################################################################
-# Classes to visit the Abstract Syntax of Break Statement
-##################################################################    
-
-    def visitOnlyBreak(self, onlyBreak):
-        print(blank(), 'break', end=' ')
-
-###################################################################
-# Classes to visit the Abstract Syntax of Return Statement
-##################################################################    
-
-    def visitReturnExpression(self,returnExpression):
-        print(blank(), 'return', end=' ')
-        if(returnExpression.expression == None):
-            pass
-
-        returnExpression.expression.accept(self)
-        
-
 ###################################################################
 # Classes to visit the Abstract Syntax of Expression
 ##################################################################
 
-    def visitExpressionPlus(self,expressionPlus):
-        expressionPlus.expression.accept(self)
+    def visitExpPlus(self,expPlus):
+        expPlus.exp.accept(self)
         print('+', end=' ')
-        expressionPlus.term.accept(self)
+        expPlus.term.accept(self)
 
-    def visitExpressionMinus(self,expressionMinus):
-        expressionMinus.expression.accept(self)
+    def visitExpMinus(self,expMinus):
+        expMinus.exp.accept(self)
         print('-', end=' ')
-        expressionMinus.term.accept(self)
+        expMinus.term.accept(self)
 
     def visitSingleTerm(self,singleTerm):
         singleTerm.term.accept(self)
 
-    def visitExpressionIncrement(self, expressionIncrement):
+    def visitExpIncrement(self, expIncrement):
         global tab
         tab_aux = tab
         tab = 0
-        expressionIncrement.increment.accept(self)
+        expIncrement.increment.accept(self)
         tab = tab_aux
 
-    def visitExpressionFuncCall(self, expressionFuncCall):
-        expressionFuncCall.funcCall.accept(self)
+    def visitExpFuncCall(self, expFuncCall):
+        expFuncCall.funcCall.accept(self)
 
+    def visitExpCallList(self, expCallList):
+        expCallList.callist.accept(self)
 
 ###################################################################
 # Classes to visit the Abstract Syntax of Relational Expression
 ##################################################################
 
-    def visitExpressionRelationalEqual(self,expressionRelationalEqual):
-        expressionRelationalEqual.expression1.accept(self)
+    def visitExpRelEqual(self,expRelEqual):
+        expRelEqual.exp1.accept(self)
         print('==', end=' ')
-        expressionRelationalEqual.expression2.accept(self)
+        expRelEqual.exp2.accept(self)
 
-    def visitExpressionRelationalNotEqual(self,expressionRelationalNotEqual):
-        expressionRelationalNotEqual.expression1.accept(self)
+    def visitExpRelNotEqual(self,expRelNotEqual):
+        expRelNotEqual.exp1.accept(self)
         print('!=', end=' ')
-        expressionRelationalNotEqual.expression2.accept(self)
+        expRelNotEqual.exp2.accept(self)
 
-    def visitExpressionRelationalLessThan(self,expressionRelationalLessThan):
-        expressionRelationalLessThan.expression1.accept(self)
+    def visitExpRelLessThan(self,expRelLessThan):
+        expRelLessThan.exp1.accept(self)
         print('<', end=' ')
-        expressionRelationalLessThan.expression2.accept(self)
+        expRelLessThan.exp2.accept(self)
 
     def visitExpressionRelationalGreaterThan(self,expressionRelationalGreaterThan):
-        expressionRelationalGreaterThan.expression1.accept(self)
+        expressionRelationalGreaterThan.exp1.accept(self)
         print('>', end=' ')
-        expressionRelationalGreaterThan.expression2.accept(self)
+        expressionRelationalGreaterThan.exp2.accept(self)
 
-    def visitExpressionRelationalLessThanOrEqual(self,expressionRelationalLessThanOrEqual):
-        expressionRelationalLessThanOrEqual.expression1.accept(self)
+    def visitExpRelLessThanOrEqual(self,expressionRelationalLessThanOrEqual):
+        expressionRelationalLessThanOrEqual.exp1.accept(self)
         print('<=', end=' ')
-        expressionRelationalLessThanOrEqual.expression2.accept(self)
+        expressionRelationalLessThanOrEqual.exp2.accept(self)
 
-    def visitExpressionRelationalGreaterThanOrEqual(self,expressionRelationalGreaterThanOrEqual):
-        expressionRelationalGreaterThanOrEqual.expression1.accept(self)
+    def visitExpRelGreaterThanOrEqual(self,expressionRelationalGreaterThanOrEqual):
+        expressionRelationalGreaterThanOrEqual.exp1.accept(self)
         print('>=', end=' ')
-        expressionRelationalGreaterThanOrEqual.expression2.accept(self)
+        expressionRelationalGreaterThanOrEqual.exp2.accept(self)
 
-    def visitExpressionRelationalAnd(self,expressionRelationalAnd):
-        expressionRelationalAnd.expression1.accept(self)
+    def visitExpRelAnd(self,expressionRelationalAnd):
+        expressionRelationalAnd.exp1.accept(self)
         print('&&', end=' ')
-        expressionRelationalAnd.expression2.accept(self)
+        expressionRelationalAnd.exp2.accept(self)
 
-    def visitExpressionRelationalOr(self,expressionRelationalOr):
-        expressionRelationalOr.expression1.accept(self)
+    def visitExpRelOr(self,expressionRelationalOr):
+        expressionRelationalOr.exp1.accept(self)
         print('||', end=' ')
-        expressionRelationalOr.expression2.accept(self)
+        expressionRelationalOr.exp2.accept(self)
 
-    def visitExpressionRelationalNot(self,expressionRelationalNot):
+    def visitExpRelNot(self,expressionRelationalNot):
         print('!', end=' ')
-        expressionRelationalNot.expression.accept(self)
+        expressionRelationalNot.exp.accept(self)
 
 ###################################################################
 # Classes to visit the Abstract Syntax of Term
@@ -567,18 +464,25 @@ class Visitor(AbstractVisitor):
 ###################################################################
 # Classes to visit the Abstract Syntax of Factor
 ##################################################################
+    def visitFactorNumber(self,factorNumber):
+        print(factorNumber.number, end=' ')
+
+    def visitFactorString(self,factorString):
+        print(factorString.string, end=' ')
 
     def visitFactorID(self,factorID):
         print(factorID.id, end=' ')
 
-    def visitFactorNumber(self,factorNumber):
-        print(factorNumber.number, end=' ')
+    def visitFactorExpression(self,factorExpression):
+        print('(', end=' ')
+        factorExpression.exp.accept(self)
+        print(')', end=' ')
 
-    def visitFactorNumberFloat(self, factorNumberFloat):
-        print(factorNumberFloat.numberfloat, end=' ')
-
-    def visitFactorString(self,factorString):
-        print(factorString.string, end=' ')
+    def visitFactorList(self, factorList):
+        print(factorList.id, end=' ',sep=' ')
+        print('[', end=' ')
+        print(factorList.number, end = ' ',sep=' ')
+        print(']', end=' ')
 
     def visitFactorTrue(self,factorTrue):
         print(factorTrue.true, end=' ')
@@ -589,16 +493,8 @@ class Visitor(AbstractVisitor):
     def visitFactorRune(self,factorRune):
         print(factorRune.rune, end=' ')
 
-    def visitFactorExpression(self,factorExpression):
-        print('(', end=' ')
-        factorExpression.expression.accept(self)
-        print(')', end=' ')
-
-    def visitFactorList(self, factorList):
-        print(factorList.id, end=' ')
-        print('[', end=' ', sep=' ')
-        print(factorList.number, end = ' ')
-        print(']', end=' ', sep=' ')
+    def visitFactorNumberFloat(self, factorNumberFloat):
+        print(factorNumberFloat.numberfloat, end=' ')
 
     def visitFactorCientificNotation(self, cientific_notation):
         print(cientific_notation.cientificNotation, end=' ')
@@ -612,26 +508,26 @@ class Visitor(AbstractVisitor):
     def visitFactorHex(self, hex):
         print(hex.factorHex, end=' ')
 
-    def visitFactorInterpolationString(self, factorInterpolationString):
-        print(factorInterpolationString.interpolationString, end=' ')
+#    def visitFactorInterpolationString(self, factorInterpolationString):
+#        print(factorInterpolationString.interpolationString, end=' ')
 
-    def visitFactorSizeOfExpression(self, factorSizeofExpression):
-        factorSizeofExpression.sizeofexpression.accept(self)
+    def visitFactorSizeOfExp(self, factorSizeofExp):
+        factorSizeofExp.sizeofexp.accept(self)
 
 ###################################################################
 # Classes to visit the Abstract Syntax of Size of Expression
 ##################################################################
 
-    def visitSizeOfExpression(self, sizeOfExpression):
-        print('sizeof', end=' ')
+    def visitSizeofExp(self, sizeOfExp):
+        print(blank(), sizeOfExp.sizeof, end=' ')
         print('(', end=' ')
-        sizeOfExpression.expression.accept(self)
+        sizeOfExp.exp.accept(self)
         print(')', end=' ')
 
     def visitSizeOfType(self, sizeOfType):
-        print('sizeof', end=' ')
+        print(blank(), sizeOfType.sizeof, end=' ')
         print('(', end=' ')
-        sizeOfType.type.accept(self)
+        print(sizeOfType.idType, end=' ')
         print(')', end=' ')
 
 ###################################################################
@@ -648,55 +544,55 @@ class Visitor(AbstractVisitor):
 # Classes to visit the Abstract Syntax of Assignment
 ##################################################################
 
-    def visitMaisIgual(self, mais_igual):
-        print(blank(),mais_igual.id, end = ' ')
+    def visitAssignPlusEquals(self, assignPlusEquals):
+        print(blank(), assignPlusEquals.id, end = ' ')
         print('+=', end=' ')
-        mais_igual.expression.accept(self)
+        assignPlusEquals.exp.accept(self)
 
-    def visitMenosIgual(self, menos_igual):
-        print(blank(),menos_igual.id, end = ' ')
+    def visitAssignMinusEquals(self, assignMinusEquals):
+        print(blank(), assignMinusEquals.id, end = ' ')
         print('-=', end=' ')
-        menos_igual.expression.accept(self)
-    
-    def visitMultiIgual(self, multi_igual):
-        print(blank(),multi_igual.id, end = ' ')
+        assignMinusEquals.exp.accept(self)
+
+    def visitAssignMultiplicationEquals(self, assignMultiplicationEquals):
+        print(blank(), assignMultiplicationEquals.id, end = ' ')
         print('*=', end=' ')
-        multi_igual.expression.accept(self)
+        assignMultiplicationEquals.exp.accept(self)
 
-    def visitDivIgual(self, div_igual):
-        print(blank(),div_igual.id, end = ' ')
+    def visitDivideEquals(self, DivideEquals):
+        print(blank(), DivideEquals.id, end = ' ')
         print('/=', end=' ')
-        div_igual.expression.accept(self)
+        DivideEquals.exp.accept(self)
 
-    def visitModIgual(self, mod_igual):
-        print(blank(),mod_igual.id, end = ' ')
+    def visitAssignModEquals(self, assignModEquals):
+        print(blank(), assignModEquals.id, end = ' ')
         print('%=', end=' ')
-        mod_igual.expression.accept(self)
+        assignModEquals.exp.accept(self)
 
-    def visitAndIgual(self, and_igual):
-        print(blank(),and_igual.id, end = ' ')
+    def visitAssignAndEquals(self, assignAndEquals):
+        print(blank(), assignAndEquals.id, end = ' ')
         print('&=', end=' ')
-        and_igual.expression.accept(self)
+        assignAndEquals.exp.accept(self)
 
-    def visitOrIgual(self, or_igual):
-        print(blank(),or_igual.id, end = ' ')
+    def visitAssignOrEquals(self, assignOrEquals):
+        print(blank(), assignOrEquals.id, end = ' ')
         print('|=', end=' ')
-        or_igual.expression.accept(self)
+        assignOrEquals.exp.accept(self)
 
-    def visitXORIgual(self, xor_igual):
-        print(blank(), xor_igual.id, end = ' ')
+    def visitAssignXOREquals(self, assignXOREquals):
+        print(blank(), assignXOREquals.id, end = ' ')
         print('^=', end=' ')
-        xor_igual.expression.accept(self)
+        assignXOREquals.exp.accept(self)
 
-    def visitDeslocaEsqIgual(self, desloca_esq_igual):
-        print(blank(),desloca_esq_igual.id, end = ' ')
+    def visitAssignDeslocationLeft(self, assignDeslocationLeft):
+        print(blank(),assignDeslocationLeft.id, end = ' ')
         print('<<=', end=' ')
-        desloca_esq_igual.expression.accept(self)
+        assignDeslocationLeft.exp.accept(self)
 
-    def visitDeslocaDirIgual(self, desloca_dir_igual):
-        print(blank(),desloca_dir_igual.id, end = ' ')
+    def visitAssignDeslocationRight(self, assignDeslocationRight):
+        print(blank(), assignDeslocationRight.id, end = ' ')
         print('>>=', end=' ')
-        desloca_dir_igual.expression.accept(self)
+        assignDeslocationRight.exp.accept(self)
 
 
 def main():
