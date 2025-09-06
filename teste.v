@@ -57,7 +57,7 @@ fn main(){
 
 	println('\n---------------------------------------\n')
     
-	for  i :=0 ; i < 5; i++ {
+	for  i := 0 ; i < 5; i++ {
 		println('Contador: ${i}')
 	}
 	

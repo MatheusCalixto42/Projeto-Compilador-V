@@ -79,10 +79,6 @@ class AbstractVisitor(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def visitSingleStatement(self, singleStatement):
-        pass
-
-    @abstractmethod
     def visitVarStm(self, varStm):
         pass
 
@@ -99,7 +95,7 @@ class AbstractVisitor(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def visitFuncCallSs(self, funcCalls):
+    def visitFuncCalls(self, funcCalls):
         pass
 
     @abstractmethod
@@ -115,15 +111,15 @@ class AbstractVisitor(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def visitAssignmentStm(self, assignStm):
+    def visitAssignStm(self, assignStm):
         pass
 
     @abstractmethod
-    def visitBreak(self, breakStm):
+    def visitBreakStm(self, breakStm):
         pass
 
     @abstractmethod
-    def visitReturn(self, returnStm):
+    def visitReturnStm(self, returnStm):
         pass
     
     @abstractmethod
@@ -168,14 +164,6 @@ class AbstractVisitor(metaclass=ABCMeta):
 
     @abstractmethod
     def visitFuncCallWithParams(self, funcCallWithParams):
-        pass
-
-    @abstractmethod
-    def visitPlusExpres(self, plusExpres):
-        pass
-
-    @abstractmethod#olhar aqui
-    def visitNoneExpression(self, noneExpression):
         pass
     
     @abstractmethod

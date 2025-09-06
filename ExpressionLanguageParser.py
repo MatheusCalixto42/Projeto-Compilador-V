@@ -2,30 +2,30 @@ import ply.yacc as yacc
 from LexicoV import *
 import SintaxeAbstrate as sa
 
-def p_program1(p):
-    '''program : program_import program_items'''
-    p[0] = sa.CompoundImportItems(p[1],p[2])
+def p_program(p):
+    '''program : program_import program_items
+                | program_items'''
+    if(len(p) == 3):
+        p[0] = sa.CompoundImportItems(p[1],p[2])
+    else:
+        p[0] = sa.ProgramItems(p[1])
 
-def p_program2(p):
-    '''program : program_items'''
-    p[0] = sa.ProgramItems(p[1])
+def p_program_import(p):
+    '''program_import : IMPORT ID program_import
+                       | IMPORT ID'''
+    if(len(p) == 4):
+        p[0] = sa.SequenceImports(p[1],p[2],p[3])
+    else:
+        p[0] = sa.SingleImport(p[1], p[2])
 
-def p_program_import1(p):
-    '''program_import : IMPORT ID program_import'''
-    p[0] = sa.SequenceImports(p[1],p[2],p[3])
-
-def p_program_import2(p):
-    '''program_import : IMPORT ID'''
-    p[0] = sa.SingleImport(p[1], p[2])
-
-def p_program_sequence_items(p):
-    '''program_items : program_item program_items'''
-    p[0] = sa.SequenceProgramItems(p[1], p[2])
-
-def p_program_single_item(p):
-    '''program_items : program_item'''
-    p[0] = sa.SingleProgramItem(p[1])
-
+def p_program_items(p):
+    '''program_items : program_item program_items
+                      | program_item'''
+    if(len(p) == 3):
+        p[0] = sa.SequenceProgramItems(p[1], p[2])
+    else:
+        p[0] = sa.SingleProgramItem(p[1])
+    
 def p_program_item_const(p):
     '''program_item : const_declaration'''
     p[0] = sa.ConstantDeclaration(p[1])
@@ -38,53 +38,53 @@ def p_program_const_declaration_rule(p):
     '''const_declaration : CONST ID DECLARE_ASSIGN expression'''
     p[0] = sa.ConstantDeclarationRule(p[2], p[4])
 
-def p_function_definition1(p):
-    '''function_definition : signature block_statement'''
-    p[0] = sa.FunctionVoid(p[1], p[2])
+def p_function_definition(p):
+    '''function_definition : signature block_statement
+                            | signature ID block_statement'''
+    if(len(p) == 3):
+        p[0] = sa.FunctionVoid(p[1], p[2])
+    else:
+        p[0] = sa.FunctionReturnType(p[1], p[2], p[3])
+    
+def p_signature(p):
+    '''signature : FN ID LPAREN sigparams RPAREN
+                  | FN ID LPAREN RPAREN'''
+    if(len(p) == 6):
+        p[0] = sa.SignatureWithParams(p[2], p[4])
+    else:
+        p[0] = sa.SignatureWithParams(p[2], None)
 
-def p_function_definition2(p):
-    '''function_definition : signature ID block_statement  '''
-    p[0] = sa.FunctionReturnType(p[1], p[2], p[3])
+def p_sigparams(p):
+    '''sigparams : ID ID
+                  | ID ID COMMA sigparams'''
+    if(len(p) == 3):
+        p[0] = sa.SingleSigParam(p[1], p[2])
+    else:
+        p[0] = sa.SequenceSigParams(p[1], p[2], p[4])
 
-def p_signature1(p):
-    '''signature : FN ID LPAREN sigparams RPAREN   '''
-    p[0] = sa.SignatureWithParams(p[2], p[4])
-
-def p_signature2(p):
-    '''signature : FN ID LPAREN RPAREN '''
-    p[0] = sa.SignatureWithParams(p[2], None)
-
-def p_single_sigparams(p):
-    '''sigparams : ID ID'''
-    p[0] = sa.SingleSigParam(p[1], p[2])
-
-def p_sequence_sigparams(p):
-    '''sigparams : ID ID COMMA sigparams'''
-    p[0] = sa.SequenceSigParams(p[1], p[2], p[4])
-
-def p_sequence_params(p):
-    '''params : expression COMMA params'''
-    p[0] = sa.SequenceParams(p[1], p[3])
-
-def p_single_params(p):
-    '''params : expression'''
-    p[0] = sa.SingleParams(p[1])
+def p_params(p):
+    '''params : expression COMMA params
+               | expression'''
+    if(len(p) == 4):
+        p[0] = sa.SequenceParams(p[1], p[3])
+    else:
+        p[0] = sa.SingleParams(p[1])
 
 def p_block_statement(p):
-    '''block_statement :  LBRACE statements RBRACE'''
-    p[0] = sa.BlockStm(p[2])
+    '''block_statement : LBRACE statements RBRACE
+                        | LBRACE RBRACE'''
+    if(len(p) == 4):
+        p[0] = sa.BlockStm(p[2])
+    else:
+        p[0] = sa.BlockStm(None)
 
-def p_none_block_statement(p):
-    '''block_statement : LBRACE RBRACE'''
-    p[0] = sa.BlockStm(None)
-
-def p_sequence_statements(p):
-    '''statements : statement statements'''
-    p[0] = sa.SequenceStm(p[1], p[2])
-
-def p_single_statement(p):
-    '''statements : statement'''
-    p[0] = sa.SingleStm(p[1])
+def p_statements(p):
+    '''statements : statement statements
+                   | statement'''
+    if(len(p) == 3):
+        p[0] = sa.SequenceStm(p[1], p[2])
+    else:
+        p[0] = sa.SingleStm(p[1])
 
 def p_statement1(p):
     '''statement :  var_statement '''
@@ -130,61 +130,66 @@ def p_statement11(p):
     '''statement :  RETURN expression'''
     p[0] = sa.Return(p[2])
 
-def p_var_declaration1(p):
-    '''var_statement : ID DECLARE_ASSIGN expression'''
-    p[0] = sa.ImutableDeclaration(p[1], p[3])
-
-def p_var_declaration2(p):
-    '''var_statement : MUT ID DECLARE_ASSIGN expression'''
-    p[0] = sa.MutableDeclaration(p[1], p[2], p[4])
+def p_var_declaration(p):
+    '''var_statement : ID DECLARE_ASSIGN expression
+                      | MUT ID DECLARE_ASSIGN expression'''
+    if(len(p) == 4):
+        p[0] = sa.ImutableDeclaration(p[1], p[3])
+    else:
+        p[0] = sa.MutableDeclaration(p[1], p[2], p[4])
 
 def p_var_assignment(p):
-    '''var_assignment :  ID ASSIGN expression'''
+    '''var_assignment : ID ASSIGN expression'''
     p[0] = sa.VarModification(p[1], p[3])
 
 def p_list_declaration_imutable(p):
-    '''list_statement : ID DECLARE_ASSIGN LBRACKET params RBRACKET'''
-    p[0] = sa.DeclarationImutableListRule(p[1],p[4])
-
-def p_list_declaration_mutable(p):
-    '''list_statement : MUT ID DECLARE_ASSIGN LBRACKET params RBRACKET'''
-    p[0] = sa.DeclarationMutableList(p[1], p[2], p[5])
-
-def p_list_declaration_mutable_list_lenght_definition(p):
-    '''list_statement : MUT ID DECLARE_ASSIGN LBRACKET params RBRACKET ID'''
-    p[0] = sa.DeclarationMutableListLengthDefinition(p[1], p[2], p[5], p[7])
+    '''list_statement : ID DECLARE_ASSIGN LBRACKET params RBRACKET
+                       | MUT ID DECLARE_ASSIGN LBRACKET params RBRACKET
+                       | MUT ID DECLARE_ASSIGN LBRACKET NUMBER RBRACKET ID'''
+    if(len(p) == 6):
+        if(p[4] != None):
+            p[0] = sa.DeclarationImutableListRule(p[1],p[4])
+        else:
+            p[0] = sa.DeclarationImutableListRule(p[1],None)
+    elif(len(p) == 7):
+        if(p[5] != None):
+            p[0] = sa.DeclarationMutableList(p[1], p[2], p[5])
+        else:
+            p[0] = sa.DeclarationMutableList(p[1], p[2], None)
+    else:
+        p[0] = sa.DeclarationMutableListLengthDefinition(p[1], p[2], p[5], p[7])
 
 def p_list_assignment(p):
     '''list_assignment : ID LBRACKET NUMBER RBRACKET ASSIGN expression'''
     p[0] = sa.ListModification(p[1], p[3], p[6])
 
-def p_list_call1(p):
-    '''list_call : ID LBRACKET DOTDOT RBRACKET'''
-    p[0] = sa.CallListAll(p[1], p[3])
-
-def p_list_call2(p):
-    '''list_call : ID LBRACKET NUMBER DOTDOT NUMBER RBRACKET'''
-    p[0] = sa.CallListRange(p[1], p[3], p[4], p[5])
+def p_list_call(p):
+    '''list_call : ID LBRACKET DOTDOT RBRACKET
+                  | ID LBRACKET NUMBER DOTDOT NUMBER RBRACKET'''
+    if(len(p) == 5):
+        p[0] = sa.CallListAll(p[1], p[3])
+    else:
+        p[0] = sa.CallListRange(p[1], p[3], p[4], p[5])
 
 # def p_func_call_list_single(p):
 #     '''func_call_list : ID LBRACKET NUMBER RBRACKET'''
 #     p[0] = sa.FuncCallListSingle(p[1], p[3])
 
 def p_func_call(p):
-    '''func_call : ID LPAREN params RPAREN'''
-    p[0] = sa.FuncCallWithParams(p[1], p[3])
-
-def p_func_call_empty(p):
-    '''func_call : ID LPAREN RPAREN'''
-    p[0] = sa.FuncCallWithParams(p[1], None)
+    '''func_call : ID LPAREN params RPAREN
+                  | ID LPAREN RPAREN'''
+    if(len(p) == 5):
+        p[0] = sa.FuncCallWithParams(p[1], p[3])
+    else:
+        p[0] = sa.FuncCallWithParams(p[1], None)
 
 def p_if_statement(p):
-    '''if_statement : IF expression_relacional block_statement '''
-    p[0] = sa.OnlyIf(p[2], p[3])
-
-def p_if_statement_else(p):
-    '''if_statement : IF expression_relacional block_statement  elseop'''
-    p[0] = sa.IfAndElse(p[2], p[3], p[4])
+    '''if_statement : IF expression_relacional block_statement
+                     | IF expression_relacional block_statement elseop'''
+    if(len(p) == 4):
+        p[0] = sa.OnlyIf(p[2], p[3])
+    else:
+        p[0] = sa.IfAndElse(p[2], p[3], p[4])
 
 def p_else(p):
     '''elseop : ELSE if_statement'''
@@ -194,17 +199,16 @@ def p_else2(p):
     '''elseop : ELSE block_statement '''
     p[0] = sa.OnlyElse(p[2])
 
-def p_for_each_statement(p):
-    '''for_statement : FOR ID IN expression block_statement '''
-    p[0] = sa.ForEach(p[2], p[4], p[5])
-
 def p_for_statement(p):
-    '''for_statement : FOR ID SEMICOLON expression_relacional SEMICOLON increment_rule block_statement '''
-    p[0] = sa.ConventionalFor(p[2], p[4], p[6], p[7])
-
-def p_for_statement2(p):
-    '''for_statement : FOR expression_relacional block_statement '''
-    p[0] = sa.OnlyexpRelFor(p[2], p[3])
+    '''for_statement : FOR ID IN expression block_statement
+                      | FOR ID DECLARE_ASSIGN NUMBER SEMICOLON expression_relacional SEMICOLON increment_rule block_statement
+                      | FOR expression_relacional block_statement'''
+    if(len(p) == 6):
+        p[0] = sa.ForEach(p[2], p[4], p[5])
+    elif(len(p) == 10):
+        p[0] = sa.ConventionalFor(p[2], p[4], p[6], p[8], p[9])
+    else:
+        p[0] = sa.OnlyexpRelFor(p[2], p[3])
 
 def p_expression_plus(p):
     '''expression : expression PLUS term'''
@@ -225,6 +229,10 @@ def p_expression_func_call(p):
 def p_expression_call_list(p):
     '''expression : list_call'''
     p[0] = sa.ExpCallList(p[1])
+
+def p_expression_single_term(p):
+    '''expression : term'''
+    p[0] = sa.SingleTerm(p[1])
 
 def p_term_mult(p):
     '''term : term TIMES factor'''

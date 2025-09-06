@@ -411,7 +411,7 @@ class CallListAll(CallListAbstract):
         self.id = id
         self.dotdot = dotdot
     def accept(self, visitor):
-        return visitor.FuncCallListAll(self)
+        return visitor.visitCallListAll(self)
 
 class CallListRange(CallListAbstract):
     def __init__(self, id, number, dotdot, number2):
@@ -457,16 +457,16 @@ class IfStmAbstract(metaclass=ABCMeta):
         pass
 
 class OnlyIf(IfStmAbstract):
-    def __init__(self,expRel,blockstm):
+    def __init__(self,expRel,blockStm):
         self.expRel = expRel
-        self.blockstm = blockstm
+        self.blockStm = blockStm
     def accept(self, visitor):
         return visitor.visitOnlyIf(self)
 
 class IfAndElse(IfStmAbstract):
-    def __init__(self, expRel, blockstm, elseV):
+    def __init__(self, expRel, blockStm, elseV):
         self.expRel = expRel
-        self.blockstm = blockstm
+        self.blockStm = blockStm
         self.elseV = elseV
     def accept(self, visitor):
         return visitor.visitIfAndElse(self)
@@ -502,26 +502,27 @@ class ForAbstract(metaclass=ABCMeta):
         pass
 
 class ForEach(ForAbstract):
-    def __init__(self,id,exp,blockstm):
+    def __init__(self,id,exp,blockStm):
         self.id = id
         self.exp = exp
-        self.blockstm = blockstm
+        self.blockStm = blockStm
     def accept(self, visitor):
         return visitor.visitForEach(self)
 
 class ConventionalFor(ForAbstract):
-    def __init__(self,id ,expRel,increment, blockstm):
+    def __init__(self, id, number, expRel, increment, blockStm):
         self.id = id
+        self.number = number
         self.expRel = expRel
         self.increment = increment
-        self.blockstm = blockstm
+        self.blockStm = blockStm
     def accept(self, visitor):
         return visitor.visitConventionalFor(self)
 
 class OnlyexpRelFor(ForAbstract):
-    def __init__(self,expRel,blockstm):
+    def __init__(self,expRel,blockStm):
         self.expRel = expRel
-        self.blockstm = blockstm
+        self.blockStm = blockStm
     def accept(self, visitor):
         return visitor.visitOnlyexpRelFor(self)
 

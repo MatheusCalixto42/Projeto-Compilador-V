@@ -53,7 +53,7 @@ If_stm -> IF ExpRel BlockStm | IF ExpRel BlockStm ElseOp
 
 ElseOp -> ELSE If_stm | ELSE BlockStm 
 
-For_stm -> FOR ID IN Exp BlockStm | FOR ID ";" ExpRel ";" Increment BlockStm | FOR ExpRel BlockStm 
+For_stm -> FOR ID IN Exp BlockStm | FOR ID ":=" NUMBER ";" ExpRel ";" Increment BlockStm | FOR ExpRel BlockStm 
 
 Exp -> Exp "+" Term | Exp "-" Term | Term | Increment | Func_call | List_call  
 

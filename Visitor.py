@@ -80,7 +80,7 @@ class Visitor(AbstractVisitor):
 
     def visitFunctionReturnType(self,functionReturnType):
         functionReturnType.signature.accept(self)
-        functionReturnType.id.accept(self)
+        print(functionReturnType.id, end=' ')
         functionReturnType.blockStm.accept(self)
 
 ###################################################################
@@ -92,7 +92,8 @@ class Visitor(AbstractVisitor):
         print('fn', end=' ', sep=' ')
         print(signatureWithParams.id, end=' ')
         print('(', end=' ')
-        signatureWithParams.s.accept(self) #usar if para o caso de n ter parametro?
+        if signatureWithParams.sigparams is not None:
+            signatureWithParams.sigparams.accept(self)
         print(')', end=' ')
 
 ###################################################################
@@ -101,7 +102,7 @@ class Visitor(AbstractVisitor):
 
     def visitSingleSigParam(self, singleSigParam):
         print(singleSigParam.id, end=' ')
-        singleSigParam.idType.accept(self)
+        print(singleSigParam.idType, end=' ')
 
     def visitSequenceSigParams(self, sequenceSigParams):
         print(sequenceSigParams.id, end = '')
@@ -143,8 +144,8 @@ class Visitor(AbstractVisitor):
         sequenceStm.stm.accept(self)
         sequenceStm.stms.accept(self)
 
-    def visitSingleStatement(self, singleStatement):
-        singleStatement.stm.accept(self)
+    def visitSingleStm(self, singleStm):
+        singleStm.stm.accept(self)
 
 ###################################################################
 # Classes to visit the Abstract Syntax of Stm
@@ -182,10 +183,10 @@ class Visitor(AbstractVisitor):
 
     def visitReturnStm(self,returnStm):
         print(blank(), 'return', end=' ')
-        if(returnStm.expression == None):
+        if(returnStm.exp == None):
             pass
 
-        returnStm.expression.accept(self)
+        returnStm.exp.accept(self)
 
     def visitIncrementStm(self, incrementStm):
         incrementStm.increment_stm.accept(self)
@@ -230,7 +231,7 @@ class Visitor(AbstractVisitor):
         print(blank(), declarationImutableListRule.id, end=' ')
         print(':=', end=' ',sep=' ')
         print('[', end=' ', sep=' ')
-        declarationImutableListRule.id_list.accept(self)
+        declarationImutableListRule.params.accept(self)
         print(']', end=' ', sep=' ')
         
 
@@ -247,9 +248,9 @@ class Visitor(AbstractVisitor):
         print(listLengthDefinition.id, end=' ')
         print(':=', end=' ',sep=' ')
         print('[', end=' ', sep=' ')
-        listLengthDefinition.number.accept(self) #aqui
+        print(listLengthDefinition.number, end=' ')
         print(']', end=' ', sep=' ')
-        listLengthDefinition.type.accept(self)
+        print(listLengthDefinition.type, end=' ')
 
 
 ###################################################################
@@ -295,7 +296,7 @@ class Visitor(AbstractVisitor):
     def visitFuncCallWithParams(self,funcCallWithParams):
         print(blank(), funcCallWithParams.id, end=' ')
         print('(', end=' ')
-        funcCallWithParams.id_list.accept(self)
+        funcCallWithParams.params.accept(self)
         print(')', end=' ')
 
 
@@ -341,18 +342,20 @@ class Visitor(AbstractVisitor):
         print(forEach.id, end=' ')
         print('in', end=' ', sep=' ')
         forEach.exp.accept(self)
-        forEach.blockstm.accept(self)
+        forEach.blockStm.accept(self)
     
 
     def visitConventionalFor(self,conventionalFor):
         global tab
         print(blank(), 'for', end=' ', sep=' ')
         print(conventionalFor.id, end=' ')
+        print(':=', end=' ')
+        print(conventionalFor.number, end=' ')
         print(';', end=' ')
         conventionalFor.expRel.accept(self)
         print(';', end=' ', sep=' ')
         conventionalFor.increment.accept(self)
-        conventionalFor.blockstm.accept(self)
+        conventionalFor.blockStm.accept(self)
 
     def visitOnlyexpRelFor(self,onlyexpRelFor):
         global tab
@@ -389,7 +392,7 @@ class Visitor(AbstractVisitor):
         expFuncCall.funcCall.accept(self)
 
     def visitExpCallList(self, expCallList):
-        expCallList.callist.accept(self)
+        expCallList.calllist.accept(self)
 
 ###################################################################
 # Classes to visit the Abstract Syntax of Relational Expression
@@ -410,20 +413,20 @@ class Visitor(AbstractVisitor):
         print('<', end=' ')
         expRelLessThan.exp2.accept(self)
 
-    def visitExpressionRelationalGreaterThan(self,expressionRelationalGreaterThan):
-        expressionRelationalGreaterThan.exp1.accept(self)
+    def visitExpRelGreaterThan(self,expRelGreaterThan):
+        expRelGreaterThan.exp1.accept(self)
         print('>', end=' ')
-        expressionRelationalGreaterThan.exp2.accept(self)
+        expRelGreaterThan.exp2.accept(self)
 
-    def visitExpRelLessThanOrEqual(self,expressionRelationalLessThanOrEqual):
-        expressionRelationalLessThanOrEqual.exp1.accept(self)
+    def visitExpRelLessThanOrEqual(self,expRelationalLessThanOrEqual):
+        expRelationalLessThanOrEqual.exp1.accept(self)
         print('<=', end=' ')
-        expressionRelationalLessThanOrEqual.exp2.accept(self)
+        expRelationalLessThanOrEqual.exp2.accept(self)
 
-    def visitExpRelGreaterThanOrEqual(self,expressionRelationalGreaterThanOrEqual):
-        expressionRelationalGreaterThanOrEqual.exp1.accept(self)
+    def visitExpRelGreaterThanOrEqual(self,expRelGreaterThanOrEqual):
+        expRelGreaterThanOrEqual.exp1.accept(self)
         print('>=', end=' ')
-        expressionRelationalGreaterThanOrEqual.exp2.accept(self)
+        expRelGreaterThanOrEqual.exp2.accept(self)
 
     def visitExpRelAnd(self,expressionRelationalAnd):
         expressionRelationalAnd.exp1.accept(self)
@@ -473,9 +476,9 @@ class Visitor(AbstractVisitor):
     def visitFactorID(self,factorID):
         print(factorID.id, end=' ')
 
-    def visitFactorExpression(self,factorExpression):
+    def visitFactorExp(self,factorExp):
         print('(', end=' ')
-        factorExpression.exp.accept(self)
+        factorExp.exp.accept(self)
         print(')', end=' ')
 
     def visitFactorList(self, factorList):
@@ -518,14 +521,14 @@ class Visitor(AbstractVisitor):
 # Classes to visit the Abstract Syntax of Size of Expression
 ##################################################################
 
-    def visitSizeofExp(self, sizeOfExp):
-        print(blank(), sizeOfExp.sizeof, end=' ')
+    def visitSizeOfExp(self, sizeOfExp):
+        print(blank(), 'sizeof', end=' ')
         print('(', end=' ')
         sizeOfExp.exp.accept(self)
         print(')', end=' ')
 
     def visitSizeOfType(self, sizeOfType):
-        print(blank(), sizeOfType.sizeof, end=' ')
+        print(blank(), 'sizeof', end=' ')
         print('(', end=' ')
         print(sizeOfType.idType, end=' ')
         print(')', end=' ')
@@ -600,7 +603,7 @@ def main():
     lexer = lex.lex()
     lexer.input(f.read())
     parser = yacc.yacc(start='program')
-    result = parser.parse(debug=True)
+    result = parser.parse(debug=False)
     print("imprime o programa que foi passado como entrada")
     visitor = Visitor()
     result.accept(visitor)
