@@ -92,8 +92,8 @@ class Visitor(AbstractVisitor):
         print('fn', end=' ', sep=' ')
         print(signatureWithParams.id, end=' ')
         print('(', end=' ')
-        if signatureWithParams.sigparams is not None:
-            signatureWithParams.sigparams.accept(self)
+        if signatureWithParams.sigParams is not None:
+            signatureWithParams.sigParams.accept(self)
         print(')', end=' ')
 
 ###################################################################
@@ -108,7 +108,7 @@ class Visitor(AbstractVisitor):
         print(sequenceSigParams.id, end = '')
         print(sequenceSigParams.idType, end = ' ')
         print(',', end=' ')
-        sequenceSigParams.sigparams.accept(self)
+        sequenceSigParams.sigParams.accept(self)
 
 
 ###################################################################
@@ -231,7 +231,8 @@ class Visitor(AbstractVisitor):
         print(blank(), declarationImutableListRule.id, end=' ')
         print(':=', end=' ',sep=' ')
         print('[', end=' ', sep=' ')
-        declarationImutableListRule.params.accept(self)
+        if(declarationImutableListRule.params != None):
+            declarationImutableListRule.params.accept(self)
         print(']', end=' ', sep=' ')
         
 
@@ -364,6 +365,16 @@ class Visitor(AbstractVisitor):
         onlyexpRelFor.blockStm.accept(self)
 
         
+###################################################################
+# Classes to visit the Abstract Syntax of ExpRels
+##################################################################
+    def visitSingleExpRel(self, singleExpRel):
+        singleExpRel.expRel.accept(self)
+
+    def visitSequenceExpRels(self, sequenceExpRels):
+        sequenceExpRels.expRel.accept(self)
+        sequenceExpRels.expRels.accept(self)
+
 ###################################################################
 # Classes to visit the Abstract Syntax of Expression
 ##################################################################
@@ -510,9 +521,6 @@ class Visitor(AbstractVisitor):
 
     def visitFactorHex(self, hex):
         print(hex.factorHex, end=' ')
-
-#    def visitFactorInterpolationString(self, factorInterpolationString):
-#        print(factorInterpolationString.interpolationString, end=' ')
 
     def visitFactorSizeOfExp(self, factorSizeofExp):
         factorSizeofExp.sizeofexp.accept(self)

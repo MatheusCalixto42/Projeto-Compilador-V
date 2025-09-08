@@ -14,712 +14,794 @@ def coercion(type1, type2):
 
 class SemanticVisitor(AbstractVisitor):
 
-    
     def __init__(self):
         self.printer = Visitor()
         self.n_errors = 0
         self.main_defined = False
-        st.beginScope('main')
+        st.beginScope('global')
 
-    def visitImportAndFuncDefinition(self, importAndFuncDefinition):
-        importAndFuncDefinition.program_import.accept(self) 
-        importAndFuncDefinition.program_items.accept(self)
+###################################################################
+# Classes to visit the Abstract Syntax of Program
+##################################################################
 
-    def visitProgramItems(self, programItems):
+    def visitCompoundImportItems(self,compoundImportItems):
+        if(compoundImportItems.program_import != None):          #esses ifs sao necessarios? ja q a gente tem uma classe para caso n ter program_import
+            compoundImportItems.program_import.accept(self)
+        if(compoundImportItems.program_items != None):
+            compoundImportItems.program_items.accept(self)
+
+    def visitProgramItems(self,programItems):
         programItems.program_items.accept(self)
 
-    def visitSequenceImports(self, sequenceImports):
-        idName = sequenceImports.id
-        if st.getBindable(idName) != None:
-            self.n_errors += 1
-            print(f"Erro: O identificador '{idName}' já foi declarado.")
+###################################################################
+# Classes to visit the Abstract Syntax of Import
+################################################################## 
+
+    def visitSequenceImports(self,sequenceImports):  #so ignora os imports mesmo?
+        bindable = st.getBindable(sequenceImports.id)
+        if bindable is None:
+            st.addImport(sequenceImports.id)
+        elif bindable[st.NAMEIMPORT] != sequenceImports.id:
+            st.addImport(sequenceImports.id)
         else:
-            st.addModule(idName)
-        sequenceImports.program_import.accept(self)
-
-    def visitSingleImport(self, singleImport):
-        idName = singleImport.id
-        if st.getBindable(idName) != None:
             self.n_errors += 1
-            print(f"Erro: O identificador '{idName}' já foi declarado.")
+            print('\n\t[Erro]', sequenceImports.id, 'já foi importado')
+       
+        if(sequenceImports.program_import.accept != None):
+           sequenceImports.program_import.accept(self)
+
+    def visitSingleImport(self,singleImport):
+        bindable = st.getBindable(singleImport.id)
+        if bindable is None:
+            st.addImport(singleImport.id)
+        elif bindable[st.NAMEIMPORT] != singleImport.id:
+            st.addImport(singleImport.id)
         else:
-            st.addModule(idName)
+            self.n_errors += 1
+            print('\n\t[Erro]', singleImport.id, 'já foi importado')
+        
+###################################################################
+# Classes to visit the Abstract Syntax of Program Items
+################################################################## 
 
-    def visitMultipleProgramItems(self, multipleProgramItems):
-        multipleProgramItems.item.accept(self)
-        if multipleProgramItems.items_recursao != None: #ISso é necessário??
-            multipleProgramItems.items_recursao.accept(self)
+    def visitSequenceProgramItems(self,sequenceProgramItems):
+        if(sequenceProgramItems.program_item.accept != None):
+            sequenceProgramItems.program_item.accept(self)
+        if(sequenceProgramItems.program_items.accept != None):
+            sequenceProgramItems.program_items.accept(self)
 
-    def visitNoneItems(self, noneItems):
-        pass
+    def visitSingleProgramItem(self, singleProgramItem):
+        singleProgramItem.program_item.accept(self)
 
-    def visitConstanteDeclaration(self, constanteDeclaration):
-        constanteDeclaration.constante.accept(self)
+###################################################################
+# Classes to visit the Abstract Syntax of Program Item
+################################################################## 
+
+    def visitConstantDeclaration(self, constantDeclaration):
+        constantDeclaration.constant.accept(self)
 
     def visitFunctionDeclaration(self, functionDeclaration):
         functionDeclaration.function.accept(self)
 
-    def visitConstanteDeclarationRule(self, constanteDeclarationRule):
-        idName = constanteDeclarationRule.id
-        typeExp = constanteDeclarationRule.expression.accept(self)  
-        if st.getBindable(idName) != None:
+###################################################################
+# Classes to visit the Abstract Syntax of Const
+################################################################## 
+
+    def visitConstantDeclarationRule(self, constantDeclarationRule):
+
+        constantDeclarationRule.exp.accept(self.printer)
+
+        bindable = st.getBindable(constantDeclarationRule.id)
+        typeConst = constantDeclarationRule.exp.accept(self)
+        if bindable is not None:
             self.n_errors += 1
-            print(f"Erro: O identificador '{idName}' já foi declarado.")
-        else:
-            st.addImutableVar(idName, typeExp)
-        return typeExp
+            print(f"\n\t[Erro] Constante '{constantDeclarationRule.id}' já declarada")
+            return None
+        st.addConstVar(constantDeclarationRule.id, typeConst)
+        return typeConst
     
-    def visitFunctionVoid(self, functionVoid):
-        func_id = functionVoid.id
-        params = []
-        if functionVoid.param is not None: #isso faz com que n precise de classes com nd para expressar vazio?
-            params = functionVoid.param.accept(self)
+
+###################################################################
+# Classes to visit the Abstract Syntax of Function Definition
+##################################################################
+
+    def visitFunctionVoid(self,functionVoid):
+        functionVoid.signature.accept(self)
+        functionVoid.blockStm.accept(self)
         
-        st.addFunction(func_id, params, None) 
 
-        st.beginScope(func_id)
-        for i in range(0, len(params),2):
-            st.addImutableVar(params[i], params[i+1])
+    def visitFunctionReturnType(self,functionReturnType):
+        nomeFunc = functionReturnType.signature.accept(self)
 
-        functionVoid.block_statement.accept(self)
-        st.endScope()
+        typeFunc = functionReturnType.id
 
-    def visitFunctionReturnType(self, functionReturnType):
-        func_id = functionReturnType.id
-        params = []
-        if functionReturnType.param is not None:
-            params = functionReturnType.param.accept(self)
-
-        typeFunc = functionReturnType.type.accept(self)
-        st.addFunction(func_id, params, typeFunc)
-
-        st.beginScope(func_id)
-        for i in range(0, len(params),2):
-            st.addImutableVar(params[i], params[i+1])
-
-        functionReturnType.block_statement.accept(self)
-        st.endScope()
-
-    def visitFunctionMain(self, functionMain):
-        func_id = functionMain.id
-        params = []
-
-        if self.main_defined:
-            self.n_errors += 1
-            print(f"Erro: A função 'main' já foi definida.")
+        if(typeFunc in st.type):
+             st.updateBindableAttr(nomeFunc, st.TYPE, typeFunc)
         else:
+            self.n_errors += 1
+            print('\n\t[ERROR] Funcao com tipo inválido: ', typeFunc)
+
+        functionReturnType.blockStm.accept(self)
+
+###################################################################
+# Classes to visit the Abstract Syntax of Signature
+##################################################################
+    
+    def visitSignatureWithParams(self, signatureWithParams):
+
+        params = {}
+
+        bindable = st.getBindable(signatureWithParams.id)
+        
+        if(signatureWithParams.id == 'main' and not self.main_defined):
             self.main_defined = True
-        st.addFunction(func_id, [], None)
-        st.beginScope(func_id)
-        functionMain.block_statement.accept(self)
-        st.endScope()
-
-    def visitDescriptionParams(self, descriptionParams):
-        param_type = descriptionParams.param.accept(self)
-        params = [param_type
-                  ]
-        more_params = descriptionParams.more_params.accept(self)
-        if more_params:
-            params.extend(more_params) #Aqui adiciona os parâmetros adicionais
-        return params
-
-    def visitMultipleParams(self, multipleParams):
-        param_type =multipleParams.param.accept(self)
-        params = [param_type]
-        moreParams = multipleParams.more_params.accept(self)
-        if moreParams:
-            params.extend(moreParams)
-        return params
-    
-    def visitNoneParam(self, noneParam):
-        return []
-    
-    def visitDescriptionParam(self, descriptionParam):
-        idName = descriptionParam.id
-        typeParam = descriptionParam.type.accept(self)
-
-        if st.lookup(idName): #Verifica se ja existe no escopo atual ou superior
+            st.addFunction(signatureWithParams.id, params, st.VOID)
+        elif(signatureWithParams.id == 'main' and self.main_defined):
             self.n_errors += 1
-            print(f"Erro: O identificador '{idName}' já foi declarado.")
-        else:
-            st.addImutableVar(idName, typeParam)
-        return typeParam
-    
-
-    def visitBlockStatement(self, blockStatement):
-        if blockStatement.statements != None:
-            blockStatement.statements.accept(self)
-    
-    def visitNoneBlockStatement(self, noneBlockStatement):
-        pass
-
-    def visitMultipleStatement(self, multipleStatement):
-        multipleStatement.statement.accept(self)
-        multipleStatement.statements.accept(self)
-
-    def visitSingleStatement(self, singleStatement):
-        singleStatement.statement.accept(self)
-
-########################################################
-#Semantico para Statement
-#######################################################
-
-    def visitVarStatement(self, varStatement):
-        varStatement.var_statement.accept(self)
-
-    def visitVarAssignment(self, varAssignment):
-        varAssignment.var_assignment.accept(self)
-
-    def visitListStatement(self, listStatement):
-        listStatement.list_statement.accept(self)
-
-    def visitListAssignment(self, listAssignment):
-        listAssignment.list_assignment.accept(self)
-
-    def visitFuncCallS(self, funcCallS):
-        funcCallS.func_call.accept(self)
-
-    def visitIfStatement(self, ifStatement):
-        ifStatement.if_statement.accept(self)
-
-    def visitForStatement(self, forStatement):
-        forStatement.for_statement.accept(self)
-
-    def visitBreakStatement(self, breakStatement):
-        breakStatement.break_statement.accept(self)
-    
-    def visitReturnStatement(self, returnStatement):
-        returnStatement.return_statement.accept(self)
-
-    def visitIncrementStatement(self, incrementStatement):
-        incrementStatement.increment_statement.accept(self)
-
-    def visitAssignmentStatement(self, assignment_statement):
-        assignment_statement.assignment_statement.accept(self)
-
-#########################################################
-# Semantico para Var Statement
-########################################################
-
-    def visitDeclarationImutable(self, declarationImutable):
-        declarationImutable.declaration_imutable.accept(self)
-
-    def visitMutableDeclaration(self, mutableDeclaration):
-        varName = mutableDeclaration.id
-        typeVar = mutableDeclaration.expression.accept(self)
-        if st.getBindable(varName) != None:
+            print('\n\t[ERROR] Funcao main já definida')
+        elif(bindable != None):
             self.n_errors += 1
-            print(f"Erro: O identificador '{varName}' já foi declarado.")
+            print('\n\t[ERROR] Funcao', bindable[st.NAMEFUNCTION],'já definida')
         else:
-            st.addMutableVar(varName, typeVar)
-
-    def visitConstantDeclaration(self, constantDeclaration):
-        varName = constantDeclaration.id
-        typeVar = constantDeclaration.expression.accept(self)   #self.visit(constantDeclaration.expression)
-        if st.getBindable(varName) != None:
-            self.n_errors += 1
-            print(f"Erro: O identificador '{varName}' já foi declarado.")
-        else:
-            st.addConstVar(varName, typeVar)
-
-##########################################################
-#Semantico para Var Assignment
-#########################################################
-
-    def visitVarModification(self, varModification): #tenho que mudar algo na tabela?? Guardar o novo valor??
-        varName = varModification.id
-        typeVar = varModification.expression.accept(self) 
-        if st.getBindable(varName) == None:
-            self.n_errors += 1
-            print(f"Erro: O identificador '{varName}' não foi declarado.")
-        else:
-            bindable = st.getBindable(varName)
-            if bindable[st.BINDABLE] == "IMUTABLEVAR" or bindable[st.BINDABLE] == "CONSTANTE":
-                self.n_errors += 1
-                print(f"Erro: A variável '{varName}' é imutável e não pode ser modificada.")
+            if (signatureWithParams.sigParams != None):
+                params = signatureWithParams.sigParams.accept(self)
+                st.addFunction(signatureWithParams.id, params, None)
+                
             else:
-                if bindable[st.TYPE] != typeVar:
-                    self.n_errors += 1
-                    print(f"Erro: Tipo incompatível na atribuição à variável '{varName}'. Esperado '{bindable[TYPE]}', mas recebeu '{typeVar}'.")
+                st.addFunction(signatureWithParams.id, params, st.VOID)
+            
+        st.beginScope(signatureWithParams.id)
+        for k in range(0, len(params), 2):
+            st.addMutableVar(params[k], params[k+1])
 
-
-##########################################################
-#Semantico para List Statement
-#########################################################
-
-    def visitDeclarationImutableList(self, declarationImutableList):
-        declarationImutableList.declaration_imutable_list.accept(self)
-
-    def visitDeclarationMutableList(self, declarationMutableList): #o que pode mudar por ser uma lista? alguma modificação na tabela de simbolos?
-        varName = declarationMutableList.id
-        typeVar = declarationMutableList.id_list.accept(self) #possivel problema--> verificar cada tipo de var dentro??
-        if st.getBindable(varName) != None:
-            self.n_errors += 1
-            print(f"Erro: O identificador '{varName}' já foi declarado.")
-        else:
-            st.addArray(varName, typeVar)
-
-    def visitDeclarationMutableListLengthDefinition(self, listLengthDefinition):
-        varName = listLengthDefinition.id
-        typeVar = listLengthDefinition.type.accept(self)  
-        length = listLengthDefinition.number              # tamanho da lista
-
-        # Verifica se já existe uma variável com esse nome
-        if st.getBindable(varName) != None:
-            self.n_errors += 1
-            print(f"Erro: O identificador '{varName}' já foi declarado.")
-        else:
-            st.addArray(varName, typeVar)
-            bindable = st.getBindable(varName) # Fiz um campo tamanho para a lista, é necessario??
-            bindable['length'] = length
-
-##########################################################
-#Semantico para List Assignment
-#########################################################
-
-    def visitListModification(self, listModification):
-        varName = listModification.id
-        index = listModification.number
-        exprType = listModification.expression.accept(self)
-
-        bindable = st.getBindable(varName)
-        if bindable is None:
-            self.n_errors += 1
-            print(f"Erro: A lista '{varName}' não foi declarada.")
-
-        if bindable[st.BINDABLE] != "MUTABLEVAR":
-            self.n_errors += 1
-            print(f"Erro: '{varName}' não é uma lista mutável e não pode ser modificada.")
-
-        if index < 0 or index >= bindable[st.LENGTH]:
-            self.n_errors += 1
-            print(f"Erro: Índice {index} fora dos limites da lista '{varName}'.")
-            return
-        
-        if bindable[st.TYPE] != exprType:
-            self.n_errors += 1
-            print(f"Erro: Tipo incompatível na atribuição ao elemento da lista '{varName}'. Esperado '{bindable[st.TYPE]}', mas recebeu '{exprType}'.")
-
-##########################################################
-#Semantico para Declaration Imutable List
-#########################################################
-    
-    def visitDeclarationImutableListRule(self, declarationImutableListRule):
-        varName = DeclarationImutableListRule.id
-        typeList = declarationImutableListRule.id_list.accept(self)
-        if st.getBindable(varName) != None:
-            self.n_errors += 1
-            print(f"Erro: O identificador '{varName}' já foi declarado.")
-        else:
-            st.addImutableVar(varName, typeList)
-
-##########################################################
-#Semantico para Func Call
-#########################################################
-    def visitFuncCompoundParams(self, funcCompoundParams):
-        bindable = st.getBindable(funcCompoundParams.id)
-
-        if(funcCompoundParams.id is "println" or funcCompoundParams.id is "print"):
-            funcCompoundParams.params.accept(self)
-            return st.VOID
-
-        elif (bindable != None and bindable[st.BINDABLE] == st.FUNCTION):
-            typeParams = funcCompoundParams.params.accept(self)
-            if (list(bindable[st.PARAMS][1::2]) == typeParams):
-                return bindable[st.TYPE]
-            funcCompoundParams.accept(self.printer)
-            self.n_errors+=1 
-            print("\n\t[Erro] Chamada de funcao invalida. Tipos passados na chamada sao:", typeParams)
-            print('\tenquanto que os tipos definidos no metodo sao:', bindable[st.PARAMS][1::2], '\n')
-        else:
-            funcCompoundParams.accept(self.printer)
-            self.n_errors+=1 
-            print("\n\t[Erro] Chamada de funcao invalida. O id", funcCompoundParams.id,
-                  "nao eh de uma funcao, nao foi definido ou foi definido apos esta funcao\n")
-        return None
-    
-    def visitFuncNoParams(self, funcNoParams):
-        bindable = st.getBindable(funcNoParams.id)
-        if (bindable != None and bindable[st.BINDABLE] == st.FUNCTION):
-            return bindable[st.TYPE]
-        funcNoParams.accept(self.printer)
-        self.n_errors+=1 
-        print("\n\t[Erro] Chamada de funcao invalida. O id", funcNoParams.id, "nao eh de uma funcao, nao foi definido ou foi definido apos esta funcao\n")
-        return None
-    
-    def visitFuncCallList(self, funcCallList):
-        funcCallList.funcCallList.accept(self)
-
-##########################################################
-#Semantico para Func Call List
-#########################################################
-
-    def visitFuncCallListAll(self, funcCallListAll):
-        FuncName = funcCallListAll.id
-    
-        bindable = st.getBindable(FuncName)
-        if bindable is None:
-            self.n_errors += 1
-            print(f"\n\t[Erro] Identificador '{FuncName}' não foi declarado antes do uso.\n")
-            return None
-
-        if bindable[st.BINDABLE] != st.ARRAY:
-            self.n_errors += 1
-            print(f"\n\t[Erro] O identificador '{FuncName}' não é indexável (esperado array ou lista).\n")
-            return None
-        # Se esta tudo certo retorna o tipo dos elementos do array
-        return bindable[st.TYPE]
-    
-    def visitFuncCallListRange(self, funcCallRange):
-        FuncName = funcCallRange.id
-        index1 = funcCallRange.number
-        index2 = funcCallRange.number2
-
-        bindable = st.getBindable(FuncName)
-        if bindable is None:
-            self.n_errors += 1
-            print(f"\n\t[Erro] Identificador '{FuncName}' não foi declarado antes do uso.\n")
-            return None
-        
-        if bindable[st.BINDABLE] != "ARRAY":
-            self.n_errors += 1
-            print(f"Erro: '{FuncName}' não é um array.")
-            return None
-        
-        if index1 < 0 or index2 >= bindable[st.LENGTH]:
-            self.n_errors += 1
-            print(f"Erro: Índice  fora dos limites do array '{FuncName}'.")
-            return None
-        
-##########################################################
-#Semantico para id list
-#########################################################
-
-    def visitListId(self, listId):
-        firstType = listId.expression.accept(self)
-
-        restTypes = []
-        if listId.more_expression != None:
-            restTypes = listId.more_expression.accept(self)
-
-        if firstType != restTypes:
-            self.n_errors += 1
-            print("[Erro] Tipos diferentes entre os parametros")
-        # Retorna a lista de tipos
-        return [firstType] + restTypes
-    
-##########################################################
-#Semantico para more expression
-#########################################################
-
-    def visitPlusExpres(self, plusExpres):
-        firstType = plusExpres.expression.accept(self)
-
-        restTypes = []
-        if plusExpres.more_expression != None:
-            restTypes = plusExpres.more_expression.accept(self)
-
-        if firstType != restTypes:
-            self.n_errors += 1
-            print("[Erro] Tipos diferentes entre os parametros")
-        # Retorna a lista de tipos
-        return [firstType] + restTypes
-    
-    def visitNoneExpression(self, noneExpression):
-        pass
-
-##########################################################
-#Semantico para if statement 
-#########################################################
-
-    def visitOnlyIf(self, onlyIf):
-        typeExp = onlyIf.expressionrelational.accept(self)
-        if (typeExp != st.BOOL):
-            onlyIf.expressionrelational.accept(self.printer)
-            self.n_errors+=1 
-            print ("\n\t[Erro] A expressao ", end='')
-            onlyIf.expressionrelational.accept(self.printer)
-            print(" eh", typeExp, end='')
-            print (". Deveria ser boolean\n")
-        onlyIf.blockstatement.accept(self)
-
-    def visitIfAndElse(self, ifAndElse):
-        typeExp = ifAndElse.expressionrelational.accept(self)
-        if (typeExp != st.BOOL):
-            ifAndElse.expressionrelational.accept(self.printer)
-            self.n_errors+=1 
-            print ("\n\t[Erro] A expressao ", end='')
-            ifAndElse.expressionrelational.accept(self.printer)
-            print(" eh", typeExp, end='')
-            print (". Deveria ser boolean\n")
-        ifAndElse.blockstatement.accept(self)
-        ifAndElse.elseV.accept(self)
-
-##########################################################
-#Semantico para else  
-#########################################################  
-
-    def visitElseIf(self,elseIf):  
-        typeExp = elseIf.if_statement.accept(self)
-        if (typeExp != st.BOOL):
-            elseIf.expressionrelational.accept(self.printer)
-            self.n_errors+=1 
-            print ("\n\t[Erro] A expressao ", end='')
-            elseIf.expressionrelational.accept(self.printer)
-            print(" eh", typeExp, end='')
-            print (". Deveria ser boolean\n")
-    
-    def visitOnlyElse(self,onlyElse):
-        onlyElse.blockstatement.accept(self)
-    
+        bindable = st.getBindable(signatureWithParams.id)
+        if(bindable[st.TYPE] == None):
+            return signatureWithParams.id
 
 ###################################################################
-# Semantico do For
+# Classes to visit the Abstract Syntax of Sigparams
 ##################################################################
-#
-    def visitForEach(self,forEach):
+
+    def visitSingleSigParam(self, singleSigParam):
+
+        return [singleSigParam.id, singleSigParam.idType]
+
+    def visitSequenceSigParams(self, sequenceSigParams):
+        sequenceSigParams.sigParams.accept(self)
         
-        idName = forEach.id
-        typeExp = forEach.expression.accept(self)
+        return [sequenceSigParams.id, sequenceSigParams.idType] + sequenceSigParams.sigParams.accept(self)
 
-        if typeExp not in st.Numero and typeExp != st.STRING:
-            self.n_errors += 1
-            print("Erro: A expressão do for deve ser numérica ou string")
-            forEach.expression.accept(self.printer)
+###################################################################
+# Classes to visit the Abstract Syntax of Params
+##################################################################
+    
+    def visitSequenceParams(self,sequenceParams):
+        return [sequenceParams.exp.accept(self)] + sequenceParams.params.accept(self)
 
-        st.beginScope('forEach')
+    def visitSingleParams(self, singleParams):
+        return [singleParams.exp.accept(self)]
 
-        if st.getBindable(idName) != None:
-            self.n_errors += 1
-            print(f"Erro: O identificador '{idName}' já foi declarado.")
-        else:
-            st.addImutableVar(idName, typeExp)
-        
-        forEach.blockstatement.accept(self)
 
-        st.endScope()
-#
+###################################################################
+# Classes to visit the Abstract Syntax of BlockStatement
+##################################################################     
 
-    def visitConventionalFor(self,conventionalFor):
-        st.beginScope('conventionalFor')
-        conventionalFor.declarationimutable.accept(self)
-        typeExp = conventionalFor.expressionrelational.accept(self)
-        if(typeExp != st.BOOL):
-            print("Erro: Expressão de controle do for deve ser booleana")
-            conventionalFor.expressionrelational.accept(self.printer)
-        conventionalFor.increment.accept(self)
-        conventionalFor.statement.accept(self)
-        st.endScope()
+    def visitBlockStm(self, blockStm):
+        if(blockStm.stms != None):
+            blockStm.stms.accept(self)
        
-#
-    def visitOnlyExpressionRelationalFor(self,onlyExpressionRelationalFor):
-        typeExp = onlyExpressionRelationalFor.expressionrelational.accept(self)
-        if(typeExp != st.BOOL):
-            print("Erro: Expressão de controle do for deve ser booleana")
-            onlyExpressionRelationalFor.expressionrelational.accept(self.printer)
-        onlyExpressionRelationalFor.blockstatement.accept(self)
-
-
-##################### Limite
+       
 
 ###################################################################
-# Semantico do Imutable Declaration
+# Classes to visit the Abstract Syntax of Stms
 ##################################################################
 
-    def visitIdImutable(self,idImutable):
-        varName = idImutable.id
-        typeVar = idImutable.expression.accept(self)
-        if st.getBindable(varName) != None:
-            self.n_errors += 1
-            print(f"Erro: O identificador '{varName}' já foi declarado.")
-        else:
-            st.addImutableVar(varName, typeVar)
-        idImutable.expression.accept(self)
+    def visitSequenceStm(self, sequenceStm):
+        sequenceStm.stm.accept(self)
+        sequenceStm.stms.accept(self)
+
+    def visitSingleStm(self, singleStm):
+        singleStm.stm.accept(self)
 
 ###################################################################
-# Classes to visit the Abstract Syntax of Break Statement
-##################################################################    
+# Classes to visit the Abstract Syntax of Stm
+##################################################################
 
-    def visitOnlyBreak(self, onlyBreak):
-        if st.currentScope != "forEach" or st.currentScope != "conventionalFor" or st.currentScope != "expressionFor":
-            self.n_errors += 1
-            print("\n\t[Erro] 'break' usado fora de um laço.\n")
+    def visitVarStm(self,varStm):#var_statemnt
+        varStm.var_stm.accept(self)
+       
+    
+    def visitVarAssign(self,varAssign):
+        varAssign.var_assign.accept(self)
+        
+   
+    def visitListStm(self, listStm):
+        listStm.list_stm.accept(self)
+        
+        
+    def visitListAssign(self, listAssign):
+        listAssign.list_assign.accept(self)
+       
 
-###################################################################
-# Classes to visit the Abstract Syntax of Return Statement
-##################################################################    
+    def visitFuncCalls(self,funcCalls):
+        funcCalls.func_call.accept(self)
+       
+         
+    def visitIfStm(self,ifStm):
+        ifStm.if_stm.accept(self)
 
-    def visitReturnExpression(self,returnExpression):
+    def visitForStm(self,forStm):
+        forStm.for_stm.accept(self)
 
-        if(returnExpression.expression == None):
+    def visitBreakStm(self, breakStm):
+        print(blank(), 'break', end=' ')
+
+    def visitReturnStm(self,returnStm):
+    
+        if(returnStm.exp == None):
             pass
 
-        returnExpression.expression.accept(self)
+        returnStm.exp.accept(self)
+
+    def visitIncrementStm(self, incrementStm):
+        incrementStm.increment_stm.accept(self)
         
 
+    def visitAssignStm(self, assignStm):
+        assignStm.assign_stm.accept(self)
+      
+
+
+ ###################################################################
+# Classes to visit the Abstract Syntax of Var Statement
+##################################################################   
+
+    def visitImutableDeclaration(self,imutableDeclaration):
+        idName = imutableDeclaration.id
+        bindable = st.getBindable(idName)
+        typeVar = imutableDeclaration.exp.accept(self)
+
+        if(bindable != None):
+            st.addImutableVar(idName,typeVar)
+        else:
+            self.n_errors += 1
+            print(f"\n\t[Erro] Variável '{idName}' já declarada")
+            
+    def visitMutableDeclaration(self,mutableDeclaration):
+        idName = mutableDeclaration.id
+        bindable = st.getBindable(idName)
+        typeVar = mutableDeclaration.exp.accept(self)
+
+        if(bindable != None):
+            st.addMutableVar(idName,typeVar)
+        else:
+            self.n_errors += 1
+            print(f"\n\t[Erro] Variável '{idName}' já declarada")
+    
+
+###################################################################
+# Classes to visit the Abstract Syntax of Var Assignment
+##################################################################
+
+    def visitVarModification(self,varModification):
+       idName = varModification.id
+       bindable = st.getBindable(idName)
+       typeVar = varModification.exp.accept(self)   
+       if(bindable == None):
+            self.n_errors += 1
+            print('\t\n[Erro] Variável', idName, 'não declarada')
+       if(bindable[st.BINDABLE] == st.IMUTABLEVAR):
+            self.n_errors += 1
+            print('\t\n[Erro] Variável', idName, 'imutável')
+       if(bindable[st.TYPE] != typeVar):
+            self.n_errors += 1
+            print('\t\n[Erro] Atribuição inválida. A variável', idName, 'é do tipo', bindable[st.TYPE], 'enquanto a expressão é do tipo', typeVar)
+           
+
+###################################################################
+# Classes to visit the Abstract Syntax of List Statement
+##################################################################
+
+    def visitDeclarationImutableListRule(self, declarationImutableListRule):
+        idName = declarationImutableListRule.id
+        bindable = st.getBindable(idName)
+        params = {}
+        typeArray = None
+
+        if(declarationImutableListRule.params != None):
+            params = declarationImutableListRule.params.accept(self)
+            typeArray = params[0]
+        
+        if params:
+            for type in params:
+                if type != typeArray:
+                    self.n_errors += 1
+                    print(f"\n\t[Erro] Lista '{declarationImutableListRule.id}' possui elementos de tipos diferentes: '{typeArray}' e '{type}'")
+                    break 
+
+        if(bindable != None):
+            self.n_errors += 1
+            print(f"\n\t[Erro] Lista '{idName}' já declarada")
+        
+        st.addArrayImutable(idName, len(params), typeArray)
+
+    def visitDeclarationMutableList(self, declarationMutableList):
+        idName = declarationMutableList.id
+        bindable = st.getBindable(idName)
+        params = {}
+        typeArray = None
+
+        if(declarationMutableList.params != None):
+            params = declarationMutableList.params.accept(self)
+            typeArray = params[0]
+        
+        if params:
+            for type in params:
+                if type != typeArray:
+                    self.n_errors += 1
+                    print(f"\n\t[Erro] Lista '{declarationMutableList.id}' possui elementos de tipos diferentes: '{typeArray}' e '{type}'")
+                    break 
+
+        if(bindable != None):
+            self.n_errors += 1
+            if(bindable != None):
+                print(f"\n\t[Erro] Lista '{idName}' já declarada")
+            if(typeArray == None and len(params) != 0):
+                print(f"\n\t[Erro] Lista '{idName}' declarada com elementos inválidos")
+    
+        st.addArrayMutable(idName, len(params), typeArray)
+
+    def visitDeclarationMutableListLengthDefinition(self, listLengthDefinition):
+        idName = listLengthDefinition.id
+        number = listLengthDefinition.number
+        bindable = st.getBindable(idName)
+        typeArray = listLengthDefinition.type
+
+        if(bindable != None):
+            self.n_errors += 1
+            print(f"\n\t[Erro] Lista '{idName}' já declarada")
+            
+        if(not (typeArray in st.type)):
+            self.n_errors += 1
+            print('\n\t[ERROR] Lista com tipo inválido: ', typeArray)
+        
+        st.addArrayMutable(idName, number, typeArray)
+        
+
+###################################################################
+# Classes to visit the Abstract Syntax of List Assigment
+##################################################################
+
+    def visitListModification(self, listModification):
+        idName = listModification.id
+        bindable = st.getBindable(idName)
+        typeVar = listModification.exp.accept(self)   
+        if(bindable == None):
+            self.n_errors += 1
+            print('\t\n[Erro] Lista', idName, 'não declarada')
+        if(bindable[st.BINDABLE] == st.IMUTABLEVAR):
+            self.n_errors += 1
+            print('\t\n[Erro] Lista', idName, 'imutável')
+        if(0 < listModification.number and listModification.number > bindable[st.LENGTH]):
+            self.n_errors += 1
+            print('\t\n[Erro] Indice fora do tamanho da lista. tamanho da lista: ', bindable[st.LENGTH])
+        if(bindable[st.TYPE] != typeVar):
+            self.n_errors += 1
+            print('\t\n[Erro] Atribuição inválida. A Lista', idName, 'é do tipo', bindable[st.TYPE], 'enquanto a expressão é do tipo', typeVar)
+            
+
+###################################################################
+# Classes to visit the Abstract Syntax of Func Call List
+##################################################################
+
+    def visitCallListAll(self, callListAll):
+        bindable = st.getBindable(callListAll.id)
+        if(bindable != None):
+            self.n_errors += 1
+            print('\t\n[Erro] Lista', callListAll.id, 'não declarada')
+
+    def visitCallListRange(self, callRange):
+        bindable = st.getBindable(callRange.id)
+        
+        if(bindable == None):
+            self.n_errors += 1
+            print('\t\n[Erro] Lista', callRange.id, 'não declarada')
+        if(0 < callRange.number and callRange.number2 > bindable[st.LENGTH]):
+            self.n_errors += 1
+            print('\t\n[Erro] Indice fora do tamanho da lista. tamanho da lista: ', bindable[st.LENGTH])
+            
+
+    # def visitFuncCallListSingle(self, funcCallSingle):
+    #     print(blank(), funcCallSingle.id, end=' ')
+    #     print('[', end=' ')
+    #     print(funcCallSingle.number, end=' ')
+    #     print(']', end=' ')
+
+###################################################################
+# Classes to visit the Abstract Syntax of Func Call
+##################################################################
+
+    def visitFuncCallWithParams(self,funcCallWithParams):
+
+        paramsCall = {}
+
+        if(funcCallWithParams.params != None):
+            paramsCall = funcCallWithParams.params.accept(self)
+        
+        paramsFunc = {}
+
+        bindable = st.getBindable(funcCallWithParams.id)
+
+        if(bindable == None):
+            self.n_errors += 1
+            print('\t\n[Erro] Função', funcCallWithParams.id, 'não declarada')
+        else:
+            paramsFunc = bindable[st.PARAMS]
+
+            if(len(paramsFunc)//2 != len(paramsCall)):
+                self.n_errors += 1
+                print('\t\n[Erro] A função', funcCallWithParams.id, 'espera', int(len(paramsFunc)/2), 'parâmetros, mas foram passados', int(len(paramsCall)))
+            else:
+                for i in range(len(paramsCall)):
+                    if paramsFunc[i*2+1] != paramsCall[i]:
+                        self.n_errors += 1
+                        print('\t\n[Erro] Parâmetro', i+1, 'da função', funcCallWithParams.id, 'espera o tipo', paramsFunc[i*2+1], 'mas foi passado o tipo', paramsCall[i])
+        
+    
+
+###################################################################
+# Classes to visit the Abstract Syntax of If Statement
+##################################################################
+
+    def visitOnlyIf(self,onlyIf):
+
+        typeExp = onlyIf.expRels.accept(self)
+        
+        st.beginScope('if') #Duvida se ta certo
+        onlyIf.blockStm.accept(self)
+        st.endScope()
+
+    def visitIfAndElse(self,ifAndElse):
+
+        typeExp = ifAndElse.expRels.accept(self)
+
+        st.beginScope('if')
+        
+        ifAndElse.blockStm.accept(self)
+        ifAndElse.elseV.accept(self)
+
+
+###################################################################
+# Classes to visit the Abstract Syntax of Else
+##################################################################
+
+    def visitElseIf(self,elseIf):
+       
+        elseIf.if_stm.accept(self)
+        st.endScope() #isso aqui ta certo?
+
+    def visitOnlyElse(self,onlyElse):
+       
+        onlyElse.blockstm.accept(self)
+        st.endScope()
+
+###################################################################
+# Classes to visit the Abstract Syntax of For
+##################################################################
+
+    def visitForEach(self,forEach):
+    
+        forEach.exp.accept(self)
+        forEach.blockStm.accept(self)
+    
+
+    def visitConventionalFor(self,conventionalFor):
+      
+        conventionalFor.expRels.accept(self)
+        
+        conventionalFor.increment.accept(self)
+        conventionalFor.blockStm.accept(self)
+
+    def visitOnlyexpRelFor(self,onlyexpRelFor):
+     
+        onlyexpRelFor.expRels.accept(self)
+        onlyexpRelFor.blockStm.accept(self)
+
+        
 ###################################################################
 # Classes to visit the Abstract Syntax of Expression
 ##################################################################
 
-    def visitExpressionPlus(self,expressionPlus):
-        expressionPlus.expression.accept(self)
-      
-        expressionPlus.term.accept(self)
+    def visitSequenceExpRels(self, sequenceExpRels):
+        sequenceExpRels.expRels.accept(self)
+        sequenceExpRels.expRel.accept(self)
 
-    def visitExpressionMinus(self,expressionMinus):
-        expressionMinus.expression.accept(self)
-        
-        expressionMinus.term.accept(self)
+    def visitSingleExpRel(self,singleExpRel):
+        singleExpRel.expRel.accept(self)
+
+    def visitExpPlus(self,expPlus):
+        expPlus.exp.accept(self.printer)
+        expPlus.term.accept(self.printer)
+
+        tipo1 = expPlus.exp.accept(self)
+        tipo2 = expPlus.term.accept(self)
+        tipo = coercion(tipo1, tipo2)
+
+        if(tipo == None):
+            expPlus.accept(self.printer)
+            self.n_errors += 1 
+            print('\n\t[Erro] Soma invalida. A expressao ', end='')
+            expPlus.exp.accept(self.printer)
+            print(' eh do tipo', tipo1, 'enquanto a expressao ', end='')
+            expPlus.term.accept(self.printer)
+            print(' eh do tipo', tipo2,'\n')
+        return tipo
+
+
+    def visitExpMinus(self,expMinus):
+        expMinus.exp.accept(self.printer)
+       
+        expMinus.term.accept(self.printer)
+
+        tipo1 = expMinus.exp.accept(self)
+        tipo2 = expMinus.term.accept(self)
+        tipo = coercion(tipo1, tipo2)
+
+        if(tipo == None):
+            expMinus.accept(self.printer)
+            self.n_errors += 1 
+            print('\n\t[Erro] Subtração invalida. A expressao ', end='')
+            expMinus.exp.accept(self.printer)
+            print(' eh do tipo', tipo1, 'enquanto a expressao ', end='')
+            expMinus.term.accept(self.printer)
+            print(' eh do tipo', tipo2,'\n')
+        return tipo
 
     def visitSingleTerm(self,singleTerm):
-        singleTerm.term.accept(self)
+        return singleTerm.term.accept(self)
 
-    def visitExpressionIncrement(self, expressionIncrement):
-     
-        expressionIncrement.increment.accept(self)
+    def visitExpIncrement(self, expIncrement):
+      
+        expIncrement.increment.accept(self)
         
 
-    def visitExpressionFuncCall(self, expressionFuncCall):
-        expressionFuncCall.funcCall.accept(self)
+    def visitExpFuncCall(self, expFuncCall):
+        expFuncCall.funcCall.accept(self)
 
+    def visitExpCallList(self, expCallList):
+        expCallList.calllist.accept(self)
 
 ###################################################################
 # Classes to visit the Abstract Syntax of Relational Expression
 ##################################################################
 
-    def visitExpressionRelationalEqual(self,expressionRelationalEqual):
-        expressionRelationalEqual.expression1.accept(self)
-        
-        expressionRelationalEqual.expression2.accept(self)
+    def visitExpRelEqual(self,expRelEqual):
+        typeVar1 = expRelEqual.exp1.accept(self)
+        typeVar2 = expRelEqual.exp2.accept(self)
+        if(typeVar1 != typeVar2):
+            self.n_errors += 1
+            print('\n\t[Erro] A expressão relacional deve ser entre expressões do mesmo tipo, e são do tipo', typeVar1, 'e', typeVar2)
+        else:
+            return st.BOOL
 
-    def visitExpressionRelationalNotEqual(self,expressionRelationalNotEqual):
-        expressionRelationalNotEqual.expression1.accept(self)
-        
-        expressionRelationalNotEqual.expression2.accept(self)
+    def visitExpRelNotEqual(self,expRelNotEqual):
+        typeVar1 = expRelNotEqual.exp1.accept(self)
+        typeVar2 = expRelNotEqual.exp2.accept(self)
+        if(typeVar1 != typeVar2):
+            self.n_errors += 1
+            print('\n\t[Erro] A expressão relacional deve ser entre expressões do mesmo tipo, e são do tipo', typeVar1, 'e', typeVar2)
+        else:
+            return st.BOOL
 
-    def visitExpressionRelationalLessThan(self,expressionRelationalLessThan):
-        expressionRelationalLessThan.expression1.accept(self)
-        
-        expressionRelationalLessThan.expression2.accept(self)
+    def visitExpRelLessThan(self,expRelLessThan):
+        typeVar1 = expRelLessThan.exp1.accept(self)
+        typeVar2 = expRelLessThan.exp2.accept(self)
+        if(typeVar1 != typeVar2):
+            self.n_errors += 1
+            print('\n\t[Erro] A expressão relacional deve ser entre expressões do mesmo tipo, e são do tipo', typeVar1, 'e', typeVar2)
+        else:
+            return st.BOOL 
 
-    def visitExpressionRelationalGreaterThan(self,expressionRelationalGreaterThan):
-        expressionRelationalGreaterThan.expression1.accept(self)
-        
-        expressionRelationalGreaterThan.expression2.accept(self)
+    def visitExpRelGreaterThan(self,expRelGreaterThan):
+        typeVar1 = expRelGreaterThan.exp1.accept(self)
+        typeVar2 = expRelGreaterThan.exp2.accept(self)
+        if(typeVar1 != typeVar2):
+            self.n_errors += 1
+            print('\n\t[Erro] A expressão relacional deve ser entre expressões do mesmo tipo, e são do tipo', typeVar1, 'e', typeVar2)
+        else:
+            return st.BOOL 
+    
+    def visitExpRelLessThanOrEqual(self,expRelationalLessThanOrEqual):
+        typeVar1 = expRelationalLessThanOrEqual.exp1.accept(self)
+        typeVar2 = expRelationalLessThanOrEqual.exp2.accept(self)
+        if(typeVar1 != typeVar2):
+            self.n_errors += 1
+            print('\n\t[Erro] A expressão relacional de igualdade deve ser entre expressões do mesmo tipo, e são do tipo', typeVar1, 'e', typeVar2)
+        else:
+            return st.BOOL
 
-    def visitExpressionRelationalLessThanOrEqual(self,expressionRelationalLessThanOrEqual):
-        expressionRelationalLessThanOrEqual.expression1.accept(self)
-        
-        expressionRelationalLessThanOrEqual.expression2.accept(self)
+    def visitExpRelGreaterThanOrEqual(self,expRelGreaterThanOrEqual):
+        typeVar1 = expRelGreaterThanOrEqual.exp1.accept(self)
+        typeVar2 = expRelGreaterThanOrEqual.exp2.accept(self)
+        if(typeVar1 != typeVar2):
+            self.n_errors += 1
+            print('\n\t[Erro] A expressão relacional deve ser entre expressões do mesmo tipo, e são do tipo', typeVar1, 'e', typeVar2)
+        else:
+            return st.BOOL 
 
-    def visitExpressionRelationalGreaterThanOrEqual(self,expressionRelationalGreaterThanOrEqual):
-        expressionRelationalGreaterThanOrEqual.expression1.accept(self)
-        
-        expressionRelationalGreaterThanOrEqual.expression2.accept(self)
+    def visitExpRelAnd(self,expressionRelationalAnd):
+        typeVar1 = expressionRelationalAnd.exp1.accept(self)
+        typeVar2 = expressionRelationalAnd.exp2.accept(self)
+        if(typeVar1 != typeVar2):
+            self.n_errors += 1
+            print('\n\t[Erro] A expressão relacional deve ser entre expressões do mesmo tipo, e são do tipo', typeVar1, 'e', typeVar2)
+        else:
+            return st.BOOL 
 
-    def visitExpressionRelationalAnd(self,expressionRelationalAnd):
-        expressionRelationalAnd.expression1.accept(self)
-        
-        expressionRelationalAnd.expression2.accept(self)
+    def visitExpRelOr(self,expressionRelationalOr):
+        typeVar1 = expressionRelationalOr.exp1.accept(self)
+        typeVar2 = expressionRelationalOr.exp2.accept(self)
+        if(typeVar1 != typeVar2):
+            self.n_errors += 1
+            print('\n\t[Erro] A expressão relacional deve ser entre expressões do mesmo tipo, e são do tipo', typeVar1, 'e', typeVar2)
+        else:
+            return st.BOOL
 
-    def visitExpressionRelationalOr(self,expressionRelationalOr):
-        expressionRelationalOr.expression1.accept(self)
-        
-        expressionRelationalOr.expression2.accept(self)
-
-    def visitExpressionRelationalNot(self,expressionRelationalNot):
-        
-        expressionRelationalNot.expression.accept(self)
+    def visitExpRelNot(self,expressionRelationalNot):
+        return st.BOOL
 
 ###################################################################
 # Classes to visit the Abstract Syntax of Term
 ##################################################################
 
     def visitMultiplication(self,multiplication):
-        multiplication.term.accept(self)
+        multiplication.term.accept(self.printer)
         
-        multiplication.factor.accept(self)
+        multiplication.factor.accept(self.printer)
+
+        tipo1 = multiplication.exp.accept(self)
+        tipo2 = multiplication.term.accept(self)
+        tipo = coercion(tipo1, tipo2)
+
+        if(tipo == None):
+            multiplication.accept(self.printer)
+            self.n_errors += 1 
+            print('\n\t[Erro] Multiplicação invalida. A expressao ', end='')
+            multiplication.exp.accept(self.printer)
+            print(' eh do tipo', tipo1, 'enquanto a expressao ', end='')
+            multiplication.term.accept(self.printer)
+            print(' eh do tipo', tipo2,'\n')
+        return tipo
 
     def visitDivision(self,division):
-        division.term.accept(self)
+        division.term.accept(self.printer)
         
-        division.factor.accept(self)
+        division.factor.accept(self.printer)
+
+        tipo1 = division.exp.accept(self)
+        tipo2 = division.term.accept(self)
+        tipo = coercion(tipo1, tipo2)
+
+        if(tipo == None):
+            division.accept(self.printer)
+            self.n_errors += 1 
+            print('\n\t[Erro] Divisão invalida. A expressao ', end='')
+            division.exp.accept(self.printer)
+            print(' eh do tipo', tipo1, 'enquanto a expressao ', end='')
+            division.term.accept(self.printer)
+            print(' eh do tipo', tipo2,'\n')
+        return tipo
     
     def visitMod(self,mod):
-        mod.term.accept(self)
+        mod.term.accept(self.printer)
         
-        mod.factor.accept(self)
+        mod.factor.accept(self.printer)
+
+        tipo1 = mod.exp.accept(self)
+        tipo2 = mod.term.accept(self)
+        tipo = coercion(tipo1, tipo2)
+
+        if(tipo == None):
+            mod.accept(self.printer)
+            self.n_errors += 1 
+            print('\n\t[Erro] Módulo invalido. A expressao ', end='')
+            mod.exp.accept(self.printer)
+            print(' eh do tipo', tipo1, 'enquanto a expressao ', end='')
+            mod.term.accept(self.printer)
+            print(' eh do tipo', tipo2,'\n')
+        return tipo
     
     def visitOnlyFactor(self,onlyFactor):
-        onlyFactor.factor.accept(self)
+        return onlyFactor.factor.accept(self)
 
 ###################################################################
 # Classes to visit the Abstract Syntax of Factor
 ##################################################################
-
-    def visitFactorID(self,factorID):
-        print(factorID.id, end=' ')
-
     def visitFactorNumber(self,factorNumber):
-        print(factorNumber.number, end=' ')
-
-    def visitFactorNumberFloat(self, factorNumberFloat):
-        print(factorNumberFloat.numberfloat, end=' ')
+        if(isinstance(factorNumber.number, int)):
+            return st.INT
 
     def visitFactorString(self,factorString):
-        print(factorString.string, end=' ')
+        return st.STRING
 
-    def visitFactorTrue(self,factorTrue):
-        print(factorTrue.true, end=' ')
-    
-    def visitFactorFalse(self,factorFalse):
-        print(factorFalse.false, end=' ')
+    def visitFactorID(self,factorID):
+        idName = factorID.id
+        bindable = st.getBindable(idName)
+        if(bindable != None):
+            return bindable[st.TYPE]
+        return None
 
-    def visitFactorRune(self,factorRune):
-        print(factorRune.rune, end=' ')
+    def visitFactorExp(self,factorExp):
+        
+        factorExp.exp.accept(self.printer)
+        
 
-    def visitFactorExpression(self,factorExpression):
-        print('(', end=' ')
-        factorExpression.expression.accept(self)
-        print(')', end=' ')
+        return factorExp.exp.accept(self)
 
     def visitFactorList(self, factorList):
-        print(factorList.id, end=' ')
-        print('[', end=' ', sep=' ')
-        print(factorList.number, end = ' ')
-        print(']', end=' ', sep=' ')
+      
+
+        idName = factorList.id
+        bindable = st.getBindable(idName)
+        if(bindable != None):
+            return bindable[st.TYPE]
+        return None
+
+    def visitFactorTrue(self,factorTrue):
+        return st.BOOL
+    
+    def visitFactorFalse(self,factorFalse):
+        return st.BOOL
+
+    def visitFactorRune(self,factorRune):
+        return st.RUNETYPE
+
+    def visitFactorNumberFloat(self, factorNumberFloat):
+        if(isinstance(factorNumberFloat.numberfloat, float)):
+            return st.FLOAT64
+        else:
+            return st.FLOAT32
 
     def visitFactorCientificNotation(self, cientific_notation):
-        print(cientific_notation.cientificNotation, end=' ')
+        if(isinstance(cientific_notation.cientificNotation, float)):
+            return st.FLOAT64
+        else:
+            return st.FLOAT32
 
     def visitFactorBinary(self, binary):
-        print(binary.factorBinary, end=' ')
+        if(isinstance(binary.factorBinary, float)):
+            return st.FLOAT64
+        else:
+            return st.FLOAT32
 
     def visitFactorOctal(self, octal):
-        print(octal.factorOctal, end=' ')
+        if(isinstance(octal.factorOctal, float)):
+            return st.FLOAT64
+        else:
+            return st.FLOAT32
 
     def visitFactorHex(self, hex):
-        print(hex.factorHex, end=' ')
+        if(isinstance(hex.factorHex, float)):
+            return st.FLOAT64
+        else:
+            return st.FLOAT32
 
-    def visitFactorInterpolationString(self, factorInterpolationString):
-        print(factorInterpolationString.interpolationString, end=' ')
-
-    def visitFactorSizeOfExpression(self, factorSizeofExpression):
-        factorSizeofExpression.sizeofexpression.accept(self)
+    def visitFactorSizeOfExp(self, factorSizeofExp):
+        factorSizeofExp.sizeofexp.accept(self)
 
 ###################################################################
 # Classes to visit the Abstract Syntax of Size of Expression
 ##################################################################
 
-    def visitSizeOfExpression(self, sizeOfExpression):
-       
-        sizeOfExpression.expression.accept(self)
-        
+    def visitSizeOfExp(self, sizeOfExp):
+
+        sizeOfExp.exp.accept(self)
+
 
     def visitSizeOfType(self, sizeOfType):
-        
-        sizeOfType.type.accept(self)
-        
+    
+        print(sizeOfType.idType, end=' ')
+ 
 
 ###################################################################
 # Classes to visit the Abstract Syntax of Increment
@@ -735,67 +817,45 @@ class SemanticVisitor(AbstractVisitor):
 # Classes to visit the Abstract Syntax of Assignment
 ##################################################################
 
-    def visitMaisIgual(self, mais_igual):
-        
-        mais_igual.expression.accept(self)
+    def visitAssignPlusEquals(self, assignPlusEquals):
+     
+        assignPlusEquals.exp.accept(self)
 
-    def visitMenosIgual(self, menos_igual):
-        
-        menos_igual.expression.accept(self)
+    def visitAssignMinusEquals(self, assignMinusEquals):
+       
+        assignMinusEquals.exp.accept(self)
+
+    def visitAssignMultiplicationEquals(self, assignMultiplicationEquals):
+       
+        assignMultiplicationEquals.exp.accept(self)
+
+    def visitDivideEquals(self, DivideEquals):
+       
+        DivideEquals.exp.accept(self)
+
+    def visitAssignModEquals(self, assignModEquals):
     
-    def visitMultiIgual(self, multi_igual):
+        assignModEquals.exp.accept(self)
+
+    def visitAssignAndEquals(self, assignAndEquals):
+       
+        assignAndEquals.exp.accept(self)
+
+    def visitAssignOrEquals(self, assignOrEquals):
+       
+        assignOrEquals.exp.accept(self)
+
+    def visitAssignXOREquals(self, assignXOREquals):
         
-        multi_igual.expression.accept(self)
+        assignXOREquals.exp.accept(self)
 
-    def visitDivIgual(self, div_igual):
+    def visitAssignDeslocationLeft(self, assignDeslocationLeft):
         
-        div_igual.expression.accept(self)
+        assignDeslocationLeft.exp.accept(self)
 
-    def visitModIgual(self, mod_igual):
+    def visitAssignDeslocationRight(self, assignDeslocationRight):
         
-        mod_igual.expression.accept(self)
-
-    def visitAndIgual(self, and_igual):
-        
-        and_igual.expression.accept(self)
-
-    def visitOrIgual(self, or_igual):
-        
-        or_igual.expression.accept(self)
-
-    def visitXORIgual(self, xor_igual):
-        
-        xor_igual.expression.accept(self)
-
-    def visitDeslocaEsqIgual(self, desloca_esq_igual):
-        
-        desloca_esq_igual.expression.accept(self)
-
-    def visitDeslocaDirIgual(self, desloca_dir_igual):
-        
-        desloca_dir_igual.expression.accept(self)
-
-###################################################################
-# Classes to visit the Abstract Syntax of Type
-##################################################################
-
-    def visitIntV(self,intV):
-        print(intV.intv, end=' ')
-
-    def visitF32(self,f32):
-        print(f32.f32, end=' ')
-
-    def visitF64(self,f64):
-        print(f64.f64, end=' ')
-
-    def visitRune(self,rune):
-        print(rune.rune, end=' ')
-
-    def visitString(self,string):
-        print(string.string, end=' ')
-    
-    def visitBoolV(self,boolV):
-        print(boolV.boolv, end=' ')
+        assignDeslocationRight.exp.accept(self)
 
 
 def main():
@@ -803,13 +863,13 @@ def main():
     lexer = lex.lex()
     lexer.input(f.read())
     parser = yacc.yacc()
-    result = parser.parse(debug=False)
+    result = parser.parse(debug=True)
     print("#imprime erros semanticos encontrados")
-    svisitor = SemanticVisitor()
     svisitor = SemanticVisitor()
     result.accept(svisitor)
     print(f"Foram encontrados {svisitor.n_errors} erros")
-
+    #visitorPrettyPrinters = Visitor()
+    #result.accept(visitorPrettyPrinters)
 
 if __name__ == "__main__":
     main()

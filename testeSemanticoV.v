@@ -1,3 +1,14 @@
+fn soma(a int, b int) int {
+	return a
+}
+
 fn main(){
-	println("Hello world!")
+	
+	mut a := 10
+
+	if  a == 10 {
+		mut b := 10
+	}
+	mut a := 20
+	
 }

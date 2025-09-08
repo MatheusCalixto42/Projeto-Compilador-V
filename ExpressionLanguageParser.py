@@ -144,9 +144,12 @@ def p_var_assignment(p):
 
 def p_list_declaration_imutable(p):
     '''list_statement : ID DECLARE_ASSIGN LBRACKET params RBRACKET
+                       | ID DECLARE_ASSIGN LBRACKET RBRACKET
                        | MUT ID DECLARE_ASSIGN LBRACKET params RBRACKET
                        | MUT ID DECLARE_ASSIGN LBRACKET NUMBER RBRACKET ID'''
-    if(len(p) == 6):
+    if(len(p) == 5):
+        p[0] = sa.DeclarationImutableListRule(p[1],None)
+    elif(len(p) == 6):
         if(p[4] != None):
             p[0] = sa.DeclarationImutableListRule(p[1],p[4])
         else:
@@ -184,8 +187,8 @@ def p_func_call(p):
         p[0] = sa.FuncCallWithParams(p[1], None)
 
 def p_if_statement(p):
-    '''if_statement : IF expression_relacional block_statement
-                     | IF expression_relacional block_statement elseop'''
+    '''if_statement : IF expression_relationals block_statement
+                     | IF expression_relationals block_statement elseop'''
     if(len(p) == 4):
         p[0] = sa.OnlyIf(p[2], p[3])
     else:
@@ -201,8 +204,8 @@ def p_else2(p):
 
 def p_for_statement(p):
     '''for_statement : FOR ID IN expression block_statement
-                      | FOR ID DECLARE_ASSIGN NUMBER SEMICOLON expression_relacional SEMICOLON increment_rule block_statement
-                      | FOR expression_relacional block_statement'''
+                      | FOR ID DECLARE_ASSIGN NUMBER SEMICOLON expression_relationals SEMICOLON increment_rule block_statement
+                      | FOR expression_relationals block_statement'''
     if(len(p) == 6):
         p[0] = sa.ForEach(p[2], p[4], p[5])
     elif(len(p) == 10):
@@ -234,6 +237,21 @@ def p_expression_single_term(p):
     '''expression : term'''
     p[0] = sa.SingleTerm(p[1])
 
+def p_expression_relationals(p):
+    '''expression_relationals : expression_relational AND expression_relationals
+                               | expression_relationals OR expression_relationals
+                               | expression_relationals EQ expression_relationals
+                               | expression_relationals NEQ expression_relationals
+                               | expression_relationals LT expression_relationals
+                               | expression_relationals GT expression_relationals
+                               | expression_relationals GE expression_relationals
+                               | expression_relationals LE expression_relationals
+                               | expression_relational'''
+    if(len(p) == 4):
+        p[0] = sa.SequenceExpRels(p[1], p[3])
+    else:
+        p[0] = sa.SingleExpRel(p[1])
+    
 def p_term_mult(p):
     '''term : term TIMES factor'''
     p[0] = sa.Multiplication(p[1], p[3])
@@ -322,40 +340,40 @@ def p_increment_minus(p):
     '''increment_rule : ID DECREMENT'''
     p[0] = sa.Dec(p[1])
 
-def p_expression_relacional_equals(p):
-    '''expression_relacional : expression EQ expression'''
+def p_expression_relational_equals(p):
+    '''expression_relational : expression EQ expression'''
     p[0] = sa.ExpRelEqual(p[1], p[3])
 
-def p_expression_relacional_not_equals(p):
-    '''expression_relacional : expression NEQ expression'''
+def p_expression_relational_not_equals(p):
+    '''expression_relational : expression NEQ expression'''
     p[0] = sa.ExpRelNotEqual(p[1], p[3])
 
-def p_expression_relacional_less_than(p):
-    '''expression_relacional : expression LT expression'''
+def p_expression_relational_less_than(p):
+    '''expression_relational : expression LT expression'''
     p[0] = sa.ExpRelLessThan(p[1], p[3])
 
-def p_expression_relacional_less_than_or_equal(p):
-    '''expression_relacional : expression LE expression'''
+def p_expression_relational_less_than_or_equal(p):
+    '''expression_relational : expression LE expression'''
     p[0] = sa.ExpRelLessThanOrEqual(p[1], p[3])
 
-def p_expression_relacional_greater_than(p):
-    '''expression_relacional : expression GT expression'''
+def p_expression_relational_greater_than(p):
+    '''expression_relational : expression GT expression'''
     p[0] = sa.ExpRelGreaterThan(p[1], p[3])
 
-def p_expression_relacional_greater_than_or_equal(p):
-    '''expression_relacional : expression GE expression'''
+def p_expression_relational_greater_than_or_equal(p):
+    '''expression_relational : expression GE expression'''
     p[0] = sa.ExpRelGreaterThanOrEqual(p[1], p[3])
 
-def p_expression_relacional_and(p):
-    '''expression_relacional : expression AND expression'''
+def p_expression_relational_and(p):
+    '''expression_relational : expression AND expression'''
     p[0] = sa.ExpRelAnd(p[1], p[3])
 
-def p_expression_relacional_or(p):
-    '''expression_relacional : expression OR expression'''
+def p_expression_relational_or(p):
+    '''expression_relational : expression OR expression'''
     p[0] = sa.ExpRelOr(p[1], p[3])    
 
-def p_expression_relacional_not(p):
-    '''expression_relacional : NOT expression'''
+def p_expression_relational_not(p):
+    '''expression_relational : NOT expression'''
     p[0] = sa.ExpRelNot(p[2])
 
 def p_assignment_plus_equals(p):

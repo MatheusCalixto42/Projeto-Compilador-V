@@ -140,9 +140,9 @@ class SignatureAbstract(metaclass=ABCMeta):
         pass
     
 class SignatureWithParams(SignatureAbstract):
-    def __init__(self,id, sigparams):
+    def __init__(self,id, sigParams):
         self.id = id
-        self.sigparams = sigparams  #Lembrar de colocar passando nada para NoneParams
+        self.sigParams = sigParams  #Lembrar de colocar passando nada para NoneParams
     def accept(self, visitor):
         return visitor.visitSignatureWithParams(self)
 
@@ -163,10 +163,10 @@ class SingleSigParam(SigParamsAbstract):
         return visitor.visitSingleSigParam(self)
     
 class SequenceSigParams(SigParamsAbstract):
-    def __init__(self,id, idType, sigparams):
+    def __init__(self,id, idType, sigParams):
         self.id = id
         self.idType = idType
-        self.sigparams = sigparams
+        self.sigParams = sigParams
     def accept(self, visitor):
         return visitor.visitSequenceSigParams(self)
 
@@ -457,15 +457,15 @@ class IfStmAbstract(metaclass=ABCMeta):
         pass
 
 class OnlyIf(IfStmAbstract):
-    def __init__(self,expRel,blockStm):
-        self.expRel = expRel
+    def __init__(self,expRels,blockStm):
+        self.expRels = expRels
         self.blockStm = blockStm
     def accept(self, visitor):
         return visitor.visitOnlyIf(self)
 
 class IfAndElse(IfStmAbstract):
-    def __init__(self, expRel, blockStm, elseV):
-        self.expRel = expRel
+    def __init__(self, expRels, blockStm, elseV):
+        self.expRels = expRels
         self.blockStm = blockStm
         self.elseV = elseV
     def accept(self, visitor):
@@ -510,18 +510,18 @@ class ForEach(ForAbstract):
         return visitor.visitForEach(self)
 
 class ConventionalFor(ForAbstract):
-    def __init__(self, id, number, expRel, increment, blockStm):
+    def __init__(self, id, number, expRels, increment, blockStm):
         self.id = id
         self.number = number
-        self.expRel = expRel
+        self.expRels = expRels
         self.increment = increment
         self.blockStm = blockStm
     def accept(self, visitor):
         return visitor.visitConventionalFor(self)
 
 class OnlyexpRelFor(ForAbstract):
-    def __init__(self,expRel,blockStm):
-        self.expRel = expRel
+    def __init__(self,expRels,blockStm):
+        self.expRels = expRels
         self.blockStm = blockStm
     def accept(self, visitor):
         return visitor.visitOnlyexpRelFor(self)
@@ -574,6 +574,27 @@ class ExpCallList(Exp):
     def accept(self, visitor):
         return visitor.visitExpCallList(self)
 
+########################################################
+# Class for ExpRels
+#######################################################
+
+class ExpRelsAbstract(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, visitor):
+        pass
+
+class SingleExpRel(ExpRelsAbstract):
+    def __init__(self, expRel):
+        self.expRel = expRel
+    def accept(self, visitor):
+        return visitor.visitSingleExpRel(self)
+    
+class SequenceExpRels(ExpRelsAbstract):
+    def __init__(self, expRel, expRels):
+        self.expRel = expRel
+        self.expRels = expRels
+    def accept(self, visitor):
+        return visitor.visitSequenceExpRels(self)
 
 ########################################################
 # Class for ExpRel

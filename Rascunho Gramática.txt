@@ -49,15 +49,25 @@ List_call -> ID "[" DOT DOT "]" | ID "[" NUMBER DOT DOT NUMBER "]"
 
 Func_call -> ID "(" Params ")" | ID "(" ")"
 
-If_stm -> IF ExpRel BlockStm | IF ExpRel BlockStm ElseOp
+If_stm -> IF ExpRels BlockStm | IF ExpRels BlockStm ElseOp
 
 ElseOp -> ELSE If_stm | ELSE BlockStm 
 
-For_stm -> FOR ID IN Exp BlockStm | FOR ID ":=" NUMBER ";" ExpRel ";" Increment BlockStm | FOR ExpRel BlockStm 
+For_stm -> FOR ID IN Exp BlockStm | FOR ID ":=" NUMBER ";" ExpRels ";" Increment BlockStm | FOR ExpRel BlockStm 
 
 Exp -> Exp "+" Term | Exp "-" Term | Term | Increment | Func_call | List_call  
 
-ExpRel -> Exp "==" Exp | Exp "!=" Exp | Exp "<" Exp | Exp "<=" Exp | Exp ">" Exp | Exp ">=" Exp | Exp "&&" Exp | Exp "||" Exp | "!" Exp 
+ExpRels -> ExpRel ExpRels | ExpRel
+
+ExpRel -> Exp "==" Exp | 
+		  Exp "!=" Exp | 
+		  Exp "<" Exp  | 
+		  Exp "<=" Exp | 
+		  Exp ">" Exp  | 
+		  Exp ">=" Exp | 
+		  Exp "&&" Exp | 
+		  Exp "||" Exp | 
+		  "!" Exp
 
 Term -> Term "*" Factor | Term "/" Factor | Term "%" Factor | Factor
 

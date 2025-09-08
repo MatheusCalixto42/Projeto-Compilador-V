@@ -223,6 +223,14 @@ class AbstractVisitor(metaclass=ABCMeta):
         pass
 
     @abstractmethod
+    def visitSingleExpRel(self, singleExpRel):
+        pass
+
+    @abstractmethod
+    def visitSequenceExpRels(self, sequenceExpRels):
+        pass
+
+    @abstractmethod
     def visitExpRelEqual(self, expressionRelationalEqual):
         pass
 
