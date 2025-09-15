@@ -1,69 +1,96 @@
 import ply.lex as lex
+from tabulate import tabulate
 
-reservadas = {
-    'true' : 'TRUE',
+reservadas = { # Analisar defer, as, suporte a global
+    'break': 'BREAK',
+    'const': 'CONST',
+    'else': 'ELSE',
     'false': 'FALSE',
-    'none' : 'NONE',
-    'if' : 'IF',
-    'else' : 'ELSE',
-    'for' : 'FOR',
-    'match' : 'MATCH',
-    'break' : 'BREAK',
-    'continue' : 'CONTINUE',
-    'return' : 'RETURN',
-    'or' : 'OR',
-    'goto' : 'GOTO',
-    'select' : 'SELECT',
-    'fn' : 'FN',
-    'module' : 'MODULE',
-    'import' : 'IMPORT',
-    'const' : 'CONST',
-    'type' : 'TYPE',
-    'struct' : 'STRUCT',
-    'enum' : 'ENUM',
-    'union' : 'UNION',
-    'interface' : 'INTERFACE',
-    'implements' : 'IMPLEMENTS',
-    'pub' : 'PUB',
-    'mut' : 'MUT',
-    'shared' : 'SHARED',
-    'rlock' : 'RLOCK',
-    'lock' : 'LOCK',
-    'atomic' : 'ATOMIC',
-    'unsafe' : 'UNSAFE',
-    'volatile' : 'VOLATILE',
-    'as' : 'AS',
-    'is' : 'IS',
-    'in' : 'IN',
-    'isrefttype' : 'ISREFTYPE',
-    'sizeof' : 'SIZEOF',
-    'typeof' : 'TYPEOF',
-    '_offsetof' : 'OFFSETOF',
-    '_global' : 'GLOBAL',
-    'spawn' : 'SPAWN',
-    'go' : 'GO',
-    'defer' : 'DEFER',
-    'static' : 'STATIC',
-    'assert' : 'ASSERT',
-    'asm' : 'ASM'
+    'fn': 'FN',
+    'for': 'FOR',
+    'if': 'IF',
+    'import': 'IMPORT',
+    'in': 'IN',
+#	'int' : 'INT',
+#	'f32' : 'F32',
+#	'f64' : 'F64',
+#	'bool' : 'BOOL', 
+#	'rune' : 'RUNE',
+#    'main' : 'MAIN',
+    'mut': 'MUT',
+    'or': 'OR',
+    'return': 'RETURN',
+    'sizeof': 'SIZEOF',
+#    'string': 'STRING',
+    'true': 'TRUE',
 }
-
 
 tokens = ['PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'MOD', 'ASSIGN', 'PLUS_ASSIGN', 'MINUS_ASSIGN',
   'TIMES_ASSIGN', 'DIVIDE_ASSIGN', 'MOD_ASSIGN', 'BIT_AND_ASSIGN', 'BIT_OR_ASSIGN',
   'BIT_XOR_ASSIGN', 'BIT_LSHIFT_ASSIGN', 'BIT_RSHIFT_ASSIGN', 'EQ', 'NEQ', 'LT',
-  'LE', 'GT', 'GE', 'AND', 'OR', 'NOT', 'BIT_AND', 'BIT_OR', 'BIT_XOR', 'LSHIFT', 'RSHIFT',
-  'BIT_NOT', 'INCREMENT', 'DECREMENT', 'DOTDOT', 'DECLARE_ASSIGN', 'QUESTION',
-  'EXCLAMATION', 'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE', 'LBRACKET', 'RBRACKET',
-  'DOT', 'COMMA', 'SEMICOLON', 'COLON','DOLLAR'] + list(reservadas.values())
+  'LE', 'GT', 'GE', 'AND','NOT', 'INCREMENT', 'DECREMENT', 'DOTDOT', 'DECLARE_ASSIGN',
+ 'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE', 'LBRACKET', 'RBRACKET',
+   'COMMA', 'SEMICOLON','ID','NUMBER','BINARY','OCTAL',
+  'HEX','NOTACAOCIENTIFICA','NUMBERFLOAT', 'WORD', 'INTERPOLATIONSTRING', 'RUNEVALOR'] + list(reservadas.values())
 
-t_PLUS    = r'\+'
-t_MINUS   = r'-'
+t_PLUS         = r'\+'
+t_MINUS        = r'-'
+t_TIMES        = r'\*'
+t_DIVIDE       = r'/'
+t_MOD          = r'%'
 
+t_ASSIGN            = r'='
+t_PLUS_ASSIGN       = r'\+='
+t_MINUS_ASSIGN      = r'-='
+t_TIMES_ASSIGN      = r'\*='
+t_DIVIDE_ASSIGN     = r'/='
+t_MOD_ASSIGN        = r'%='
+t_BIT_AND_ASSIGN    = r'&='
+t_BIT_OR_ASSIGN     = r'\|='
+t_BIT_XOR_ASSIGN    = r'\^='
+t_BIT_LSHIFT_ASSIGN = r'<<='
+t_BIT_RSHIFT_ASSIGN = r'>>='
 
+t_EQ  = r'=='
+t_NEQ = r'!='
+t_LT  = r'<'
+t_LE  = r'<='
+t_GT  = r'>'
+t_GE  = r'>='
+
+t_AND = r'&&'
+t_OR  = r'\|\|'
+t_NOT = r'!'
+
+t_INCREMENT = r'\+\+'
+t_DECREMENT = r'--'
+
+t_DOTDOT         = r'\.\.'     
+t_DECLARE_ASSIGN = r':='              
+
+t_LPAREN    = r'\('
+t_RPAREN    = r'\)'
+t_LBRACE    = r'\{'
+t_RBRACE    = r'\}'
+t_LBRACKET  = r'\['
+t_RBRACKET  = r'\]'
+t_COMMA     = r','
+t_SEMICOLON = r';'
+
+def t_INTERPOLATIONSTRING(t):
+    r'\$\{[^\}]*\}'
+    return t
+
+def t_WORD(t):
+    r'\'[^\']*\'|\"[^\"]*\"'
+    return t
+
+def t_RUNEVALOR(t):
+    r'`[^`]{1}`'
+    return t
 
 def t_ID(t):
-    r'[a-zA-Z_][a-zA-Z0-9_]*'
+    r'[a-z][a-z0-9_]*'
     t.type = reservadas.get(t.value,'ID') #busca nas reservadas se tem alguma igual, se tiver retorna com o nome que esta la, por exemplo "IF", se n tiver retorna com 'ID'
     return t
 
@@ -92,24 +119,40 @@ def t_NUMBERFLOAT(t):
     t.value = float(t.value)
     return t
 
+def t_NUMBER(t):
+    r'\d+'
+    t.value = int(t.value)
+    return t
+
+def t_COMENTARIOSIMPLES(t):
+    r'//.*'
+    pass
+
+def t_BLOCODECOMENTARIO(t):
+    r'/\*(.|\n)*?\*/'
+    t.lexer.lineno += t.value.count('\n')
+    pass
+
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
 def t_error(t):
-  print("Caractere ilegal '%s'" % t.value[0])
-  t.lexer.skip(1)
+    print("Caractere inválido '%s'" % t.value[0])
+    t.lexer.skip(1)
 
 
+t_ignore  = ' \t' 
 
-t_ignore  = ' \t' #Ignora branco, tabulação e quebra de linha
+def main():
+   f = open("teste.v", "r")
+   lexer = lex.lex(debug=1)
+   lexer.input(f.read())
+   print('\n\n# lexer output:')
+   for tok in lexer:
+      print ('type:', tok.type, ', value:',tok.value)
 
 
+if __name__ == "__main__":
+   main()
 
-
-
-lexer = lex.lex()
-lexer.input("+\n  - --+\n +  +")
-print('{:10s}{:10s}{:10s}{:10s}'.format("Token", "Lexema", "Linha", "Coluna"))
-for tok in lexer:
-  print('{:10s}{:10s}{:10s}{:10s}'.format(tok.type, tok.value, str(tok.lineno), str(tok.lexpos)))

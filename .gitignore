@@ -3,8 +3,14 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Cython debug symbols
+parser.out
+parsetab.py
+
 # C extensions
 *.so
+
+*.exe
 
 # Distribution / packaging
 .Python
@@ -36,7 +42,7 @@ MANIFEST
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Unit test / coverage reports
+# Unit test / coselect': 'SELECT',verage reports
 htmlcov/
 .tox/
 .nox/
