@@ -308,14 +308,14 @@ class Visitor(AbstractVisitor):
     def visitOnlyIf(self,onlyIf):
         global tab
         print(blank(), 'if', end=' ', sep=' ')
-        onlyIf.expRel.accept(self)
+        onlyIf.expRels.accept(self)
         onlyIf.blockStm.accept(self)
         
 
     def visitIfAndElse(self,ifAndElse):
         global tab
         print(blank(), 'if', end=' ', sep=' ')
-        ifAndElse.expRel.accept(self)
+        ifAndElse.expRels.accept(self)
         ifAndElse.blockStm.accept(self)
         ifAndElse.elseV.accept(self)
      
@@ -353,7 +353,7 @@ class Visitor(AbstractVisitor):
         print(':=', end=' ')
         print(conventionalFor.number, end=' ')
         print(';', end=' ')
-        conventionalFor.expRel.accept(self)
+        conventionalFor.expRels.accept(self)
         print(';', end=' ', sep=' ')
         conventionalFor.increment.accept(self)
         conventionalFor.blockStm.accept(self)
@@ -361,7 +361,7 @@ class Visitor(AbstractVisitor):
     def visitOnlyexpRelFor(self,onlyexpRelFor):
         global tab
         print(blank(), 'for', end=' ', sep=' ')
-        onlyexpRelFor.expRel.accept(self)
+        onlyexpRelFor.expRels.accept(self)
         onlyexpRelFor.blockStm.accept(self)
 
         
@@ -404,6 +404,9 @@ class Visitor(AbstractVisitor):
 
     def visitExpCallList(self, expCallList):
         expCallList.calllist.accept(self)
+
+    def visitExpRelationals(self, expressionRelationals):
+        expressionRelationals.expRels.accept(self)
 
 ###################################################################
 # Classes to visit the Abstract Syntax of Relational Expression

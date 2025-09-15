@@ -187,8 +187,8 @@ def p_func_call(p):
         p[0] = sa.FuncCallWithParams(p[1], None)
 
 def p_if_statement(p):
-    '''if_statement : IF expression_relationals block_statement
-                     | IF expression_relationals block_statement elseop'''
+    '''if_statement : IF expression block_statement
+                     | IF expression block_statement elseop'''
     if(len(p) == 4):
         p[0] = sa.OnlyIf(p[2], p[3])
     else:
@@ -204,8 +204,8 @@ def p_else2(p):
 
 def p_for_statement(p):
     '''for_statement : FOR ID IN expression block_statement
-                      | FOR ID DECLARE_ASSIGN NUMBER SEMICOLON expression_relationals SEMICOLON increment_rule block_statement
-                      | FOR expression_relationals block_statement'''
+                      | FOR ID DECLARE_ASSIGN NUMBER SEMICOLON expression SEMICOLON increment_rule block_statement
+                      | FOR expression block_statement'''
     if(len(p) == 6):
         p[0] = sa.ForEach(p[2], p[4], p[5])
     elif(len(p) == 10):
@@ -235,6 +235,10 @@ def p_expression_call_list(p):
 
 def p_expression_single_term(p):
     '''expression : term'''
+    p[0] = sa.SingleTerm(p[1])
+
+def p_expression_exp_relationals(p):
+    '''expression : expression_relationals'''
     p[0] = sa.SingleTerm(p[1])
 
 def p_expression_relationals(p):

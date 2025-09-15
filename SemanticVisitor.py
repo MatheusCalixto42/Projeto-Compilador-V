@@ -108,6 +108,7 @@ class SemanticVisitor(AbstractVisitor):
     def visitFunctionVoid(self,functionVoid):
         functionVoid.signature.accept(self)
         functionVoid.blockStm.accept(self)
+        st.endScope()
         
 
     def visitFunctionReturnType(self,functionReturnType):
@@ -234,14 +235,18 @@ class SemanticVisitor(AbstractVisitor):
         forStm.for_stm.accept(self)
 
     def visitBreakStm(self, breakStm):
-        print(blank(), 'break', end=' ')
+        pass
 
     def visitReturnStm(self,returnStm):
-    
-        if(returnStm.exp == None):
-            pass
-
-        returnStm.exp.accept(self)
+        typeExp = returnStm.exp.accept(self)
+        scope = st.symbolTable[-1][st.SCOPE]
+        bindable = st.getBindable(scope)
+        if (typeExp != bindable[st.TYPE]):
+            returnStm.accept(self.printer)
+            self.n_errors+=1 
+            print ('\t[Erro] O retorno da funcao', scope, 'eh do tipo', bindable[st.TYPE],end='')
+            print(' no entanto, o retorno passado foi do tipo', typeExp, '\n')
+        st.endScope()
 
     def visitIncrementStm(self, incrementStm):
         incrementStm.increment_stm.accept(self)
@@ -261,7 +266,7 @@ class SemanticVisitor(AbstractVisitor):
         bindable = st.getBindable(idName)
         typeVar = imutableDeclaration.exp.accept(self)
 
-        if(bindable != None):
+        if(bindable is None):
             st.addImutableVar(idName,typeVar)
         else:
             self.n_errors += 1
@@ -272,7 +277,7 @@ class SemanticVisitor(AbstractVisitor):
         bindable = st.getBindable(idName)
         typeVar = mutableDeclaration.exp.accept(self)
 
-        if(bindable != None):
+        if(bindable is None):
             st.addMutableVar(idName,typeVar)
         else:
             self.n_errors += 1
@@ -454,19 +459,20 @@ class SemanticVisitor(AbstractVisitor):
 ##################################################################
 
     def visitOnlyIf(self,onlyIf):
-
         typeExp = onlyIf.expRels.accept(self)
-        
-        st.beginScope('if') #Duvida se ta certo
+        if typeExp != st.BOOL:
+            self.n_errors += 1
+            print(f"\n\t[Erro] A expressão do if deve ser do tipo bool, e é do tipo {typeExp}")
+        st.beginScope('if')
         onlyIf.blockStm.accept(self)
         st.endScope()
 
     def visitIfAndElse(self,ifAndElse):
-
         typeExp = ifAndElse.expRels.accept(self)
-
+        if typeExp != st.BOOL:
+            self.n_errors += 1
+            print(f"\n\t[Erro] A expressão do if deve ser do tipo bool, e é do tipo {typeExp}")
         st.beginScope('if')
-        
         ifAndElse.blockStm.accept(self)
         ifAndElse.elseV.accept(self)
 
@@ -490,22 +496,44 @@ class SemanticVisitor(AbstractVisitor):
 ##################################################################
 
     def visitForEach(self,forEach):
-    
-        forEach.exp.accept(self)
+        expType = forEach.exp.accept(self)
+        if expType is None:
+            self.n_errors += 1
+            print(f"\n\t[Erro] Expressão do for-each inválida")
+        st.beginScope('for')
         forEach.blockStm.accept(self)
+        st.endScope()
     
 
     def visitConventionalFor(self,conventionalFor):
-      
-        conventionalFor.expRels.accept(self)
-        
-        conventionalFor.increment.accept(self)
+        #declara ou verifica variável de controle
+        idName = conventionalFor.id
+        bindable = st.getBindable(idName)
+        if bindable is None:
+            st.addMutableVar(idName, st.INT)  # supondo que seja int
+        #verifica expressão relacional
+        typeExpRel = conventionalFor.expRels.accept(self)
+        if typeExpRel != st.BOOL:
+            self.n_errors += 1
+            print(f"\n\t[Erro] A expressão relacional do for deve ser do tipo bool, e é do tipo {typeExpRel}")
+        #verifica incremento
+        incType = conventionalFor.increment.accept(self)
+        if incType != st.INT:
+            self.n_errors += 1
+            print(f"\n\t[Erro] O incremento do for deve ser do tipo int, e é do tipo {incType}")
+        # Abre escopo do for
+        st.beginScope('for')
         conventionalFor.blockStm.accept(self)
+        st.endScope()
 
     def visitOnlyexpRelFor(self,onlyexpRelFor):
-     
-        onlyexpRelFor.expRels.accept(self)
+        typeExpRel = onlyexpRelFor.expRels.accept(self)
+        if(typeExpRel != st.BOOL):
+            self.n_errors += 1
+            print('\n\t[Erro] A expressão relacional do for deve ser do tipo bool, e é do tipo', typeExpRel)
+        st.beginScope('for')
         onlyexpRelFor.blockStm.accept(self)
+        st.endScope()
 
         
 ###################################################################
@@ -513,11 +541,12 @@ class SemanticVisitor(AbstractVisitor):
 ##################################################################
 
     def visitSequenceExpRels(self, sequenceExpRels):
+         #o tipo relevante é o da última expressão relacional
         sequenceExpRels.expRels.accept(self)
-        sequenceExpRels.expRel.accept(self)
+        return sequenceExpRels.expRel.accept(self)
 
     def visitSingleExpRel(self,singleExpRel):
-        singleExpRel.expRel.accept(self)
+        return singleExpRel.expRel.accept(self)
 
     def visitExpPlus(self,expPlus):
         expPlus.exp.accept(self.printer)
@@ -561,8 +590,7 @@ class SemanticVisitor(AbstractVisitor):
         return singleTerm.term.accept(self)
 
     def visitExpIncrement(self, expIncrement):
-      
-        expIncrement.increment.accept(self)
+       return expIncrement.increment.accept(self)
         
 
     def visitExpFuncCall(self, expFuncCall):
@@ -570,6 +598,9 @@ class SemanticVisitor(AbstractVisitor):
 
     def visitExpCallList(self, expCallList):
         expCallList.calllist.accept(self)
+
+    def visitExpRelationals(self, expressionRelationals):
+        expressionRelationals.expRels.accept(self)
 
 ###################################################################
 # Classes to visit the Abstract Syntax of Relational Expression
@@ -727,9 +758,12 @@ class SemanticVisitor(AbstractVisitor):
     def visitFactorID(self,factorID):
         idName = factorID.id
         bindable = st.getBindable(idName)
-        if(bindable != None):
+        if(bindable is not None):
             return bindable[st.TYPE]
-        return None
+        else:
+            self.n_errors += 1
+            print(f"\n\t[Erro] Variável '{idName}' não declarada")
+            return None
 
     def visitFactorExp(self,factorExp):
         
@@ -808,10 +842,35 @@ class SemanticVisitor(AbstractVisitor):
 ##################################################################
 
     def visitInc(self, inc):
-        print(blank(), inc.id + '++', end=' ')
+        bindable = st.getBindable(inc.id)
+        if(bindable == None):
+            print(f'ERROR semantico: Variavel {inc.id} não declarada')
+            self.printer.visitInc(inc)
+            return None
+        else:
+            tipoId = bindable[st.TYPE]
+            if(not(tipoId in st.inteiro)):
+                print(f'ERROR semantico: Variavel {inc.id} deve ser do tipo inteiro')
+                self.printer.visitInc(inc)
+                return None
+            else:
+                return tipoId
 
     def visitDec(self, dec):
-        print(blank(), dec.id + '--', end=' ')
+        bindable = st.getBindable(dec.id)
+        if(bindable == None):
+            print(f'ERROR semantico: Variavel {dec.id} não declarada')
+            self.printer.visitDec(dec)
+            return None
+        else:
+            tipoId = bindable[st.TYPE]
+            if(not(tipoId in st.inteiro)):
+                print(f'ERROR semantico: Variavel {dec.id} deve ser do tipo inteiro')
+                self.printer.visitDec(dec)
+                return None
+            else:
+                
+                return tipoId
 
 ###################################################################
 # Classes to visit the Abstract Syntax of Assignment

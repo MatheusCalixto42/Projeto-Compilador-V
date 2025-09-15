@@ -95,6 +95,12 @@ fn main(){
 	a := 0x7B
 	b := 0b01111011
 	c := 0o173
+	mut a := 10
+	mut c := 30
+	if  (a == 10) && (c == 30) {
+		mut b := 10
+		println("Entrou no if e printou b: ${b}")
+	}
 	
 }
 const teste4 := 10

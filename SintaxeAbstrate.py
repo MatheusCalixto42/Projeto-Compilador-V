@@ -573,6 +573,12 @@ class ExpCallList(Exp):
         self.calllist = calllist
     def accept(self, visitor):
         return visitor.visitExpCallList(self)
+    
+class ExpRelationals(Exp):
+    def __init__(self,expRels):
+        self.expRels = expRels
+    def accept(self, visitor):
+        return visitor.visitExpRelationals(self)
 
 ########################################################
 # Class for ExpRels
