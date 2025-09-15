@@ -11,20 +11,25 @@ PARAMS = 'params'
 BINDABLE = 'bindable'
 FUNCTION = 'fn'
 VARIABLE = 'var'
-ARRAY = 'array'
+ARRAYMUTABLE = 'arrayMutable'
+ARRAYIMUTABLE = 'arrayImutable'
 CONSTANTE = 'const'
 SCOPE = 'scope'
 MUTABLEVAR = 'mutvar'
 IMUTABLEVAR = 'imutvar'
 LENGTH = 'length'
 OFFSET = 'offset'
-MODULE = 'module' #imports
+IMPORT = 'import' #imports
 SP = 'sp'
+NAMEIMPORT = 'nameImport'
+VOID = 'void'
+NAMEFUNCTION = 'nameFunction'
 # Se DEBUG = -1, imprime conteudo da tabela de símbolos após cada mudança
 DEBUG = -1
 Number = [INT,FLOAT32,FLOAT64]
 inteiro = [INT]
 real = [FLOAT32,FLOAT64]
+type = [INT,FLOAT32,FLOAT64,BOOL,STRING,RUNETYPE]
 
 
 curoffset = 0
@@ -44,36 +49,40 @@ def endScope():
     symbolTable = symbolTable[0:-1]
     printTable()
 
-def addModule(name):
+def addImport(name):
     # Adiciona um módulo/import na tabela de símbolos
     global symbolTable
-    symbolTable[-1][name] = {BINDABLE: MODULE, TYPE: MODULE}
+    symbolTable[-1][name] = {BINDABLE: IMPORT, NAMEIMPORT: name}
     printTable()
 
-def addArray(name):
-    # Adiciona um módulo/import na tabela de símbolos
+def addArrayMutable(name, length, type):
     global symbolTable
-    symbolTable[-1][name] = {BINDABLE: ARRAY, TYPE: MODULE}
+    symbolTable[-1][name] = {BINDABLE: ARRAYMUTABLE, LENGTH : length, TYPE: type}
+    printTable()
+
+def addArrayImutable(name, length, type):
+    global symbolTable
+    symbolTable[-1][name] = {BINDABLE: ARRAYIMUTABLE, LENGTH : length, TYPE: type}
     printTable()
 
 def addMutableVar(name, type, offset = None):
     global symbolTable
-    symbolTable[-1][name] = {BINDABLE: MUTABLEVAR, TYPE : type, OFFSET: offset}
+    symbolTable[-1][name] = {BINDABLE: MUTABLEVAR, TYPE: type, OFFSET: offset}
     printTable()
 
 def addImutableVar(name, type, offset = None):
     global symbolTable
-    symbolTable[-1][name] = {BINDABLE: IMUTABLEVAR, TYPE : type, OFFSET: offset}
+    symbolTable[-1][name] = {BINDABLE: IMUTABLEVAR, TYPE: type, OFFSET: offset}
     printTable()
 
 def addConstVar(name, type, offset = None):
     global symbolTable
-    symbolTable[-1][name] = {BINDABLE: CONSTANTE, TYPE : type, OFFSET: offset}
+    symbolTable[-1][name] = {BINDABLE: CONSTANTE, TYPE: type, OFFSET: offset}
     printTable()
 
 def addFunction(name, params, returnType):
     global symbolTable
-    symbolTable[-1][name] = {BINDABLE: FUNCTION, PARAMS: params, TYPE : returnType}
+    symbolTable[-1][name] = {BINDABLE: FUNCTION, NAMEFUNCTION: name, PARAMS: params, TYPE : returnType}
     printTable()
 
 def getBindable(bindableName):
@@ -82,6 +91,15 @@ def getBindable(bindableName):
         if (bindableName in symbolTable[i].keys()):
             return symbolTable[i][bindableName]
     return None
+
+def updateBindableAttr(name, attr, value):
+    global symbolTable
+    for i in reversed(range(len(symbolTable))):
+        if name in symbolTable[i]:
+            symbolTable[i][name][attr] = value
+            printTable()
+            return True  # Sucesso
+    return False  # Não encontrado
 
 def getScope(bindableName):
     global symbolTable

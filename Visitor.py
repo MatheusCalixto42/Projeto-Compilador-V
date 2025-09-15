@@ -92,8 +92,8 @@ class Visitor(AbstractVisitor):
         print('fn', end=' ', sep=' ')
         print(signatureWithParams.id, end=' ')
         print('(', end=' ')
-        if signatureWithParams.sigparams is not None:
-            signatureWithParams.sigparams.accept(self)
+        if signatureWithParams.sigParams is not None:
+            signatureWithParams.sigParams.accept(self)
         print(')', end=' ')
 
 ###################################################################
@@ -108,7 +108,7 @@ class Visitor(AbstractVisitor):
         print(sequenceSigParams.id, end = '')
         print(sequenceSigParams.idType, end = ' ')
         print(',', end=' ')
-        sequenceSigParams.sigparams.accept(self)
+        sequenceSigParams.sigParams.accept(self)
 
 
 ###################################################################
@@ -231,7 +231,8 @@ class Visitor(AbstractVisitor):
         print(blank(), declarationImutableListRule.id, end=' ')
         print(':=', end=' ',sep=' ')
         print('[', end=' ', sep=' ')
-        declarationImutableListRule.params.accept(self)
+        if(declarationImutableListRule.params != None):
+            declarationImutableListRule.params.accept(self)
         print(']', end=' ', sep=' ')
         
 
@@ -307,14 +308,14 @@ class Visitor(AbstractVisitor):
     def visitOnlyIf(self,onlyIf):
         global tab
         print(blank(), 'if', end=' ', sep=' ')
-        onlyIf.expRel.accept(self)
+        onlyIf.expRels.accept(self)
         onlyIf.blockStm.accept(self)
         
 
     def visitIfAndElse(self,ifAndElse):
         global tab
         print(blank(), 'if', end=' ', sep=' ')
-        ifAndElse.expRel.accept(self)
+        ifAndElse.expRels.accept(self)
         ifAndElse.blockStm.accept(self)
         ifAndElse.elseV.accept(self)
      
@@ -352,7 +353,7 @@ class Visitor(AbstractVisitor):
         print(':=', end=' ')
         print(conventionalFor.number, end=' ')
         print(';', end=' ')
-        conventionalFor.expRel.accept(self)
+        conventionalFor.expRels.accept(self)
         print(';', end=' ', sep=' ')
         conventionalFor.increment.accept(self)
         conventionalFor.blockStm.accept(self)
@@ -360,10 +361,20 @@ class Visitor(AbstractVisitor):
     def visitOnlyexpRelFor(self,onlyexpRelFor):
         global tab
         print(blank(), 'for', end=' ', sep=' ')
-        onlyexpRelFor.expRel.accept(self)
+        onlyexpRelFor.expRels.accept(self)
         onlyexpRelFor.blockStm.accept(self)
 
         
+###################################################################
+# Classes to visit the Abstract Syntax of ExpRels
+##################################################################
+    def visitSingleExpRel(self, singleExpRel):
+        singleExpRel.expRel.accept(self)
+
+    def visitSequenceExpRels(self, sequenceExpRels):
+        sequenceExpRels.expRel.accept(self)
+        sequenceExpRels.expRels.accept(self)
+
 ###################################################################
 # Classes to visit the Abstract Syntax of Expression
 ##################################################################
@@ -393,6 +404,9 @@ class Visitor(AbstractVisitor):
 
     def visitExpCallList(self, expCallList):
         expCallList.calllist.accept(self)
+
+    def visitExpRelationals(self, expressionRelationals):
+        expressionRelationals.expRels.accept(self)
 
 ###################################################################
 # Classes to visit the Abstract Syntax of Relational Expression
@@ -510,9 +524,6 @@ class Visitor(AbstractVisitor):
 
     def visitFactorHex(self, hex):
         print(hex.factorHex, end=' ')
-
-#    def visitFactorInterpolationString(self, factorInterpolationString):
-#        print(factorInterpolationString.interpolationString, end=' ')
 
     def visitFactorSizeOfExp(self, factorSizeofExp):
         factorSizeofExp.sizeofexp.accept(self)
