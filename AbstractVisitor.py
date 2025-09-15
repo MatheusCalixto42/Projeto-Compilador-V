@@ -3,11 +3,11 @@ from abc import abstractmethod, ABCMeta
 class AbstractVisitor(metaclass=ABCMeta):
 
     @abstractmethod
-    def visitImportAndFuncDefinition(self, importAndFuncDefinition):
+    def visitCompoundImportItems(self, compoundImportItems):
         pass
 
     @abstractmethod
-    def visitSingleFuncDefinition(self, singleFuncDefinition):
+    def visitProgramItems(self, programItems):
         pass
 
     @abstractmethod
@@ -19,6 +19,26 @@ class AbstractVisitor(metaclass=ABCMeta):
         pass
 
     @abstractmethod
+    def visitSequenceProgramItems(self, sequenceProgramItems):
+        pass
+
+    @abstractmethod
+    def visitSingleProgramItem(self, singleProgramItem):
+        pass
+
+    @abstractmethod
+    def visitConstantDeclaration(self, constanteDeclaration):
+        pass
+
+    @abstractmethod
+    def visitFunctionDeclaration(self, functionDeclaration):
+        pass
+
+    @abstractmethod
+    def visitConstantDeclarationRule(self, constantDeclarationRule):
+        pass
+
+    @abstractmethod
     def visitFunctionVoid(self, functionVoid):
         pass
 
@@ -27,107 +47,87 @@ class AbstractVisitor(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def visitFunctionMain(self, functionMain):
+    def visitSignatureWithParams(self, signatureWithParams):
         pass
 
     @abstractmethod
-    def visitFunctionVoidWithoutMain(self, functionVoidWithoutMain):
+    def visitSingleSigParam(self, singleSigParam):
         pass
 
     @abstractmethod
-    def visitFunctionReturnTypeWithoutMain(self, functionReturnTypeWithoutMain):
+    def visitSequenceSigParams(self, sequenceSigParams):
         pass
 
     @abstractmethod
-    def visitNoneFunction(self, noneFunction):
+    def visitSequenceParams(self, sequenceParams):
         pass
 
     @abstractmethod
-    def visitDescriptionParam(self, descriptionParam):
+    def visitSingleParams(self, singleParams):
         pass
 
     @abstractmethod
-    def visitDescriptionParams(self, descriptionParams):
+    def visitBlockStm(self, blockStm):
         pass
 
     @abstractmethod
-    def visitNoneParam(self, noneParam):#olhar esse noneParam
+    def visitSequenceStm(self, sequenceStm):
         pass
 
     @abstractmethod
-    def visitMultipleParams(self, multipleParams):
+    def visitSingleStm(self, singleStm):
         pass
 
     @abstractmethod
-    def visitNoneParam(self, noneParam):
+    def visitVarStm(self, varStm):
         pass
 
     @abstractmethod
-    def visitIntV(self, intV):
+    def visitVarAssign(self, varAssign):
         pass
 
     @abstractmethod
-    def visitF32(self, f32):
+    def visitListStm(self, listStm):
         pass
 
     @abstractmethod
-    def visitF64(self, f64):
+    def visitListAssign(self, listAssign):
         pass
 
     @abstractmethod
-    def visitRune(self, rune):
+    def visitFuncCalls(self, funcCalls):
         pass
 
     @abstractmethod
-    def visitString(self, string):
+    def visitIfStm(self, ifStm):
         pass
 
     @abstractmethod
-    def visitBoolV(self, boolv):
+    def visitForStm(self, forStm):
         pass
 
     @abstractmethod
-    def visitBlockStatement(self, blockStatement):
+    def visitIncrementStm(self, incrementStm):
         pass
 
     @abstractmethod
-    def visitVarStatement(self, varStatement):
+    def visitAssignStm(self, assignStm):
         pass
 
     @abstractmethod
-    def visitVarAssignment(self, varAssignment):
+    def visitBreakStm(self, breakStm):
         pass
 
     @abstractmethod
-    def visitFuncCallS(self, funcCall):
-        pass
-
-    @abstractmethod
-    def visitIfStatement(self, ifStatement):
-        pass
-
-    @abstractmethod
-    def visitForStatement(self, forStatement):
-        pass
-
-    @abstractmethod
-    def visitReturnStatement(self, returnStatement):
-        pass
-
-    @abstractmethod
-    def visitNoneStatement(self, noneStatement):
+    def visitReturnStm(self, returnStm):
         pass
     
     @abstractmethod
-    def visitDeclarationImutable(self, declarationImutable):
+    def visitImutableDeclaration(self, imutableDeclaration):
         pass
-
+    
     @abstractmethod
     def visitMutableDeclaration(self, mutableDeclaration):
-        pass
-
-    @abstractmethod
-    def visitConstantDeclaration(self, constantDeclaration):
         pass
 
     @abstractmethod
@@ -135,23 +135,35 @@ class AbstractVisitor(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def visitFuncCompoundParams(self, funcCompoundParams):
+    def visitDeclarationImutableListRule(self, declarationImutableListRule):
         pass
-
-    @abstractmethod#olhar aqui
-    def visitFuncNoParams(self, funcNoParams):
+    
+    @abstractmethod
+    def visitDeclarationMutableList(self, declarationMutableList):
         pass
 
     @abstractmethod
-    def visitListId(self, listId):
+    def visitDeclarationMutableListLengthDefinition(self, listLengthDefinition):
         pass
 
     @abstractmethod
-    def visitPlusExpres(self, plusExpres):
+    def visitListModification(self, listModification):
         pass
 
-    @abstractmethod#olhar aqui
-    def visitNoneExpression(self, noneExpression):
+    @abstractmethod
+    def visitCallListAll(self, callListAll):
+        pass
+
+    @abstractmethod
+    def visitCallListRange(self, callRange):
+        pass
+
+    # @abstractmethod
+    # def visitFuncCallListSingle(self, funcCallSingle):
+    #     pass
+
+    @abstractmethod
+    def visitFuncCallWithParams(self, funcCallWithParams):
         pass
     
     @abstractmethod
@@ -179,63 +191,71 @@ class AbstractVisitor(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def visitOnlyExpressionRelationalFor(self, onlyExpressionRelationalFor):
+    def visitOnlyexpRelFor(self, onlyExpressionRelationalFor):
+        pass
+
+#    @abstractmethod
+#    def visitIdImutable(self, idImutable):
+#        pass
+
+    @abstractmethod
+    def visitExpPlus(self, expressionPlus):
         pass
 
     @abstractmethod
-    def visitIdImutable(self, idImutable):
-        pass
-
-    @abstractmethod
-    def visitReturnExpression(self, returnExpression):
-        pass
-
-    @abstractmethod
-    def visitExpressionPlus(self, expressionPlus):
-        pass
-
-    @abstractmethod
-    def visitExpressionMinus(self, expressionMinus):
+    def visitExpMinus(self, expressionMinus):
         pass
 
     @abstractmethod
     def visitSingleTerm(self, singleTerm):
         pass
-
+    
     @abstractmethod
-    def visitExpressionRelationalEqual(self, expressionRelationalEqual):
+    def visitExpIncrement(self, expressionIncrement):
         pass
 
     @abstractmethod
-    def visitExpressionRelationalNotEqual(self, expressionRelationalNotEqual):
+    def visitExpFuncCall(self, expressionFuncCall):
         pass
 
     @abstractmethod
-    def visitExpressionRelationalLessThan(self, expressionRelationalLessThan):
+    def visitExpCallList(self, expressionCallList):
         pass
 
     @abstractmethod
-    def visitExpressionRelationalGreaterThan(self, expressionRelationalGreaterThan):
+    def visitExpRelEqual(self, expressionRelationalEqual):
         pass
 
     @abstractmethod
-    def visitExpressionRelationalLessThanOrEqual(self, expressionRelationalLessThanOrEqual):
+    def visitExpRelNotEqual(self, expressionRelationalNotEqual):
         pass
 
     @abstractmethod
-    def visitExpressionRelationalGreaterThanOrEqual(self, expressionRelationalGreaterThanOrEqual):
+    def visitExpRelLessThan(self, expressionRelationalLessThan):
         pass
 
     @abstractmethod
-    def visitExpressionRelationalAnd(self, expressionRelationalAnd):
+    def visitExpRelGreaterThan(self, expressionRelationalGreaterThan):
         pass
 
     @abstractmethod
-    def visitExpressionRelationalOr(self, expressionRelationalOr):
+    def visitExpRelLessThanOrEqual(self, expressionRelationalLessThanOrEqual):
         pass
 
     @abstractmethod
-    def visitExpressionRelationalNot(self, expressionRelationalNot):
+    def visitExpRelGreaterThanOrEqual(self, expressionRelationalGreaterThanOrEqual):
+        pass
+
+    @abstractmethod
+    def visitExpRelAnd(self, expressionRelationalAnd):
+        pass
+
+    @abstractmethod
+    def visitExpRelOr(self, expressionRelationalOr):
+        pass
+
+    @abstractmethod
+    def visitExpRelNot(self, expressionRelationalNot):
         pass
 
     @abstractmethod
@@ -263,6 +283,10 @@ class AbstractVisitor(metaclass=ABCMeta):
         pass
 
     @abstractmethod
+    def visitFactorNumberFloat(self, factorNumberFloat):
+        pass
+
+    @abstractmethod
     def visitFactorString(self, factorString):
         pass
 
@@ -279,7 +303,43 @@ class AbstractVisitor(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def visitFactorExpression(self, factorExpression):
+    def visitFactorExp(self, factorExpression):
+        pass
+
+    @abstractmethod
+    def visitFactorList(self, factorList):
+        pass
+
+    @abstractmethod
+    def visitFactorCientificNotation(self, cientific_notation):
+        pass
+
+    @abstractmethod
+    def visitFactorBinary(self, binary):
+        pass
+
+    @abstractmethod
+    def visitFactorOctal(self, octal):
+        pass
+
+    @abstractmethod
+    def visitFactorHex(self, hex):
+        pass
+
+ #   @abstractmethod
+ #   def visitFactorInterpolationString(self, factorInterpolationString):
+ #       pass
+
+    @abstractmethod
+    def visitFactorSizeOfExp(self, factorSizeOfExpression):
+        pass
+
+    @abstractmethod
+    def visitSizeOfExp(self, sizeOfExpression):
+        pass
+
+    @abstractmethod
+    def visitSizeOfType(self, sizeOfType):
         pass
 
     @abstractmethod
@@ -288,4 +348,44 @@ class AbstractVisitor(metaclass=ABCMeta):
 
     @abstractmethod
     def visitDec(self, dec):
+        pass
+
+    @abstractmethod
+    def visitAssignPlusEquals(self, mais_igual):
+        pass
+
+    @abstractmethod
+    def visitAssignMinusEquals(self, menos_igual):
+        pass
+
+    @abstractmethod
+    def visitAssignMultiplicationEquals(self, multi_igual):
+        pass
+
+    @abstractmethod
+    def visitDivideEquals(self, div_igual):
+        pass
+
+    @abstractmethod
+    def visitAssignModEquals(self, mod_igual):
+        pass
+
+    @abstractmethod
+    def visitAssignAndEquals(self, and_igual):
+        pass
+
+    @abstractmethod
+    def visitAssignOrEquals(self, or_igual):
+        pass
+
+    @abstractmethod
+    def visitAssignXOREquals(self, xor_igual):
+        pass
+
+    @abstractmethod
+    def visitAssignDeslocationLeft(self, desloca_esq_igual):
+        pass
+
+    @abstractmethod
+    def visitAssignDeslocationRight(self, desloca_dir_igual):
         pass
