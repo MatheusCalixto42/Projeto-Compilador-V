@@ -602,6 +602,25 @@ class SequenceExpRels(ExpRelsAbstract):
     def accept(self, visitor):
         return visitor.visitSequenceExpRels(self)
 
+class ExpIncrement(Exp):
+    def __init__(self, increment):
+        self.increment = increment
+    def accept(self, visitor):
+        return visitor.visitExpIncrement(self)
+    
+class ExpFuncCall(Exp):
+    def __init__(self,funcCall):
+        self.funcCall = funcCall
+    def accept(self, visitor):
+        return visitor.visitExpFuncCall(self)
+
+class ExpCallList(Exp):
+    def __init__(self,calllist):
+        self.calllist = calllist
+    def accept(self, visitor):
+        return visitor.visitExpCallList(self)
+
+
 ########################################################
 # Class for ExpRel
 #######################################################
